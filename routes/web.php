@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\CatalogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -32,6 +33,19 @@ Route::middleware([
 
             Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])
                 ->name('products.destroy');
+
+                Route::middleware('can:manage products')->group(function (): void {
+    Route::resource(
+        'categories',
+        AdminProductCategoryController::class,
+    )->except('show');
+
+    Route::get('/products', [AdminProductController::class, 'index'])
+        ->name('products.index');
+
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])
+        ->name('products.destroy');
+});
         });
     });
 

@@ -53,7 +53,7 @@ type Props = {
 const navigation = [
     { label: 'Tableau de bord', href: '/admin' },
     { label: 'Clients', href: '#' },
-    { label: 'Catégories', href: '#' },
+    { label: 'Catégories', href: '/admin/categories' },
     { label: 'Produits', href: '/admin/products' },
     { label: 'Offres', href: '/offres' },
     { label: 'Commandes', href: '#' },
