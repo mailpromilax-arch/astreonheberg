@@ -40,6 +40,11 @@ Route::middleware([
         AdminProductCategoryController::class,
     )->except('show');
 
+    Route::resource(
+    'products',
+    AdminProductController::class,
+)->except('show');
+
     Route::get('/products', [AdminProductController::class, 'index'])
         ->name('products.index');
 

@@ -216,14 +216,12 @@ export default function ProductsIndex({
                                 </p>
                             </div>
 
-                            <button
-                                type="button"
-                                disabled
-                                title="Disponible lors de la prochaine étape"
-                                className="cursor-not-allowed rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 text-sm font-black opacity-60"
-                            >
-                                Ajouter un produit
-                            </button>
+                            <Link
+    href="/admin/products/create"
+    className="rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 text-sm font-black"
+>
+    Ajouter un produit
+</Link>
                         </section>
 
                         <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -398,13 +396,12 @@ export default function ProductsIndex({
 
                                                 <td className="px-6 py-5">
                                                     <div className="flex justify-end gap-2">
-                                                        <button
-                                                            type="button"
-                                                            disabled
-                                                            className="cursor-not-allowed rounded-lg border border-white/10 px-3 py-2 text-xs font-bold text-slate-400 opacity-50"
-                                                        >
-                                                            Modifier
-                                                        </button>
+                                                        <Link
+    href={`/admin/products/${product.id}/edit`}
+    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-bold transition hover:bg-white/5"
+>
+    Modifier
+</Link>
 
                                                         <button
                                                             type="button"
