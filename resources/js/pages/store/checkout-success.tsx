@@ -93,7 +93,7 @@ export default function CheckoutSuccess({ order }: Props) {
                             </Link>
 
                             <Link
-                                href="/dashboard"
+                                href="/client"
                                 className="rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 text-center font-black"
                             >
                                 Espace client

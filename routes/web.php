@@ -10,6 +10,22 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Client\ClientDashboardController;
+use App\Http\Controllers\Client\ClientOrderController;
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('client')
+    ->name('client.')
+    ->group(function (): void {
+        Route::get('/', ClientDashboardController::class)
+            ->name('dashboard');
+
+        Route::get('/orders', [ClientOrderController::class, 'index'])
+            ->name('orders.index');
+
+        Route::get('/orders/{order}', [ClientOrderController::class, 'show'])
+            ->name('orders.show');
+    });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/checkout', [CheckoutController::class, 'index'])
