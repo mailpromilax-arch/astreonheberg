@@ -56,7 +56,7 @@ const navigation = [
     { label: 'Catégories', href: '/admin/categories' },
     { label: 'Produits', href: '/admin/products' },
     { label: 'Offres', href: '/offres' },
-    { label: 'Commandes', href: '#' },
+    { label: 'Commandes', href: '/admin/orders' },
     { label: 'Factures', href: '#' },
     { label: 'Tickets', href: '#' },
     { label: 'Infrastructure', href: '#' },

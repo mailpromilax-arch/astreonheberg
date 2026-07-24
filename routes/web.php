@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanControll
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/checkout', [CheckoutController::class, 'index'])
@@ -64,6 +65,17 @@ Route::middleware([
     ->group(function (): void {
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
+
+Route::middleware('can:manage orders')->group(function (): void {
+    Route::get('/orders', [AdminOrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
+        ->name('orders.show');
+
+    Route::patch('/orders/{order}', [AdminOrderController::class, 'update'])
+        ->name('orders.update');
+});
 
 Route::get('/boutique', [StoreController::class, 'index'])
     ->name('store.index');
