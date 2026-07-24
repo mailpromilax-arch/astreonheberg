@@ -49,7 +49,7 @@ const navigation = [
     { label: 'Clients', href: '#' },
     { label: 'Catégories', href: '/admin/categories' },
     { label: 'Produits', href: '/admin/products' },
-    { label: 'Offres', href: '/offres' },
+    { label: 'Offres', href: '/admin/plans' },
     { label: 'Commandes', href: '#' },
     { label: 'Factures', href: '#' },
     { label: 'Tickets', href: '#' },

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\CatalogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
+use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -31,6 +32,11 @@ Route::middleware([
             Route::get('/products', [AdminProductController::class, 'index'])
                 ->name('products.index');
 
+            Route::resource(
+    'plans',
+    AdminProductPlanController::class,
+)->except('show');
+      
             Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])
                 ->name('products.destroy');
 
