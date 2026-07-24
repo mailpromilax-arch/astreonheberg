@@ -6,11 +6,48 @@ use App\Http\Controllers\CatalogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
 use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+
+Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout.index');
+
+    Route::post('/checkout', [CheckoutController::class, 'store'])
+        ->name('checkout.store');
+
+    Route::get('/checkout/success/{order}', [
+        CheckoutController::class,
+        'success',
+    ])->name('checkout.success');
+});
 
 Route::inertia('/', 'welcome')->name('home');
 
 Route::get('/offres', [CatalogController::class, 'index'])
     ->name('catalog.index');
+
+Route::get('/boutique', [StoreController::class, 'index'])
+    ->name('store.index');
+
+Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
+    ->name('store.show');
+
+Route::get('/panier', [CartController::class, 'index'])
+    ->name('cart.index');
+
+Route::post('/panier/{plan}', [CartController::class, 'store'])
+    ->name('cart.store');
+
+Route::patch('/panier/{plan}', [CartController::class, 'update'])
+    ->name('cart.update');
+
+Route::delete('/panier/{plan}', [CartController::class, 'destroy'])
+    ->name('cart.destroy');
+
+Route::delete('/panier', [CartController::class, 'clear'])
+    ->name('cart.clear');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('/dashboard', 'dashboard')
@@ -27,6 +64,12 @@ Route::middleware([
     ->group(function (): void {
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
+
+Route::get('/boutique', [StoreController::class, 'index'])
+    ->name('store.index');
+
+Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
+    ->name('store.show');
 
         Route::middleware('can:manage products')->group(function (): void {
             Route::get('/products', [AdminProductController::class, 'index'])

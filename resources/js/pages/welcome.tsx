@@ -104,7 +104,7 @@ export default function Welcome() {
                         </Link>
 
                         <div className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-                            <a href="#services" className="transition hover:text-white">
+                            <a href="/boutique" className="transition hover:text-white">
                                 Services
                             </a>
                             <a href="#infrastructure" className="transition hover:text-white">
@@ -156,12 +156,12 @@ export default function Welcome() {
                             </p>
 
                             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-                                <a
-                                    href="#services"
-                                    className="rounded-2xl bg-gradient-to-r from-blue-500 to-emerald-400 px-7 py-4 text-center font-bold shadow-xl shadow-blue-500/20 transition hover:-translate-y-1"
-                                >
-                                    Découvrir les offres
-                                </a>
+                                <Link
+    href="/boutique"
+    className="rounded-2xl bg-gradient-to-r from-blue-500 to-emerald-400 px-7 py-4 text-center font-bold shadow-xl shadow-blue-500/20 transition hover:-translate-y-1"
+>
+    Découvrir les offres
+</Link>
                                 <a
                                     href="#infrastructure"
                                     className="rounded-2xl border border-white/15 bg-white/5 px-7 py-4 text-center font-bold backdrop-blur transition hover:border-white/30 hover:bg-white/10"
