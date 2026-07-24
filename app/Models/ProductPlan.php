@@ -25,7 +25,13 @@ class ProductPlan extends Model
         'backups_limit',
         'player_slots',
         'features',
+        'specifications',
+        'billing_cycles',
         'provisioning_config',
+        'stock_quantity',
+        'stock_tracking',
+        'allow_upgrades',
+        'allow_downgrades',
         'status',
         'is_popular',
         'sort_order',
@@ -35,8 +41,10 @@ class ProductPlan extends Model
     {
         return [
             'features' => 'array',
+            'specifications' => 'array',
+            'billing_cycles' => 'array',
             'provisioning_config' => 'array',
-            'is_popular' => 'boolean',
+
             'price_monthly_cents' => 'integer',
             'setup_fee_cents' => 'integer',
             'ram_mb' => 'integer',
@@ -46,13 +54,22 @@ class ProductPlan extends Model
             'databases_limit' => 'integer',
             'backups_limit' => 'integer',
             'player_slots' => 'integer',
+            'stock_quantity' => 'integer',
             'sort_order' => 'integer',
+
+            'stock_tracking' => 'boolean',
+            'allow_upgrades' => 'boolean',
+            'allow_downgrades' => 'boolean',
+            'is_popular' => 'boolean',
         ];
     }
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(
+            Product::class,
+            'product_id',
+        );
     }
 
     public function getFormattedMonthlyPriceAttribute(): string
@@ -63,5 +80,18 @@ class ProductPlan extends Model
             ',',
             ' ',
         ).' €';
+    }
+
+    public function isAvailable(): bool
+    {
+        if ($this->status !== 'active') {
+            return false;
+        }
+
+        if (! $this->stock_tracking) {
+            return true;
+        }
+
+        return ($this->stock_quantity ?? 0) > 0;
     }
 }
