@@ -1,0 +1,32 @@
+ASTREON V7 — INSCRIPTION, REDIRECTION CLIENT ET MENU LATÉRAL
+
+Ce pack :
+- supprime directement le menu vertical de la page d'accueil ;
+- ajoute une page d'inscription complète à /register ;
+- ajoute le bouton « Créer un compte » sur la page de connexion ;
+- conserve le bouton « Espace client » dans le menu public ;
+- redirige automatiquement /dashboard vers /client après connexion ;
+- conserve toute la DA violette cosmique.
+
+INSTALLATION
+1. Décompresser ce ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Choisir :
+   Remplacer les fichiers dans la destination
+
+3. Exécuter :
+   cd C:\Astreon\astreonheberg
+   php artisan optimize:clear
+   npm run build
+
+4. Si npm run dev est déjà ouvert :
+   Ctrl + C
+   npm run dev
+
+5. Recharger le navigateur avec Ctrl + F5.
+
+IMPORTANT
+La page /register utilise le système d'inscription Laravel/Fortify déjà
+présent dans le projet. Si /register retourne une erreur 404, activez
+Features::registration() dans config/fortify.php.

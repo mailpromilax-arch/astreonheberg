@@ -57,44 +57,18 @@ export default function StoreIndex({ categories }: Props) {
         <>
             <Head title="Boutique — AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] text-white">
-                <header className="border-b border-white/10 bg-[#07101f]/90 backdrop-blur">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-                        <Link href="/" className="text-xl font-black">
-                            Astreon
-                            <span className="text-emerald-400">
-                                Heberg
-                            </span>
-                        </Link>
-
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href="/"
-                                className="rounded-xl px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/5"
-                            >
-                                Accueil
-                            </Link>
-
-                            <Link
-                                href="/panier"
-                                className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/5"
-                            >
-                                Panier
-                            </Link>
-
-                            <Link
-                                href="/login"
-                                className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/5"
-                            >
-                                Connexion
-                            </Link>
-                        </div>
-                    </div>
-                </header>
+            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
 
                 <main className="mx-auto max-w-7xl px-6 py-20">
-                    <section className="mx-auto max-w-3xl text-center">
-                        <p className="text-sm font-black uppercase tracking-[0.25em] text-emerald-400">
+                    <section
+                        className="mx-auto max-w-3xl border-0 !bg-transparent text-center shadow-none"
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            boxShadow: 'none',
+                        }}
+                    >
+                        <p className="text-sm font-black uppercase tracking-[0.25em] text-orange-500">
                             Boutique
                         </p>
 
@@ -102,7 +76,7 @@ export default function StoreIndex({ categories }: Props) {
                             Choisissez votre prochaine infrastructure
                         </h1>
 
-                        <p className="mt-6 text-lg leading-8 text-slate-400">
+                        <p className="mt-6 text-lg leading-8 text-slate-500">
                             Serveurs Gaming, VPS et hébergements Web,
                             tous administrables depuis un seul espace client.
                         </p>
@@ -116,7 +90,7 @@ export default function StoreIndex({ categories }: Props) {
                                         {category.name}
                                     </h2>
 
-                                    <p className="mt-3 max-w-3xl text-slate-400">
+                                    <p className="mt-3 max-w-3xl text-slate-500">
                                         {category.description}
                                     </p>
                                 </div>
@@ -125,11 +99,11 @@ export default function StoreIndex({ categories }: Props) {
                                     {category.products.map((product) => (
                                         <article
                                             key={product.id}
-                                            className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 transition hover:-translate-y-1 hover:border-emerald-400/30"
+                                            className="group rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:border-emerald-400/30"
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
-                                                    <p className="text-sm font-bold text-emerald-400">
+                                                    <p className="text-sm font-bold text-orange-500">
                                                         {category.name}
                                                     </p>
 
@@ -145,12 +119,12 @@ export default function StoreIndex({ categories }: Props) {
                                                 )}
                                             </div>
 
-                                            <p className="mt-4 min-h-16 leading-7 text-slate-400">
+                                            <p className="mt-4 min-h-16 leading-7 text-slate-500">
                                                 {product.short_description ??
                                                     'Découvrez cette offre AstreonHeberg.'}
                                             </p>
 
-                                            <div className="mt-7 border-t border-white/10 pt-6">
+                                            <div className="mt-7 border-t border-slate-200 pt-6">
                                                 <p className="text-xs uppercase tracking-wider text-slate-500">
                                                     À partir de
                                                 </p>
@@ -179,7 +153,7 @@ export default function StoreIndex({ categories }: Props) {
 
                                                 <Link
                                                     href={`/boutique/${product.slug}`}
-                                                    className="rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 text-sm font-black"
+                                                    className="rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 text-sm font-black"
                                                 >
                                                     Voir les offres
                                                 </Link>

@@ -45,6 +45,23 @@ const euro = new Intl.NumberFormat('fr-FR', {
     currency: 'EUR',
 });
 
+/**
+ * Les offres enregistrent la RAM en Mo.
+ *
+ * Exemples :
+ * 4096 Mo  = 4 Go
+ * 8192 Mo  = 8 Go
+ * 10240 Mo = 10 Go
+ * 12288 Mo = 12 Go
+ *
+ * L'affichage est volontairement limité à un nombre entier.
+ */
+function formatRam(ramMb: number): string {
+    const ramGb = Math.round(ramMb / 1024);
+
+    return `${ramGb} Go`;
+}
+
 function displayValue(value: unknown): string {
     if (typeof value === 'boolean') {
         return value ? 'Oui' : 'Non';
@@ -66,28 +83,11 @@ export default function StoreShow({ product }: Props) {
         <>
             <Head title={`${product.name} — AstreonHeberg`} />
 
-            <div className="min-h-screen bg-[#050b18] text-white">
-                <header className="border-b border-white/10 bg-[#07101f]">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-                        <Link href="/" className="text-xl font-black">
-                            Astreon
-                            <span className="text-emerald-400">
-                                Heberg
-                            </span>
-                        </Link>
-
-                        <Link
-                            href="/boutique"
-                            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold"
-                        >
-                            Retour à la boutique
-                        </Link>
-                    </div>
-                </header>
+            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
 
                 <main className="mx-auto max-w-7xl px-6 py-16">
                     <section className="max-w-4xl">
-                        <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400">
+                        <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
                             {product.category.name}
                         </p>
 
@@ -95,7 +95,7 @@ export default function StoreShow({ product }: Props) {
                             {product.name}
                         </h1>
 
-                        <p className="mt-6 text-lg leading-8 text-slate-400">
+                        <p className="mt-6 text-lg leading-8 text-slate-500">
                             {product.description ??
                                 product.short_description}
                         </p>
@@ -113,7 +113,7 @@ export default function StoreShow({ product }: Props) {
                                     className={`relative rounded-3xl border p-6 ${
                                         plan.is_popular
                                             ? 'border-emerald-400/50 bg-emerald-400/10'
-                                            : 'border-white/10 bg-white/[0.04]'
+                                            : 'border-slate-200 bg-white'
                                     }`}
                                 >
                                     {plan.is_popular && (
@@ -133,7 +133,8 @@ export default function StoreShow({ product }: Props) {
                                     <div className="mt-6">
                                         <span className="text-4xl font-black">
                                             {euro.format(
-                                                plan.price_monthly_cents / 100,
+                                                plan.price_monthly_cents /
+                                                    100,
                                             )}
                                         </span>
 
@@ -147,7 +148,8 @@ export default function StoreShow({ product }: Props) {
                                         <p className="mt-2 text-xs text-slate-500">
                                             +{' '}
                                             {euro.format(
-                                                plan.setup_fee_cents / 100,
+                                                plan.setup_fee_cents /
+                                                    100,
                                             )}{' '}
                                             de mise en service
                                         </p>
@@ -159,8 +161,11 @@ export default function StoreShow({ product }: Props) {
                                                 <dt className="text-slate-500">
                                                     RAM
                                                 </dt>
+
                                                 <dd className="font-bold">
-                                                    {plan.ram_mb / 1024} Go
+                                                    {formatRam(
+                                                        plan.ram_mb,
+                                                    )}
                                                 </dd>
                                             </div>
                                         )}
@@ -170,6 +175,7 @@ export default function StoreShow({ product }: Props) {
                                                 <dt className="text-slate-500">
                                                     Stockage
                                                 </dt>
+
                                                 <dd className="font-bold">
                                                     {plan.disk_gb} Go NVMe
                                                 </dd>
@@ -182,6 +188,7 @@ export default function StoreShow({ product }: Props) {
                                                 <dt className="text-slate-500">
                                                     CPU
                                                 </dt>
+
                                                 <dd className="font-bold">
                                                     {plan.cpu_cores !== null
                                                         ? `${plan.cpu_cores} vCPU`
@@ -195,8 +202,23 @@ export default function StoreShow({ product }: Props) {
                                                 <dt className="text-slate-500">
                                                     Joueurs
                                                 </dt>
+
                                                 <dd className="font-bold">
                                                     {plan.player_slots}
+                                                </dd>
+                                            </div>
+                                        )}
+
+                                        {plan.databases_limit !== null && (
+                                            <div className="flex justify-between gap-4">
+                                                <dt className="text-slate-500">
+                                                    Bases de données
+                                                </dt>
+
+                                                <dd className="font-bold">
+                                                    {
+                                                        plan.databases_limit
+                                                    }
                                                 </dd>
                                             </div>
                                         )}
@@ -206,6 +228,7 @@ export default function StoreShow({ product }: Props) {
                                                 <dt className="text-slate-500">
                                                     Sauvegardes
                                                 </dt>
+
                                                 <dd className="font-bold">
                                                     {plan.backups_limit}
                                                 </dd>
@@ -224,59 +247,66 @@ export default function StoreShow({ product }: Props) {
                                     </ul>
 
                                     {plan.specifications &&
-                                        Object.keys(plan.specifications)
-                                            .length > 0 && (
-                                            <details className="mt-6 rounded-xl border border-white/10 bg-black/10 p-4">
+                                        Object.keys(
+                                            plan.specifications,
+                                        ).length > 0 && (
+                                            <details className="mt-6 rounded-xl border border-slate-200 bg-black/10 p-4">
                                                 <summary className="cursor-pointer text-sm font-bold">
-                                                    Caractéristiques avancées
+                                                    Caractéristiques
+                                                    avancées
                                                 </summary>
 
                                                 <dl className="mt-4 space-y-2 text-xs">
                                                     {Object.entries(
                                                         plan.specifications,
-                                                    ).map(([key, value]) => (
-                                                        <div
-                                                            key={key}
-                                                            className="flex justify-between gap-4"
-                                                        >
-                                                            <dt className="text-slate-500">
-                                                                {key}
-                                                            </dt>
+                                                    ).map(
+                                                        ([key, value]) => (
+                                                            <div
+                                                                key={key}
+                                                                className="flex justify-between gap-4"
+                                                            >
+                                                                <dt className="text-slate-500">
+                                                                    {key}
+                                                                </dt>
 
-                                                            <dd className="text-right font-semibold">
-                                                                {displayValue(
-                                                                    value,
-                                                                )}
-                                                            </dd>
-                                                        </div>
-                                                    ))}
+                                                                <dd className="text-right font-semibold">
+                                                                    {displayValue(
+                                                                        value,
+                                                                    )}
+                                                                </dd>
+                                                            </div>
+                                                        ),
+                                                    )}
                                                 </dl>
                                             </details>
                                         )}
 
                                     <button
-    type="button"
-    disabled={unavailable}
-    onClick={() =>
-        router.post(`/panier/${plan.id}`, {
-            quantity: 1,
-        })
-    }
-    className="mt-7 w-full rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 font-black disabled:cursor-not-allowed disabled:opacity-40"
->
-    {unavailable
-        ? 'Rupture de stock'
-        : 'Ajouter au panier'}
-</button>
+                                        type="button"
+                                        disabled={unavailable}
+                                        onClick={() => {
+                                            router.post(
+                                                `/panier/${plan.id}`,
+                                                {
+                                                    quantity: 1,
+                                                },
+                                            );
+                                        }}
+                                        className="mt-7 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 font-black disabled:cursor-not-allowed disabled:opacity-40"
+                                    >
+                                        {unavailable
+                                            ? 'Rupture de stock'
+                                            : 'Ajouter au panier'}
+                                    </button>
                                 </article>
                             );
                         })}
                     </section>
 
                     {product.plans.length === 0 && (
-                        <div className="mt-14 rounded-3xl border border-white/10 bg-white/[0.04] p-12 text-center text-slate-400">
-                            Aucune offre n’est actuellement disponible pour ce
-                            produit.
+                        <div className="mt-14 rounded-3xl border border-slate-200 bg-white p-12 text-center text-slate-500">
+                            Aucune offre n’est actuellement disponible
+                            pour ce produit.
                         </div>
                     )}
                 </main>

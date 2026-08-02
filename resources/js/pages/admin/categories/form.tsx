@@ -48,11 +48,11 @@ export default function CategoryForm({ category }: Props) {
                 }
             />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-12 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-12 text-slate-950">
                 <main className="mx-auto max-w-3xl">
                     <Link
                         href="/admin/categories"
-                        className="text-sm font-bold text-slate-400 hover:text-white"
+                        className="text-sm font-bold text-slate-500 hover:text-slate-950"
                     >
                         ← Retour aux catégories
                     </Link>
@@ -65,7 +65,7 @@ export default function CategoryForm({ category }: Props) {
 
                     <form
                         onSubmit={submit}
-                        className="mt-8 space-y-6 rounded-3xl border border-white/10 bg-white/[0.04] p-7"
+                        className="mt-8 space-y-6 rounded-3xl border border-slate-200 bg-white p-7"
                     >
                         <div>
                             <label className="text-sm font-bold">Nom</label>
@@ -74,7 +74,7 @@ export default function CategoryForm({ category }: Props) {
                                 onChange={(event) =>
                                     form.setData('name', event.target.value)
                                 }
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                             />
                             {form.errors.name && (
                                 <p className="mt-2 text-sm text-red-300">
@@ -93,7 +93,7 @@ export default function CategoryForm({ category }: Props) {
                                     form.setData('slug', event.target.value)
                                 }
                                 placeholder="Généré automatiquement si vide"
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                             />
                             {form.errors.slug && (
                                 <p className="mt-2 text-sm text-red-300">
@@ -115,7 +115,7 @@ export default function CategoryForm({ category }: Props) {
                                         event.target.value,
                                     )
                                 }
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                             />
                         </div>
 
@@ -133,7 +133,7 @@ export default function CategoryForm({ category }: Props) {
                                         )
                                     }
                                     placeholder="gamepad, server, globe..."
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                                 />
                             </div>
 
@@ -151,7 +151,7 @@ export default function CategoryForm({ category }: Props) {
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                                 />
                             </div>
                         </div>
@@ -172,10 +172,10 @@ export default function CategoryForm({ category }: Props) {
                             </span>
                         </label>
 
-                        <div className="flex justify-end gap-3 border-t border-white/10 pt-6">
+                        <div className="flex justify-end gap-3 border-t border-slate-200 pt-6">
                             <Link
                                 href="/admin/categories"
-                                className="rounded-xl border border-white/10 px-5 py-3 font-bold"
+                                className="rounded-xl border border-slate-200 px-5 py-3 font-bold"
                             >
                                 Annuler
                             </Link>

@@ -71,11 +71,11 @@ export default function ProductForm({
                 }
             />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-12 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-12 text-slate-950">
                 <main className="mx-auto max-w-4xl">
                     <Link
                         href="/admin/products"
-                        className="text-sm font-bold text-slate-400 transition hover:text-white"
+                        className="text-sm font-bold text-slate-500 transition hover:text-slate-950"
                     >
                         ← Retour aux produits
                     </Link>
@@ -91,7 +91,7 @@ export default function ProductForm({
                                 : 'Ajouter un produit'}
                         </h1>
 
-                        <p className="mt-3 text-slate-400">
+                        <p className="mt-3 text-slate-500">
                             Configurez les informations commerciales et le
                             système de provisionnement du service.
                         </p>
@@ -99,7 +99,7 @@ export default function ProductForm({
 
                     <form
                         onSubmit={submit}
-                        className="mt-9 space-y-8 rounded-3xl border border-white/10 bg-white/[0.04] p-7"
+                        className="mt-9 space-y-8 rounded-3xl border border-slate-200 bg-white p-7"
                     >
                         <section className="grid gap-6 md:grid-cols-2">
                             <div>
@@ -116,7 +116,7 @@ export default function ProductForm({
                                         )
                                     }
                                     placeholder="Minecraft Java"
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                                 />
 
                                 {form.errors.name && (
@@ -139,7 +139,7 @@ export default function ProductForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                                 >
                                     {categories.map((category) => (
                                         <option
@@ -173,7 +173,7 @@ export default function ProductForm({
                                     )
                                 }
                                 placeholder="Généré automatiquement si vide"
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                             />
 
                             <p className="mt-2 text-xs text-slate-500">
@@ -202,7 +202,7 @@ export default function ProductForm({
                                     )
                                 }
                                 placeholder="Résumé affiché dans les cartes et listes."
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                             />
 
                             {form.errors.short_description && (
@@ -227,7 +227,7 @@ export default function ProductForm({
                                     )
                                 }
                                 placeholder="Présentation complète du produit..."
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                             />
 
                             {form.errors.description && (
@@ -251,7 +251,7 @@ export default function ProductForm({
                                             event.target.value,
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                                 >
                                     {Object.entries(drivers).map(
                                         ([value, label]) => (
@@ -285,7 +285,7 @@ export default function ProductForm({
                                             event.target.value,
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                                 >
                                     {Object.entries(statuses).map(
                                         ([value, label]) => (
@@ -322,7 +322,7 @@ export default function ProductForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none transition focus:border-blue-400"
                                 />
 
                                 {form.errors.sort_order && (
@@ -333,7 +333,7 @@ export default function ProductForm({
                             </div>
                         </section>
 
-                        <label className="flex cursor-pointer items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                        <label className="flex cursor-pointer items-start gap-4 rounded-2xl border border-slate-200 bg-white/[0.03] p-5">
                             <input
                                 type="checkbox"
                                 checked={form.data.is_featured}
@@ -351,17 +351,17 @@ export default function ProductForm({
                                     Mettre le produit en avant
                                 </span>
 
-                                <span className="mt-1 block text-sm text-slate-400">
+                                <span className="mt-1 block text-sm text-slate-500">
                                     Le produit pourra apparaître sur la page
                                     d’accueil et dans les recommandations.
                                 </span>
                             </span>
                         </label>
 
-                        <div className="flex flex-col-reverse gap-3 border-t border-white/10 pt-7 sm:flex-row sm:justify-end">
+                        <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-7 sm:flex-row sm:justify-end">
                             <Link
                                 href="/admin/products"
-                                className="rounded-xl border border-white/10 px-6 py-3 text-center font-bold transition hover:bg-white/5"
+                                className="rounded-xl border border-slate-200 px-6 py-3 text-center font-bold transition hover:bg-white/5"
                             >
                                 Annuler
                             </Link>

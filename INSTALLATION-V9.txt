@@ -1,0 +1,35 @@
+ASTREON V9 — CORRECTIF ERREUR REGISTER VIEW RESPONSE
+
+Erreur corrigée :
+Target [Laravel\Fortify\Contracts\RegisterViewResponse] is not instantiable.
+
+La route /register existe maintenant, mais Fortify ne sait pas quelle page
+Inertia afficher. Ce correctif relie la route à :
+
+resources/js/pages/auth/register.tsx
+
+INSTALLATION
+
+1. Décompressez ce ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Exécutez :
+
+   cd C:\Astreon\astreonheberg
+   php install-astreon-register-view.php
+
+3. Redémarrez Laravel :
+
+   Ctrl + C
+   php artisan serve
+
+4. Si Vite est ouvert, redémarrez-le également :
+
+   Ctrl + C
+   npm run dev
+
+5. Ouvrez :
+   http://127.0.0.1:8000/register
+
+Le script sauvegarde automatiquement :
+app\Providers\FortifyServiceProvider.php

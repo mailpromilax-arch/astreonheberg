@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+'pterodactyl' => [
+    'url' => env('PTERODACTYL_URL'),
+    'application_key' => env('PTERODACTYL_APPLICATION_KEY'),
+    'client_key' => env('PTERODACTYL_CLIENT_KEY'),
+    'location_id' => env('PTERODACTYL_LOCATION_ID'),
+    'nest_id' => env('PTERODACTYL_NEST_ID'),
+    'egg_id' => env('PTERODACTYL_EGG_ID'),
+    'docker_image' => env('PTERODACTYL_DOCKER_IMAGE'),
+],
+
 ];

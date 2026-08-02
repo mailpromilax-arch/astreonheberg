@@ -1,0 +1,34 @@
+ASTREON V8 — CORRECTIF ROUTE /REGISTER
+
+Le problème 404 vient du fait que l'inscription Fortify n'est pas activée.
+Le fichier React existe déjà, mais Laravel ne crée pas les routes /register.
+
+INSTALLATION
+
+1. Décompressez ce ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Ouvrez PowerShell dans le projet :
+
+   cd C:\Astreon\astreonheberg
+
+3. Exécutez :
+
+   php install-astreon-register.php
+
+4. Vérifiez que PowerShell affiche deux routes :
+   GET|HEAD  register
+   POST      register
+
+5. Redémarrez le serveur Laravel si nécessaire :
+
+   php artisan serve
+
+6. Ouvrez :
+   http://127.0.0.1:8000/register
+
+Le script :
+- crée une sauvegarde de config\fortify.php ;
+- active Features::registration() ;
+- vide les caches Laravel ;
+- affiche les routes register pour vérification.

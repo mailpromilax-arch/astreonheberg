@@ -1,0 +1,40 @@
+ASTREON V10 — CORRECTIF CRÉATION DU COMPTE
+
+Erreur corrigée :
+Target [Laravel\Fortify\Contracts\CreatesNewUsers] is not instantiable.
+
+La page d'inscription fonctionne, mais Fortify n'avait aucune action
+enregistrée pour créer réellement l'utilisateur.
+
+INSTALLATION
+
+1. Décompresser le ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Choisir « Remplacer les fichiers dans la destination ».
+
+3. Exécuter :
+
+   cd C:\Astreon\astreonheberg
+   php install-astreon-register-create-user.php
+
+4. Redémarrer Laravel :
+
+   Ctrl + C
+   php artisan serve
+
+5. Si Vite est lancé, le redémarrer :
+
+   Ctrl + C
+   npm run dev
+
+6. Revenir sur :
+   http://127.0.0.1:8000/register
+
+Le correctif :
+- ajoute app\Actions\Fortify\CreateNewUser.php ;
+- lie cette action à Fortify::createUsersUsing(...) ;
+- vérifie que FortifyServiceProvider est bien chargé ;
+- sauvegarde les fichiers avant modification ;
+- nettoie les caches ;
+- vérifie automatiquement la syntaxe PHP.

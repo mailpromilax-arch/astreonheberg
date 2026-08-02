@@ -94,9 +94,9 @@ export default function AdminDashboard({
         <>
             <Head title="Administration — AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] text-white">
-                <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-[#07101f] lg:block">
-                    <div className="flex h-20 items-center border-b border-white/10 px-7">
+            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
+                <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-slate-200 bg-[#07101f] lg:block">
+                    <div className="flex h-20 items-center border-b border-slate-200 px-7">
                         <Link href="/" className="text-xl font-black">
                             Astreon
                             <span className="text-emerald-400">Heberg</span>
@@ -115,8 +115,8 @@ export default function AdminDashboard({
                                     href={item.href}
                                     className={`block rounded-xl px-4 py-3 text-sm font-semibold transition ${
                                         index === 0
-                                            ? 'bg-gradient-to-r from-blue-500/20 to-emerald-400/10 text-white'
-                                            : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                            ? 'bg-gradient-to-r from-blue-500/20 to-emerald-400/10 text-slate-950'
+                                            : 'text-slate-500 hover:bg-white/5 hover:text-slate-950'
                                     }`}
                                 >
                                     {item.label}
@@ -127,7 +127,7 @@ export default function AdminDashboard({
                 </aside>
 
                 <div className="lg:pl-72">
-                    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-white/10 bg-[#050b18]/90 px-6 backdrop-blur-xl lg:px-10">
+                    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-[#f5f7fb]/90 px-6 backdrop-blur-xl lg:px-10">
                         <div>
                             <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
                                 Astreon Control Center
@@ -140,7 +140,7 @@ export default function AdminDashboard({
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/"
-                                className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/5"
+                                className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/5"
                             >
                                 Voir le site
                             </Link>
@@ -157,13 +157,13 @@ export default function AdminDashboard({
 
                     <main className="px-6 py-10 lg:px-10">
                         <section>
-                            <p className="text-sm font-bold text-slate-400">
+                            <p className="text-sm font-bold text-slate-500">
                                 Vue d’ensemble
                             </p>
                             <h2 className="mt-2 text-3xl font-black">
                                 Tableau de bord
                             </h2>
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 Suivez les utilisateurs, le catalogue et les dernières actions réalisées.
                             </p>
                         </section>
@@ -172,9 +172,9 @@ export default function AdminDashboard({
                             {cards.map((card) => (
                                 <article
                                     key={card.label}
-                                    className="rounded-3xl border border-white/10 bg-white/[0.04] p-6"
+                                    className="rounded-3xl border border-slate-200 bg-white p-6"
                                 >
-                                    <p className="text-sm font-bold text-slate-400">
+                                    <p className="text-sm font-bold text-slate-500">
                                         {card.label}
                                     </p>
                                     <p className="mt-4 text-4xl font-black">
@@ -188,13 +188,13 @@ export default function AdminDashboard({
                         </section>
 
                         <section className="mt-8 grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
-                            <article className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
-                                <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+                            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+                                <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5">
                                     <div>
                                         <h3 className="text-lg font-black">
                                             Derniers utilisateurs
                                         </h3>
-                                        <p className="mt-1 text-sm text-slate-400">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Comptes récemment créés
                                         </p>
                                     </div>
@@ -220,7 +220,7 @@ export default function AdminDashboard({
                                                 <p className="truncate font-bold">
                                                     {user.name}
                                                 </p>
-                                                <p className="mt-1 truncate text-sm text-slate-400">
+                                                <p className="mt-1 truncate text-sm text-slate-500">
                                                     {user.email}
                                                 </p>
                                             </div>
@@ -244,12 +244,12 @@ export default function AdminDashboard({
                                 </div>
                             </article>
 
-                            <article className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
-                                <div className="border-b border-white/10 px-6 py-5">
+                            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+                                <div className="border-b border-slate-200 px-6 py-5">
                                     <h3 className="text-lg font-black">
                                         Activité récente
                                     </h3>
-                                    <p className="mt-1 text-sm text-slate-400">
+                                    <p className="mt-1 text-sm text-slate-500">
                                         Journal de sécurité et d’administration
                                     </p>
                                 </div>
@@ -273,7 +273,7 @@ export default function AdminDashboard({
                                                     <p className="text-sm font-bold">
                                                         {activity.description}
                                                     </p>
-                                                    <p className="mt-1 text-xs text-slate-400">
+                                                    <p className="mt-1 text-xs text-slate-500">
                                                         {activity.causer_name ??
                                                             'Système'}
                                                     </p>
@@ -296,7 +296,7 @@ export default function AdminDashboard({
                                     <h3 className="text-xl font-black">
                                         Catalogue AstreonHeberg
                                     </h3>
-                                    <p className="mt-2 text-sm text-slate-400">
+                                    <p className="mt-2 text-sm text-slate-500">
                                         {statistics.products} produits et{' '}
                                         {statistics.plans} offres sont actuellement
                                         enregistrés.

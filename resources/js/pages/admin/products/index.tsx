@@ -146,9 +146,9 @@ export default function ProductsIndex({
         <>
             <Head title="Produits — Administration AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] text-white">
-                <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-[#07101f] lg:block">
-                    <div className="flex h-20 items-center border-b border-white/10 px-7">
+            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
+                <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-slate-200 bg-[#07101f] lg:block">
+                    <div className="flex h-20 items-center border-b border-slate-200 px-7">
                         <Link href="/" className="text-xl font-black">
                             Astreon
                             <span className="text-emerald-400">Heberg</span>
@@ -170,8 +170,8 @@ export default function ProductsIndex({
                                         href={item.href}
                                         className={`block rounded-xl px-4 py-3 text-sm font-semibold transition ${
                                             active
-                                                ? 'bg-gradient-to-r from-blue-500/20 to-emerald-400/10 text-white'
-                                                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                                ? 'bg-gradient-to-r from-blue-500/20 to-emerald-400/10 text-slate-950'
+                                                : 'text-slate-500 hover:bg-white/5 hover:text-slate-950'
                                         }`}
                                     >
                                         {item.label}
@@ -183,7 +183,7 @@ export default function ProductsIndex({
                 </aside>
 
                 <div className="lg:pl-72">
-                    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-white/10 bg-[#050b18]/90 px-6 backdrop-blur-xl lg:px-10">
+                    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-[#f5f7fb]/90 px-6 backdrop-blur-xl lg:px-10">
                         <div>
                             <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
                                 Catalogue
@@ -195,7 +195,7 @@ export default function ProductsIndex({
 
                         <Link
                             href="/admin"
-                            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/5"
+                            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/5"
                         >
                             Tableau de bord
                         </Link>
@@ -204,13 +204,13 @@ export default function ProductsIndex({
                     <main className="px-6 py-10 lg:px-10">
                         <section className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                             <div>
-                                <p className="text-sm font-bold text-slate-400">
+                                <p className="text-sm font-bold text-slate-500">
                                     Produits commercialisés
                                 </p>
                                 <h2 className="mt-2 text-3xl font-black">
                                     Produits
                                 </h2>
-                                <p className="mt-3 text-slate-400">
+                                <p className="mt-3 text-slate-500">
                                     Gérez les services Gaming, VPS et Web proposés
                                     aux clients.
                                 </p>
@@ -228,9 +228,9 @@ export default function ProductsIndex({
                             {cards.map((card) => (
                                 <article
                                     key={card.label}
-                                    className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
+                                    className="rounded-2xl border border-slate-200 bg-white p-5"
                                 >
-                                    <p className="text-sm font-bold text-slate-400">
+                                    <p className="text-sm font-bold text-slate-500">
                                         {card.label}
                                     </p>
                                     <p className="mt-3 text-3xl font-black">
@@ -242,7 +242,7 @@ export default function ProductsIndex({
 
                         <form
                             onSubmit={submitFilters}
-                            className="mt-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:grid-cols-[1fr_220px_180px_auto]"
+                            className="mt-8 grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 md:grid-cols-[1fr_220px_180px_auto]"
                         >
                             <input
                                 type="search"
@@ -251,7 +251,7 @@ export default function ProductsIndex({
                                     setSearch(event.target.value)
                                 }
                                 placeholder="Rechercher un produit..."
-                                className="rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400"
+                                className="rounded-xl border border-slate-200 bg-slate-950/50 px-4 py-3 text-sm text-slate-950 outline-none placeholder:text-slate-600 focus:border-blue-400"
                             />
 
                             <select
@@ -259,7 +259,7 @@ export default function ProductsIndex({
                                 onChange={(event) =>
                                     setCategory(event.target.value)
                                 }
-                                className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"
+                                className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 text-sm text-slate-950 outline-none focus:border-blue-400"
                             >
                                 <option value="">Toutes les catégories</option>
 
@@ -278,7 +278,7 @@ export default function ProductsIndex({
                                 onChange={(event) =>
                                     setStatus(event.target.value)
                                 }
-                                className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"
+                                className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 text-sm text-slate-950 outline-none focus:border-blue-400"
                             >
                                 <option value="">Tous les états</option>
                                 <option value="active">Actif</option>
@@ -297,17 +297,17 @@ export default function ProductsIndex({
                                 <button
                                     type="button"
                                     onClick={resetFilters}
-                                    className="rounded-xl border border-white/10 px-4 py-3 text-sm font-bold text-slate-300 hover:bg-white/5"
+                                    className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-300 hover:bg-white/5"
                                 >
                                     Effacer
                                 </button>
                             </div>
                         </form>
 
-                        <section className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+                        <section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white">
                             <div className="overflow-x-auto">
                                 <table className="min-w-full">
-                                    <thead className="border-b border-white/10 bg-white/[0.03]">
+                                    <thead className="border-b border-slate-200 bg-white/[0.03]">
                                         <tr className="text-left text-xs font-black uppercase tracking-wider text-slate-500">
                                             <th className="px-6 py-4">
                                                 Produit
@@ -355,7 +355,7 @@ export default function ProductsIndex({
                                                     <p className="mt-1 text-xs text-slate-500">
                                                         {product.slug}
                                                     </p>
-                                                    <p className="mt-2 max-w-sm truncate text-sm text-slate-400">
+                                                    <p className="mt-2 max-w-sm truncate text-sm text-slate-500">
                                                         {product.short_description ??
                                                             'Aucune description'}
                                                     </p>
@@ -398,7 +398,7 @@ export default function ProductsIndex({
                                                     <div className="flex justify-end gap-2">
                                                         <Link
     href={`/admin/products/${product.id}/edit`}
-    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-bold transition hover:bg-white/5"
+    className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold transition hover:bg-white/5"
 >
     Modifier
 </Link>
@@ -422,7 +422,7 @@ export default function ProductsIndex({
                                 </table>
                             </div>
 
-                            <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex flex-col gap-4 border-t border-slate-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
                                 <p className="text-sm text-slate-500">
                                     {products.from ?? 0} à {products.to ?? 0} sur{' '}
                                     {products.total} produits
@@ -433,7 +433,7 @@ export default function ProductsIndex({
                                         <Link
                                             href={products.prev_page_url}
                                             preserveScroll
-                                            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold hover:bg-white/5"
+                                            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold hover:bg-white/5"
                                         >
                                             Précédent
                                         </Link>
@@ -452,7 +452,7 @@ export default function ProductsIndex({
                                         <Link
                                             href={products.next_page_url}
                                             preserveScroll
-                                            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold hover:bg-white/5"
+                                            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold hover:bg-white/5"
                                         >
                                             Suivant
                                         </Link>

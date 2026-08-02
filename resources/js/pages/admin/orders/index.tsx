@@ -120,13 +120,13 @@ export default function OrdersIndex({
         <>
             <Head title="Commandes — Administration AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-10 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-10 text-slate-950">
                 <main className="mx-auto max-w-7xl">
                     <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                         <div>
                             <Link
                                 href="/admin"
-                                className="text-sm font-bold text-slate-400 hover:text-white"
+                                className="text-sm font-bold text-slate-500 hover:text-slate-950"
                             >
                                 ← Tableau de bord
                             </Link>
@@ -139,7 +139,7 @@ export default function OrdersIndex({
                                 Commandes
                             </h1>
 
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 Consultez les commandes et gérez leur traitement.
                             </p>
                         </div>
@@ -161,9 +161,9 @@ export default function OrdersIndex({
                         {cards.map(([label, value]) => (
                             <article
                                 key={String(label)}
-                                className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
+                                className="rounded-2xl border border-slate-200 bg-white p-5"
                             >
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-slate-500">
                                     {label}
                                 </p>
 
@@ -176,7 +176,7 @@ export default function OrdersIndex({
 
                     <form
                         onSubmit={submit}
-                        className="mt-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:grid-cols-[1fr_240px_auto]"
+                        className="mt-8 grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 md:grid-cols-[1fr_240px_auto]"
                     >
                         <input
                             type="search"
@@ -185,7 +185,7 @@ export default function OrdersIndex({
                                 setSearch(event.target.value)
                             }
                             placeholder="Référence, client ou e-mail..."
-                            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
+                            className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none focus:border-blue-400"
                         />
 
                         <select
@@ -193,7 +193,7 @@ export default function OrdersIndex({
                             onChange={(event) =>
                                 setStatus(event.target.value)
                             }
-                            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                            className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                         >
                             <option value="">Tous les statuts</option>
 
@@ -217,17 +217,17 @@ export default function OrdersIndex({
                             <button
                                 type="button"
                                 onClick={reset}
-                                className="rounded-xl border border-white/10 px-4 py-3 font-bold"
+                                className="rounded-xl border border-slate-200 px-4 py-3 font-bold"
                             >
                                 Effacer
                             </button>
                         </div>
                     </form>
 
-                    <section className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+                    <section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white">
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
-                                <thead className="border-b border-white/10 bg-white/[0.03]">
+                                <thead className="border-b border-slate-200 bg-white/[0.03]">
                                     <tr className="text-left text-xs uppercase tracking-wider text-slate-500">
                                         <th className="px-6 py-4">
                                             Commande
@@ -302,7 +302,7 @@ export default function OrdersIndex({
                                                 </span>
                                             </td>
 
-                                            <td className="px-6 py-5 text-sm text-slate-400">
+                                            <td className="px-6 py-5 text-sm text-slate-500">
                                                 {dateFormatter.format(
                                                     new Date(order.created_at),
                                                 )}
@@ -311,7 +311,7 @@ export default function OrdersIndex({
                                             <td className="px-6 py-5 text-right">
                                                 <Link
                                                     href={`/admin/orders/${order.id}`}
-                                                    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-bold hover:bg-white/5"
+                                                    className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold hover:bg-white/5"
                                                 >
                                                     Consulter
                                                 </Link>
@@ -333,7 +333,7 @@ export default function OrdersIndex({
                             </table>
                         </div>
 
-                        <div className="flex flex-col gap-4 border-t border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex flex-col gap-4 border-t border-slate-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-sm text-slate-500">
                                 {orders.from ?? 0} à {orders.to ?? 0} sur{' '}
                                 {orders.total} commandes
@@ -344,7 +344,7 @@ export default function OrdersIndex({
                                     <Link
                                         href={orders.prev_page_url}
                                         preserveScroll
-                                        className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold"
+                                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold"
                                     >
                                         Précédent
                                     </Link>
@@ -359,7 +359,7 @@ export default function OrdersIndex({
                                     <Link
                                         href={orders.next_page_url}
                                         preserveScroll
-                                        className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold"
+                                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold"
                                     >
                                         Suivant
                                     </Link>

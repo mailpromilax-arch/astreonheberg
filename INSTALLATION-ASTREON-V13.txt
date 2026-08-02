@@ -1,0 +1,40 @@
+ASTREON V13 — CORRECTIF DÉTAIL DE COMMANDE
+
+Erreur corrigée :
+Uncaught ReferenceError: ClientLayout is not defined
+
+Cause :
+La page resources/js/pages/client/orders/show.tsx utilisait ClientLayout
+sans l'importer.
+
+Le pack :
+- ajoute l'import ClientLayout depuis @/layouts/client-layout ;
+- conserve la route et le contrôleur actuels ;
+- transforme les cartes blanches du détail de commande en cartes sombres ;
+- garde la DA violette Astreon.
+
+INSTALLATION
+
+1. Décompresser le ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Choisir :
+   Remplacer les fichiers dans la destination
+
+3. Exécuter :
+
+   cd C:\Astreon\astreonheberg
+   php artisan optimize:clear
+   npm run build
+
+4. Si Vite tourne déjà :
+
+   Ctrl + C
+   npm run dev
+
+5. Recharger la page avec :
+   Ctrl + F5
+
+Fichiers remplacés :
+- resources\js\pages\client\orders\show.tsx
+- resources\css\app.css

@@ -1,0 +1,24 @@
+ASTREON V14 — HERO BOUTIQUE TRANSPARENT
+
+Correction :
+- suppression du rectangle sombre derrière le titre de la boutique ;
+- le fond du Hero est forcé en transparent ;
+- aucune bordure ni ombre sur ce bloc.
+
+Installation :
+1. Décompresser dans C:\Astreon\astreonheberg
+2. Remplacer le fichier existant.
+3. Exécuter :
+
+cd C:\Astreon\astreonheberg
+php artisan optimize:clear
+npm run build
+
+Si Vite est lancé :
+Ctrl + C
+npm run dev
+
+Recharge ensuite avec Ctrl + F5.
+
+Fichier remplacé :
+resources\js\pages\store\index.tsx

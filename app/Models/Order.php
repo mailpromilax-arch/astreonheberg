@@ -58,4 +58,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function services(): HasMany
+{
+    return $this->hasMany(Service::class);
+}
 }

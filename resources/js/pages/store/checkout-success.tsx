@@ -31,10 +31,10 @@ export default function CheckoutSuccess({ order }: Props) {
         <>
             <Head title="Commande créée — AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-20 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-20 text-slate-950">
                 <main className="mx-auto max-w-3xl">
                     <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/[0.06] p-8">
-                        <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400">
+                        <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
                             Commande enregistrée
                         </p>
 
@@ -47,11 +47,11 @@ export default function CheckoutSuccess({ order }: Props) {
                             <strong>{order.reference}</strong>
                         </p>
 
-                        <p className="mt-2 text-slate-400">
+                        <p className="mt-2 text-slate-500">
                             Statut : {order.status}
                         </p>
 
-                        <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-black/10 px-5">
+                        <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-slate-200 bg-black/10 px-5">
                             {order.items.map((item) => (
                                 <div
                                     key={item.id}
@@ -72,7 +72,7 @@ export default function CheckoutSuccess({ order }: Props) {
                             ))}
                         </div>
 
-                        <div className="mt-7 flex justify-between border-t border-white/10 pt-6">
+                        <div className="mt-7 flex justify-between border-t border-slate-200 pt-6">
                             <span className="font-bold">
                                 Total
                             </span>
@@ -87,14 +87,14 @@ export default function CheckoutSuccess({ order }: Props) {
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                             <Link
                                 href="/boutique"
-                                className="rounded-xl border border-white/10 px-5 py-3 text-center font-bold"
+                                className="rounded-xl border border-slate-200 px-5 py-3 text-center font-bold"
                             >
                                 Retour à la boutique
                             </Link>
 
                             <Link
                                 href="/client"
-                                className="rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 text-center font-black"
+                                className="rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 text-center font-black"
                             >
                                 Espace client
                             </Link>

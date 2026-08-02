@@ -1,0 +1,33 @@
+ASTREON V12 — CORRECTIF CARTES DE SERVICES
+
+Ce correctif cible précisément les fiches réelles de services :
+- .astreon-service-row
+- .astreon-service-row-head
+- .astreon-service-grid
+- .astreon-service-row-foot
+- .astreon-service-icon
+
+INSTALLATION
+
+1. Décompresser dans :
+   C:\Astreon\astreonheberg
+
+2. Choisir :
+   Remplacer les fichiers dans la destination
+
+3. Exécuter :
+
+   cd C:\Astreon\astreonheberg
+   php artisan optimize:clear
+   npm run build
+
+4. Si Vite tourne déjà :
+
+   Ctrl + C
+   npm run dev
+
+5. Recharger la page avec :
+   Ctrl + F5
+
+Fichier remplacé :
+resources\css\app.css

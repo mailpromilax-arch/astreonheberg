@@ -1,38 +1,18 @@
 import { Link } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
-import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
+import AstreonLogo from '@/components/astreon/AstreonLogo';
 
-export default function AuthSimpleLayout({
-    children,
-    title,
-    description,
-}: AuthLayoutProps) {
+export default function AuthSimpleLayout({ children, title, description }: AuthLayoutProps) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
-                        <Link
-                            href={home()}
-                            className="flex flex-col items-center gap-2 font-medium"
-                        >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
-                            </div>
-                            <span className="sr-only">{title}</span>
-                        </Link>
-
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-center text-sm text-muted-foreground">
-                                {description}
-                            </p>
-                        </div>
-                    </div>
-                    {children}
+        <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
+            <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex h-[82px] max-w-5xl items-center justify-between px-5"><AstreonLogo /><div className="flex items-center gap-3"><Link href="/" className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-bold">Accueil</Link><Link href="/register" className="astreon-primary-button">Créer un compte</Link></div></div></header>
+            <main className="mx-auto flex min-h-[590px] max-w-5xl items-start justify-center px-5 py-14">
+                <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
+                    <div className="border-b border-slate-100 px-7 py-6"><h1 className="text-2xl font-black">{title}</h1><p className="mt-2 text-sm text-slate-500">{description}</p></div>
+                    <div className="p-7">{children}</div>
                 </div>
-            </div>
+            </main>
+            <footer className="bg-[#3e3e3e] py-12 text-center text-sm text-white">Copyright © 2026 Astreon. Tous droits réservés.</footer>
         </div>
     );
 }

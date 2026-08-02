@@ -80,11 +80,11 @@ export default function OrderShow({
         <>
             <Head title={`${order.reference} — Administration`} />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-10 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-10 text-slate-950">
                 <main className="mx-auto max-w-7xl">
                     <Link
                         href="/admin/orders"
-                        className="text-sm font-bold text-slate-400 hover:text-white"
+                        className="text-sm font-bold text-slate-500 hover:text-slate-950"
                     >
                         ← Retour aux commandes
                     </Link>
@@ -99,7 +99,7 @@ export default function OrderShow({
                                 {order.reference}
                             </h1>
 
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 Créée le{' '}
                                 {dateFormatter.format(
                                     new Date(order.created_at),
@@ -119,7 +119,7 @@ export default function OrderShow({
                                         event.target.value,
                                     )
                                 }
-                                className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                             >
                                 {Object.entries(statuses).map(
                                     ([value, label]) => (
@@ -142,8 +142,8 @@ export default function OrderShow({
 
                     <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
                         <section className="space-y-8">
-                            <article className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
-                                <div className="border-b border-white/10 px-6 py-5">
+                            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+                                <div className="border-b border-slate-200 px-6 py-5">
                                     <h2 className="text-xl font-black">
                                         Services commandés
                                     </h2>
@@ -219,7 +219,7 @@ export default function OrderShow({
                                 </div>
                             </article>
 
-                            <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
                                 <h2 className="text-xl font-black">
                                     Facturation
                                 </h2>
@@ -248,14 +248,14 @@ export default function OrderShow({
                         </section>
 
                         <aside className="space-y-6">
-                            <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
                                 <h2 className="text-xl font-black">
                                     Récapitulatif
                                 </h2>
 
                                 <dl className="mt-6 space-y-4">
                                     <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-400">
+                                        <dt className="text-slate-500">
                                             Abonnements
                                         </dt>
                                         <dd className="font-bold">
@@ -266,7 +266,7 @@ export default function OrderShow({
                                     </div>
 
                                     <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-400">
+                                        <dt className="text-slate-500">
                                             Installation
                                         </dt>
                                         <dd className="font-bold">
@@ -277,7 +277,7 @@ export default function OrderShow({
                                     </div>
 
                                     <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-400">
+                                        <dt className="text-slate-500">
                                             TVA
                                         </dt>
                                         <dd className="font-bold">
@@ -288,7 +288,7 @@ export default function OrderShow({
                                     </div>
                                 </dl>
 
-                                <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-6">
+                                <div className="mt-6 flex items-end justify-between border-t border-slate-200 pt-6">
                                     <span className="font-bold">
                                         Total
                                     </span>
@@ -301,7 +301,7 @@ export default function OrderShow({
                                 </div>
                             </article>
 
-                            <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
                                 <h2 className="text-xl font-black">
                                     Client
                                 </h2>
@@ -311,19 +311,19 @@ export default function OrderShow({
                                         order.billing_name}
                                 </p>
 
-                                <p className="mt-2 text-sm text-slate-400">
+                                <p className="mt-2 text-sm text-slate-500">
                                     {order.user?.email ??
                                         order.billing_email}
                                 </p>
 
                                 {order.user?.company_name && (
-                                    <p className="mt-2 text-sm text-slate-400">
+                                    <p className="mt-2 text-sm text-slate-500">
                                         {order.user.company_name}
                                     </p>
                                 )}
                             </article>
 
-                            <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
                                 <h2 className="text-xl font-black">
                                     Paiement
                                 </h2>

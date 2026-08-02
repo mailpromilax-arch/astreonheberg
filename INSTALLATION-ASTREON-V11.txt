@@ -1,0 +1,33 @@
+ASTREON V11 — CARTES SOMBRES ESPACE CLIENT
+
+Ce correctif remplace les rectangles blancs visibles dans :
+- Mes services ;
+- Mes commandes ;
+- les compteurs Total / Actifs / En cours ;
+- les états vides « Aucun service » et « Aucune commande » ;
+- l'en-tête du tableau et ses lignes.
+
+INSTALLATION
+
+1. Décompresser ce ZIP dans :
+   C:\Astreon\astreonheberg
+
+2. Choisir :
+   Remplacer les fichiers dans la destination
+
+3. Exécuter :
+
+   cd C:\Astreon\astreonheberg
+   php artisan optimize:clear
+   npm run build
+
+4. Si npm run dev est déjà lancé :
+
+   Ctrl + C
+   npm run dev
+
+5. Recharger avec :
+   Ctrl + F5
+
+Fichier remplacé :
+resources\css\app.css

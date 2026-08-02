@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 
 return [
+    App\Providers\FortifyServiceProvider::class,
     AppServiceProvider::class,
     FortifyServiceProvider::class,
 ];

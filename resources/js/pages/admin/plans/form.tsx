@@ -102,11 +102,11 @@ export default function PlanForm({
                 }
             />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-12 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-12 text-slate-950">
                 <main className="mx-auto max-w-5xl">
                     <Link
                         href="/admin/plans"
-                        className="text-sm font-bold text-slate-400 hover:text-white"
+                        className="text-sm font-bold text-slate-500 hover:text-slate-950"
                     >
                         ← Retour aux offres
                     </Link>
@@ -119,7 +119,7 @@ export default function PlanForm({
 
                     <form
                         onSubmit={submit}
-                        className="mt-8 space-y-8 rounded-3xl border border-white/10 bg-white/[0.04] p-7"
+                        className="mt-8 space-y-8 rounded-3xl border border-slate-200 bg-white p-7"
                     >
                         <section className="grid gap-5 md:grid-cols-2">
                             <div>
@@ -135,7 +135,7 @@ export default function PlanForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 >
                                     {products.map((product) => (
                                         <option
@@ -161,7 +161,7 @@ export default function PlanForm({
                                             event.target.value,
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
 
@@ -179,7 +179,7 @@ export default function PlanForm({
                                         )
                                     }
                                     placeholder="Automatique si vide"
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
 
@@ -197,7 +197,7 @@ export default function PlanForm({
                                         )
                                     }
                                     placeholder="GAME-MCJ-START"
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
                         </section>
@@ -219,7 +219,7 @@ export default function PlanForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
 
@@ -239,7 +239,7 @@ export default function PlanForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
                         </section>
@@ -277,7 +277,7 @@ export default function PlanForm({
                                                 ) as never,
                                             )
                                         }
-                                        className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                        className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                     />
                                 </div>
                             ))}
@@ -298,7 +298,7 @@ export default function PlanForm({
                                     )
                                 }
                                 placeholder={'Une fonctionnalité par ligne\nProtection anti-DDoS\nSauvegardes automatiques\nAccès SFTP'}
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                             />
                         </div>
 
@@ -323,7 +323,7 @@ export default function PlanForm({
                             ].map(([field, label]) => (
                                 <label
                                     key={field}
-                                    className="flex items-center gap-3 rounded-xl border border-white/10 p-4"
+                                    className="flex items-center gap-3 rounded-xl border border-slate-200 p-4"
                                 >
                                     <input
                                         type="checkbox"
@@ -361,7 +361,7 @@ export default function PlanForm({
                                             event.target.value,
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 >
                                     {Object.entries(statuses).map(
                                         ([value, label]) => (
@@ -391,15 +391,15 @@ export default function PlanForm({
                                             Number(event.target.value),
                                         )
                                     }
-                                    className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                                 />
                             </div>
                         </section>
 
-                        <div className="flex justify-end gap-3 border-t border-white/10 pt-7">
+                        <div className="flex justify-end gap-3 border-t border-slate-200 pt-7">
                             <Link
                                 href="/admin/plans"
-                                className="rounded-xl border border-white/10 px-6 py-3 font-bold"
+                                className="rounded-xl border border-slate-200 px-6 py-3 font-bold"
                             >
                                 Annuler
                             </Link>

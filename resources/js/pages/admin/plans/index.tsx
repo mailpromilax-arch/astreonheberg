@@ -99,13 +99,13 @@ export default function PlansIndex({
         <>
             <Head title="Offres — Administration AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-10 text-white">
+            <div className="min-h-screen bg-[#f5f7fb] px-6 py-10 text-slate-950">
                 <main className="mx-auto max-w-7xl">
                     <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                         <div>
                             <Link
                                 href="/admin"
-                                className="text-sm font-bold text-slate-400 hover:text-white"
+                                className="text-sm font-bold text-slate-500 hover:text-slate-950"
                             >
                                 ← Administration
                             </Link>
@@ -118,7 +118,7 @@ export default function PlansIndex({
                                 Offres tarifaires
                             </h1>
 
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 Gérez les prix et ressources des services.
                             </p>
                         </div>
@@ -140,9 +140,9 @@ export default function PlansIndex({
                         ].map(([label, value]) => (
                             <article
                                 key={label}
-                                className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
+                                className="rounded-2xl border border-slate-200 bg-white p-5"
                             >
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-slate-500">
                                     {label}
                                 </p>
 
@@ -155,7 +155,7 @@ export default function PlansIndex({
 
                     <form
                         onSubmit={submit}
-                        className="mt-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:grid-cols-[1fr_240px_180px_auto]"
+                        className="mt-8 grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 md:grid-cols-[1fr_240px_180px_auto]"
                     >
                         <input
                             type="search"
@@ -164,7 +164,7 @@ export default function PlansIndex({
                                 setSearch(event.target.value)
                             }
                             placeholder="Nom, slug ou SKU..."
-                            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 outline-none"
+                            className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3 outline-none"
                         />
 
                         <select
@@ -172,7 +172,7 @@ export default function PlansIndex({
                             onChange={(event) =>
                                 setProduct(event.target.value)
                             }
-                            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                            className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                         >
                             <option value="">Tous les produits</option>
 
@@ -188,7 +188,7 @@ export default function PlansIndex({
                             onChange={(event) =>
                                 setStatus(event.target.value)
                             }
-                            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3"
+                            className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
                         >
                             <option value="">Tous les états</option>
                             <option value="active">Actif</option>
@@ -204,10 +204,10 @@ export default function PlansIndex({
                         </button>
                     </form>
 
-                    <section className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+                    <section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white">
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
-                                <thead className="border-b border-white/10">
+                                <thead className="border-b border-slate-200">
                                     <tr className="text-left text-xs uppercase tracking-wider text-slate-500">
                                         <th className="px-6 py-4">Offre</th>
                                         <th className="px-6 py-4">Produit</th>
@@ -283,7 +283,7 @@ export default function PlansIndex({
                                                 <div className="flex justify-end gap-2">
                                                     <Link
                                                         href={`/admin/plans/${plan.id}/edit`}
-                                                        className="rounded-lg border border-white/10 px-3 py-2 text-xs font-bold"
+                                                        className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold"
                                                     >
                                                         Modifier
                                                     </Link>

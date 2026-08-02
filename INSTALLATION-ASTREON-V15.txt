@@ -1,0 +1,46 @@
+ASTREON V15 — PAIEMENT DIRECT STRIPE + MENU NETTOYÉ
+
+Ce pack réalise :
+- suppression du rectangle foncé derrière le titre de la boutique ;
+- suppression des bandeaux secondaires AstreonHeberg / Accueil / Panier / Connexion ;
+- ajout du bouton Panier juste à gauche de « Bonjour, ... » ;
+- formulaire de carte bancaire sécurisé directement dans le checkout ;
+- remplacement de « Créer la commande » par « Payer » ;
+- aucune commande créée avant l’acceptation du paiement ;
+- paiement accepté : création de la commande, lancement du service, panier vidé et redirection vers Mes services ;
+- paiement refusé : maintien sur la page de paiement avec un message d’erreur ;
+- protection contre une double création de commande grâce à la référence du PaymentIntent Stripe.
+
+INSTALLATION
+1. Décompressez le ZIP dans :
+   C:\Astreon\astreonheberg
+2. Choisissez « Remplacer les fichiers dans la destination ».
+3. Vérifiez dans votre fichier .env que ces variables existent :
+   STRIPE_KEY=pk_...
+   STRIPE_SECRET=sk_...
+   (ne partagez jamais STRIPE_SECRET)
+4. Exécutez :
+
+   cd C:\Astreon\astreonheberg
+   php artisan optimize:clear
+   npm run build
+
+5. Si Vite tourne déjà :
+   Ctrl + C
+   npm run dev
+
+6. Rechargez avec Ctrl + F5.
+
+AUCUNE NOUVELLE ROUTE N’EST NÉCESSAIRE :
+le correctif réutilise la route POST /checkout déjà présente.
+
+FICHIERS REMPLACÉS
+- app\Http\Controllers\CheckoutController.php
+- resources\js\pages\store\checkout.tsx
+- resources\js\pages\store\index.tsx
+- resources\js\pages\store\cart.tsx
+- resources\js\pages\store\show.tsx
+- resources\js\layouts\client-layout.tsx
+
+IMPORTANT
+Testez d’abord avec les clés Stripe de test et une carte de test avant de passer en production.

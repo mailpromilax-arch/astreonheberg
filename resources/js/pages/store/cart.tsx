@@ -65,27 +65,12 @@ export default function Cart({ items, summary }: Props) {
         <>
             <Head title="Panier — AstreonHeberg" />
 
-            <div className="min-h-screen bg-[#050b18] text-white">
-                <header className="border-b border-white/10 bg-[#07101f]">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-                        <Link href="/" className="text-xl font-black">
-                            Astreon
-                            <span className="text-emerald-400">Heberg</span>
-                        </Link>
-
-                        <Link
-                            href="/boutique"
-                            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold"
-                        >
-                            Continuer mes achats
-                        </Link>
-                    </div>
-                </header>
+            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
 
                 <main className="mx-auto max-w-7xl px-6 py-14">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400">
+                            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
                                 Commande
                             </p>
 
@@ -93,7 +78,7 @@ export default function Cart({ items, summary }: Props) {
                                 Votre panier
                             </h1>
 
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 {summary.quantity} service
                                 {summary.quantity > 1 ? 's' : ''} sélectionné
                                 {summary.quantity > 1 ? 's' : ''}
@@ -112,19 +97,19 @@ export default function Cart({ items, summary }: Props) {
                     </div>
 
                     {items.length === 0 ? (
-                        <section className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] px-6 py-20 text-center">
+                        <section className="mt-10 rounded-3xl border border-slate-200 bg-white px-6 py-20 text-center">
                             <h2 className="text-2xl font-black">
                                 Votre panier est vide
                             </h2>
 
-                            <p className="mt-3 text-slate-400">
+                            <p className="mt-3 text-slate-500">
                                 Découvrez nos serveurs Gaming, VPS et
                                 hébergements Web.
                             </p>
 
                             <Link
                                 href="/boutique"
-                                className="mt-7 inline-flex rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-6 py-3 font-black"
+                                className="mt-7 inline-flex rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-3 font-black"
                             >
                                 Découvrir les offres
                             </Link>
@@ -135,11 +120,11 @@ export default function Cart({ items, summary }: Props) {
                                 {items.map((item) => (
                                     <article
                                         key={item.plan_id}
-                                        className="rounded-3xl border border-white/10 bg-white/[0.04] p-6"
+                                        className="rounded-3xl border border-slate-200 bg-white p-6"
                                     >
                                         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                                             <div>
-                                                <p className="text-sm font-bold text-emerald-400">
+                                                <p className="text-sm font-bold text-orange-500">
                                                     {item.category.name}
                                                 </p>
 
@@ -155,7 +140,7 @@ export default function Cart({ items, summary }: Props) {
 
                                             <div className="flex flex-wrap items-center gap-4">
                                                 <label className="flex items-center gap-2">
-                                                    <span className="text-sm text-slate-400">
+                                                    <span className="text-sm text-slate-500">
                                                         Quantité
                                                     </span>
 
@@ -170,7 +155,7 @@ export default function Cart({ items, summary }: Props) {
                                                                 ),
                                                             )
                                                         }
-                                                        className="rounded-xl border border-white/10 bg-slate-950 px-3 py-2"
+                                                        className="rounded-xl border border-slate-200 bg-slate-950 px-3 py-2"
                                                     >
                                                         {Array.from(
                                                             { length: 10 },
@@ -227,14 +212,14 @@ export default function Cart({ items, summary }: Props) {
                                 ))}
                             </section>
 
-                            <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.04] p-7 lg:sticky lg:top-8">
+                            <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-7 lg:sticky lg:top-8">
                                 <h2 className="text-xl font-black">
                                     Récapitulatif
                                 </h2>
 
                                 <dl className="mt-7 space-y-4">
                                     <div className="flex justify-between gap-5">
-                                        <dt className="text-slate-400">
+                                        <dt className="text-slate-500">
                                             Abonnements mensuels
                                         </dt>
                                         <dd className="font-bold">
@@ -245,7 +230,7 @@ export default function Cart({ items, summary }: Props) {
                                     </div>
 
                                     <div className="flex justify-between gap-5">
-                                        <dt className="text-slate-400">
+                                        <dt className="text-slate-500">
                                             Frais d’installation
                                         </dt>
                                         <dd className="font-bold">
@@ -256,7 +241,7 @@ export default function Cart({ items, summary }: Props) {
                                     </div>
                                 </dl>
 
-                                <div className="mt-7 border-t border-white/10 pt-6">
+                                <div className="mt-7 border-t border-slate-200 pt-6">
                                     <div className="flex items-end justify-between gap-5">
                                         <span className="font-bold">
                                             Total aujourd’hui
@@ -277,7 +262,7 @@ export default function Cart({ items, summary }: Props) {
 
                                 <Link
                                     href="/checkout"
-                                    className="mt-7 block rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-4 text-center font-black"
+                                    className="mt-7 block rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-4 text-center font-black"
                                 >
                                     Continuer la commande
                                 </Link>

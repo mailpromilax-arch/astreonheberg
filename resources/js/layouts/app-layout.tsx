@@ -1,5 +1,5 @@
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { BreadcrumbItem } from '@/types';
+import ClientLayout from '@/layouts/client-layout';
 
 export default function AppLayout({
     breadcrumbs = [],
@@ -8,9 +8,11 @@ export default function AppLayout({
     breadcrumbs?: BreadcrumbItem[];
     children: React.ReactNode;
 }) {
+    const title = breadcrumbs.at(-1)?.title ?? 'Mon compte';
+
     return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs}>
+        <ClientLayout title={title} description="Gérez les informations et la sécurité de votre compte Astreon.">
             {children}
-        </AppLayoutTemplate>
+        </ClientLayout>
     );
 }

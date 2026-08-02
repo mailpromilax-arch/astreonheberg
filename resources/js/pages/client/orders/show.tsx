@@ -1,4 +1,5 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import ClientLayout from '@/layouts/client-layout';
 
 type OrderItem = {
     id: number;
@@ -20,6 +21,9 @@ type Order = {
     billing_postal_code: string;
     billing_city: string;
     billing_country: string;
+    payment_provider: string | null;
+    payment_reference: string | null;
+    paid_at: string | null;
     created_at: string;
     items: OrderItem[];
 };
@@ -38,11 +42,11 @@ export default function ClientOrderShow({ order }: Props) {
         <>
             <Head title={`${order.reference} — AstreonHeberg`} />
 
-            <div className="min-h-screen bg-[#050b18] px-6 py-12 text-white">
+            <ClientLayout title="Détail de la commande" description="Consultez les articles, le paiement et le suivi de votre commande."><div className="astreon-order-detail">
                 <main className="mx-auto max-w-5xl">
                     <Link
                         href="/client/orders"
-                        className="text-sm font-bold text-slate-400"
+                        className="text-sm font-bold text-slate-500"
                     >
                         ← Mes commandes
                     </Link>
@@ -56,12 +60,24 @@ export default function ClientOrderShow({ order }: Props) {
                             {order.reference}
                         </h1>
 
-                        <p className="mt-3 text-slate-400">
+                        <p className="mt-3 text-slate-500">
                             Statut : {order.status}
                         </p>
+
+{order.status === 'pending_payment' && (
+    <button
+        type="button"
+        onClick={() =>
+            router.post(`/orders/${order.id}/stripe`)
+        }
+        className="mt-6 rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-6 py-3 font-black transition hover:-translate-y-0.5"
+    >
+        Payer avec Stripe
+    </button>
+)}
                     </div>
 
-                    <section className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">
+                    <section className="astreon-order-detail-card mt-8 overflow-hidden rounded-3xl border">
                         <div className="border-b border-white/10 px-6 py-5">
                             <h2 className="text-xl font-black">
                                 Services commandés
@@ -97,7 +113,7 @@ export default function ClientOrderShow({ order }: Props) {
                     </section>
 
                     <div className="mt-8 grid gap-6 md:grid-cols-2">
-                        <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                        <article className="astreon-order-detail-card rounded-3xl border p-7">
                             <h2 className="text-xl font-black">
                                 Facturation
                             </h2>
@@ -116,7 +132,7 @@ export default function ClientOrderShow({ order }: Props) {
                             </address>
                         </article>
 
-                        <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+                        <article className="astreon-order-detail-card rounded-3xl border p-7">
                             <h2 className="text-xl font-black">
                                 Total
                             </h2>
@@ -127,7 +143,7 @@ export default function ClientOrderShow({ order }: Props) {
                         </article>
                     </div>
                 </main>
-            </div>
+            </div></ClientLayout>
         </>
     );
 }
