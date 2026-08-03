@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\ShareNotificationCenter;
+
+use App\Http\Middleware\ShareFlashData;
+
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\AuthenticateServiceApiKey;
@@ -27,7 +31,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web(append: [
-            HandleAppearance::class,
+            
+            
+            ShareNotificationCenter::class,
+ShareFlashData::class,
+HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);

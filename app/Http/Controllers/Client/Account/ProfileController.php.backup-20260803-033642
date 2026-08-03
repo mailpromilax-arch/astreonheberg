@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Client\Account;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
+
+final class ProfileController extends Controller
+{
+    public function index(Request $request): Response
+    {
+        $user = $request->user()->fresh();
+
+        return Inertia::render('client/account/profile/index', [
+            'profile' => $user->only([
+                'id',
+                'name',
+                'email',
+                'first_name',
+                'last_name',
+                'company_name',
+                'address_line_1',
+                'address_line_2',
+                'city',
+                'region',
+                'postal_code',
+                'country',
+                'phone',
+                'locale',
+                'marketing_emails',
+                'billing_emails',
+                'support_emails',
+            ]),
+        ]);
+    }
+
+    public function update(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
+            'company_name' => ['nullable', 'string', 'max:150'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'address_line_1' => ['nullable', 'string', 'max:255'],
+            'address_line_2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'region' => ['nullable', 'string', 'max:100'],
+            'postal_code' => ['nullable', 'string', 'max:30'],
+            'country' => ['nullable', 'string', 'max:100'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'locale' => ['required', Rule::in(['fr', 'en'])],
+            'marketing_emails' => ['required', 'boolean'],
+            'billing_emails' => ['required', 'boolean'],
+            'support_emails' => ['required', 'boolean'],
+        ]);
+
+        $validated['name'] = trim(
+            $validated['first_name'].' '.$validated['last_name'],
+        );
+
+        $emailChanged = $validated['email'] !== $user->email;
+
+        $user->forceFill($validated);
+
+        if ($emailChanged) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+        $user->refresh();
+
+        return back()->with(
+            'success',
+            'Vos informations ont été enregistrées.',
+        );
+    }
+}

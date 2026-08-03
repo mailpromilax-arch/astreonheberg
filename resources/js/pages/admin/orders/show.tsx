@@ -1,53 +1,30 @@
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import {
+    ArrowLeft,
+    CreditCard,
+    PackageCheck,
+    Save,
+    Server,
+    ShoppingCart,
+    User,
+} from 'lucide-react';
 import { FormEvent } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import AdminShell from './admin-shell';
 
-type OrderItem = {
-    id: number;
-    product_name: string;
-    plan_name: string;
-    sku: string;
-    quantity: number;
-    billing_cycle: string;
-    unit_price_cents: number;
-    setup_fee_cents: number;
-    line_subtotal_cents: number;
-    line_setup_cents: number;
-    line_total_cents: number;
-};
-
-type Order = {
-    id: number;
-    reference: string;
-    status: string;
-    currency: string;
-    subtotal_cents: number;
-    setup_total_cents: number;
-    tax_total_cents: number;
-    total_cents: number;
-    billing_name: string;
-    billing_email: string;
-    billing_company: string | null;
-    billing_address: string;
-    billing_postal_code: string;
-    billing_city: string;
-    billing_country: string;
-    payment_provider: string | null;
-    payment_reference: string | null;
-    paid_at: string | null;
-    created_at: string;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-        company_name: string | null;
-        status: string;
-    } | null;
-    items: OrderItem[];
-};
+type Value = string | number | boolean | null | undefined;
 
 type Props = {
-    order: Order;
-    statuses: Record<string, string>;
+    order: Record<string, Value>;
+    customer?: Record<string, Value> | null;
+    items: Array<Record<string, Value>>;
+    services: Array<Record<string, Value>>;
+    payments: Array<Record<string, Value>>;
+};
+
+type SharedProps = {
+    flash?: {
+        success?: string;
+    };
 };
 
 const euro = new Intl.NumberFormat('fr-FR', {
@@ -55,316 +32,272 @@ const euro = new Intl.NumberFormat('fr-FR', {
     currency: 'EUR',
 });
 
-const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
-    dateStyle: 'long',
-    timeStyle: 'short',
-});
+function text(value: Value): string {
+    return value === null || value === undefined || value === ''
+        ? '—'
+        : String(value);
+}
 
-export default function OrderShow({
+function cents(row: Record<string, Value>): number {
+    return Number(
+        row.total_cents
+            ?? row.amount_cents
+            ?? row.price_cents
+            ?? row.unit_price_cents
+            ?? 0,
+    );
+}
+
+export default function AdminOrderShow({
     order,
-    statuses,
+    customer,
+    items,
+    services,
+    payments,
 }: Props) {
+    const flash = usePage<SharedProps>().props.flash;
+
     const form = useForm({
-        status: order.status,
+        status: text(order.status) === '—'
+            ? 'pending'
+            : text(order.status),
     });
 
-    const submit = (event: FormEvent<HTMLFormElement>): void => {
+    function submit(event: FormEvent) {
         event.preventDefault();
-
-        form.patch(`/admin/orders/${order.id}`, {
-            preserveScroll: true,
-        });
-    };
+        form.patch(`/admin/orders/${order.id}`);
+    }
 
     return (
-        <>
-            <Head title={`${order.reference} — Administration`} />
+        <AdminShell>
+            <Head title={`Commande ${text(order.reference ?? order.id)}`} />
 
-            <div className="min-h-screen bg-[#f5f7fb] px-6 py-10 text-slate-950">
-                <main className="mx-auto max-w-7xl">
-                    <Link
-                        href="/admin/orders"
-                        className="text-sm font-bold text-slate-500 hover:text-slate-950"
-                    >
-                        ← Retour aux commandes
-                    </Link>
+            <Link
+                href="/admin/orders"
+                className="inline-flex items-center gap-2 text-sm font-black text-violet-300"
+            >
+                <ArrowLeft className="h-4 w-4" />
+                Retour aux commandes
+            </Link>
 
-                    <div className="mt-7 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-                        <div>
-                            <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400">
-                                Commande
-                            </p>
+            <section className="mt-5 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+                <div>
+                    <p className="text-xs font-black uppercase tracking-[.28em] text-violet-400">
+                        Commande #{text(order.id)}
+                    </p>
+                    <h1 className="mt-3 text-3xl font-black sm:text-4xl">
+                        {text(order.reference ?? order.number ?? order.id)}
+                    </h1>
+                    <p className="mt-2 text-sm text-slate-400">
+                        Statut actuel : {text(order.status)}
+                    </p>
+                </div>
 
-                            <h1 className="mt-3 text-4xl font-black">
-                                {order.reference}
-                            </h1>
+                <div className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 px-5 py-4">
+                    <p className="text-xs font-black uppercase tracking-wider text-slate-500">
+                        Montant total
+                    </p>
+                    <p className="mt-2 text-2xl font-black text-violet-200">
+                        {euro.format(cents(order) / 100)}
+                    </p>
+                </div>
+            </section>
 
-                            <p className="mt-3 text-slate-500">
-                                Créée le{' '}
-                                {dateFormatter.format(
-                                    new Date(order.created_at),
-                                )}
-                            </p>
+            {flash?.success && (
+                <div className="mt-5 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-200">
+                    {flash.success}
+                </div>
+            )}
+
+            <section className="mt-6 grid gap-6 xl:grid-cols-[1fr_340px]">
+                <div className="space-y-6">
+                    <article className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5">
+                        <div className="flex items-center gap-3">
+                            <ShoppingCart className="h-5 w-5 text-violet-300" />
+                            <h2 className="font-black">Articles commandés</h2>
                         </div>
 
-                        <form
-                            onSubmit={submit}
-                            className="flex flex-col gap-3 sm:flex-row"
-                        >
-                            <select
-                                value={form.data.status}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'status',
-                                        event.target.value,
-                                    )
-                                }
-                                className="rounded-xl border border-slate-200 bg-slate-950 px-4 py-3"
-                            >
-                                {Object.entries(statuses).map(
-                                    ([value, label]) => (
-                                        <option key={value} value={value}>
-                                            {label}
-                                        </option>
-                                    ),
-                                )}
-                            </select>
-
-                            <button
-                                type="submit"
-                                disabled={form.processing}
-                                className="rounded-xl bg-gradient-to-r from-blue-500 to-emerald-400 px-5 py-3 font-black disabled:opacity-50"
-                            >
-                                Mettre à jour
-                            </button>
-                        </form>
-                    </div>
-
-                    <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
-                        <section className="space-y-8">
-                            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white">
-                                <div className="border-b border-slate-200 px-6 py-5">
-                                    <h2 className="text-xl font-black">
-                                        Services commandés
-                                    </h2>
-                                </div>
-
-                                <div className="divide-y divide-white/10">
-                                    {order.items.map((item) => (
-                                        <div
-                                            key={item.id}
-                                            className="px-6 py-6"
-                                        >
-                                            <div className="flex flex-col gap-5 sm:flex-row sm:justify-between">
-                                                <div>
-                                                    <p className="text-lg font-black">
-                                                        {item.product_name} —{' '}
-                                                        {item.plan_name}
-                                                    </p>
-
-                                                    <p className="mt-2 text-xs text-slate-500">
-                                                        {item.sku} ·{' '}
-                                                        {item.billing_cycle} ·
-                                                        Quantité {item.quantity}
-                                                    </p>
-                                                </div>
-
-                                                <p className="text-xl font-black">
-                                                    {euro.format(
-                                                        item.line_total_cents /
-                                                            100,
-                                                    )}
-                                                </p>
-                                            </div>
-
-                                            <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-3">
-                                                <div>
-                                                    <dt className="text-slate-500">
-                                                        Prix unitaire
-                                                    </dt>
-                                                    <dd className="mt-1 font-bold">
-                                                        {euro.format(
-                                                            item.unit_price_cents /
-                                                                100,
-                                                        )}
-                                                    </dd>
-                                                </div>
-
-                                                <div>
-                                                    <dt className="text-slate-500">
-                                                        Mise en service
-                                                    </dt>
-                                                    <dd className="mt-1 font-bold">
-                                                        {euro.format(
-                                                            item.line_setup_cents /
-                                                                100,
-                                                        )}
-                                                    </dd>
-                                                </div>
-
-                                                <div>
-                                                    <dt className="text-slate-500">
-                                                        Sous-total
-                                                    </dt>
-                                                    <dd className="mt-1 font-bold">
-                                                        {euro.format(
-                                                            item.line_subtotal_cents /
-                                                                100,
-                                                        )}
-                                                    </dd>
-                                                </div>
-                                            </dl>
-                                        </div>
-                                    ))}
-                                </div>
-                            </article>
-
-                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
-                                <h2 className="text-xl font-black">
-                                    Facturation
-                                </h2>
-
-                                <address className="mt-6 not-italic leading-7 text-slate-300">
-                                    <strong>{order.billing_name}</strong>
-                                    <br />
-
-                                    {order.billing_company && (
-                                        <>
-                                            {order.billing_company}
-                                            <br />
-                                        </>
-                                    )}
-
-                                    {order.billing_address}
-                                    <br />
-                                    {order.billing_postal_code}{' '}
-                                    {order.billing_city}
-                                    <br />
-                                    {order.billing_country}
-                                    <br />
-                                    {order.billing_email}
-                                </address>
-                            </article>
-                        </section>
-
-                        <aside className="space-y-6">
-                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
-                                <h2 className="text-xl font-black">
-                                    Récapitulatif
-                                </h2>
-
-                                <dl className="mt-6 space-y-4">
-                                    <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-500">
-                                            Abonnements
-                                        </dt>
-                                        <dd className="font-bold">
-                                            {euro.format(
-                                                order.subtotal_cents / 100,
-                                            )}
-                                        </dd>
-                                    </div>
-
-                                    <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-500">
-                                            Installation
-                                        </dt>
-                                        <dd className="font-bold">
-                                            {euro.format(
-                                                order.setup_total_cents / 100,
-                                            )}
-                                        </dd>
-                                    </div>
-
-                                    <div className="flex justify-between gap-4">
-                                        <dt className="text-slate-500">
-                                            TVA
-                                        </dt>
-                                        <dd className="font-bold">
-                                            {euro.format(
-                                                order.tax_total_cents / 100,
-                                            )}
-                                        </dd>
-                                    </div>
-                                </dl>
-
-                                <div className="mt-6 flex items-end justify-between border-t border-slate-200 pt-6">
-                                    <span className="font-bold">
-                                        Total
-                                    </span>
-
-                                    <span className="text-3xl font-black">
-                                        {euro.format(
-                                            order.total_cents / 100,
-                                        )}
-                                    </span>
-                                </div>
-                            </article>
-
-                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
-                                <h2 className="text-xl font-black">
-                                    Client
-                                </h2>
-
-                                <p className="mt-5 font-black">
-                                    {order.user?.name ??
-                                        order.billing_name}
+                        <div className="mt-4 space-y-3">
+                            {items.length === 0 && (
+                                <p className="py-8 text-center text-sm text-slate-500">
+                                    Aucun article enregistré.
                                 </p>
+                            )}
 
-                                <p className="mt-2 text-sm text-slate-500">
-                                    {order.user?.email ??
-                                        order.billing_email}
-                                </p>
+                            {items.map((item) => (
+                                <div
+                                    key={String(item.id)}
+                                    className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-black/10 p-4"
+                                >
+                                    <div>
+                                        <p className="text-sm font-black">
+                                            {text(
+                                                item.name
+                                                    ?? item.product_name
+                                                    ?? item.description
+                                                    ?? `Article #${text(item.id)}`,
+                                            )}
+                                        </p>
+                                        <p className="mt-1 text-xs text-slate-500">
+                                            Quantité : {text(item.quantity ?? 1)}
+                                        </p>
+                                    </div>
 
-                                {order.user?.company_name && (
-                                    <p className="mt-2 text-sm text-slate-500">
-                                        {order.user.company_name}
+                                    <p className="text-sm font-black text-violet-200">
+                                        {euro.format(cents(item) / 100)}
                                     </p>
-                                )}
-                            </article>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
 
-                            <article className="rounded-3xl border border-slate-200 bg-white p-7">
-                                <h2 className="text-xl font-black">
-                                    Paiement
-                                </h2>
+                    <article className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5">
+                        <div className="flex items-center gap-3">
+                            <Server className="h-5 w-5 text-violet-300" />
+                            <h2 className="font-black">Services livrés</h2>
+                        </div>
 
-                                <dl className="mt-5 space-y-4 text-sm">
+                        <div className="mt-4 space-y-3">
+                            {services.length === 0 && (
+                                <p className="py-8 text-center text-sm text-slate-500">
+                                    Aucun service lié.
+                                </p>
+                            )}
+
+                            {services.map((service) => (
+                                <Link
+                                    key={String(service.id)}
+                                    href={`/admin/servers/${service.id}`}
+                                    className="block rounded-xl border border-white/5 bg-black/10 p-4 hover:border-violet-400/20"
+                                >
+                                    <p className="text-sm font-black">
+                                        {text(service.name ?? service.reference)}
+                                    </p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        {text(service.status)}
+                                    </p>
+                                </Link>
+                            ))}
+                        </div>
+                    </article>
+
+                    <article className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5">
+                        <div className="flex items-center gap-3">
+                            <CreditCard className="h-5 w-5 text-violet-300" />
+                            <h2 className="font-black">Paiements liés</h2>
+                        </div>
+
+                        <div className="mt-4 space-y-3">
+                            {payments.length === 0 && (
+                                <p className="py-8 text-center text-sm text-slate-500">
+                                    Aucun paiement lié.
+                                </p>
+                            )}
+
+                            {payments.map((payment) => (
+                                <div
+                                    key={String(payment.id)}
+                                    className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-black/10 p-4"
+                                >
                                     <div>
-                                        <dt className="text-slate-500">
-                                            Prestataire
-                                        </dt>
-                                        <dd className="mt-1 font-bold">
-                                            {order.payment_provider ?? '—'}
-                                        </dd>
+                                        <p className="text-sm font-black">
+                                            Paiement #{text(payment.id)}
+                                        </p>
+                                        <p className="mt-1 text-xs text-slate-500">
+                                            {text(payment.status)}
+                                        </p>
                                     </div>
 
-                                    <div>
-                                        <dt className="text-slate-500">
-                                            Référence
-                                        </dt>
-                                        <dd className="mt-1 break-all font-bold">
-                                            {order.payment_reference ?? '—'}
-                                        </dd>
-                                    </div>
+                                    <p className="text-sm font-black text-violet-200">
+                                        {euro.format(cents(payment) / 100)}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
+                </div>
 
-                                    <div>
-                                        <dt className="text-slate-500">
-                                            Date de paiement
-                                        </dt>
-                                        <dd className="mt-1 font-bold">
-                                            {order.paid_at
-                                                ? dateFormatter.format(
-                                                      new Date(order.paid_at),
-                                                  )
-                                                : 'Non payée'}
-                                        </dd>
-                                    </div>
-                                </dl>
-                            </article>
-                        </aside>
-                    </div>
-                </main>
-            </div>
-        </>
+                <aside className="space-y-6">
+                    <form
+                        onSubmit={submit}
+                        className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5"
+                    >
+                        <div className="flex items-center gap-3">
+                            <PackageCheck className="h-5 w-5 text-violet-300" />
+                            <h2 className="font-black">Gestion du statut</h2>
+                        </div>
+
+                        <select
+                            value={form.data.status}
+                            onChange={(event) =>
+                                form.setData('status', event.target.value)
+                            }
+                            className="mt-4 h-12 w-full rounded-xl border border-violet-400/15 bg-[#0c0917] px-4 text-sm text-white outline-none"
+                        >
+                            <option value="created">Créée</option>
+                            <option value="pending">En attente</option>
+                            <option value="processing">Traitement</option>
+                            <option value="paid">Payée</option>
+                            <option value="completed">Terminée</option>
+                            <option value="failed">Échouée</option>
+                            <option value="cancelled">Annulée</option>
+                            <option value="refunded">Remboursée</option>
+                        </select>
+
+                        <button
+                            type="submit"
+                            disabled={form.processing}
+                            className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 text-sm font-black disabled:opacity-50"
+                        >
+                            <Save className="h-4 w-4" />
+                            Enregistrer
+                        </button>
+                    </form>
+
+                    <article className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5">
+                        <div className="flex items-center gap-3">
+                            <User className="h-5 w-5 text-violet-300" />
+                            <h2 className="font-black">Client</h2>
+                        </div>
+
+                        <p className="mt-4 text-sm font-black">
+                            {text(customer?.name)}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-500">
+                            {text(customer?.email)}
+                        </p>
+
+                        {customer?.id && (
+                            <Link
+                                href={`/admin/users/${customer.id}`}
+                                className="mt-4 inline-flex h-10 items-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 text-sm font-black text-violet-200"
+                            >
+                                Ouvrir le client
+                            </Link>
+                        )}
+                    </article>
+
+                    <article className="rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5">
+                        <h2 className="font-black">Détails techniques</h2>
+
+                        <div className="mt-4 max-h-[580px] space-y-2 overflow-y-auto">
+                            {Object.entries(order).map(([key, value]) => (
+                                <div
+                                    key={key}
+                                    className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-black/10 p-3"
+                                >
+                                    <span className="text-xs font-black uppercase text-slate-600">
+                                        {key}
+                                    </span>
+                                    <span className="max-w-[60%] break-all text-right text-xs text-slate-300">
+                                        {text(value)}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
+                </aside>
+            </section>
+        </AdminShell>
     );
 }

@@ -1,12 +1,23 @@
-CORRECTIF ASTREON INFRASTRUCTURE ULTIMATE
-
-Remplace la carte Astreon Shield de la page d’accueil par les caractéristiques réelles de l’offre Ptero ULTIMATE à 39,95 €/mois.
+ASTREON — À PROPOS + ÉTAT DES SERVICES V32
 
 Installation :
 1. Décompresser dans C:\Astreon\astreonheberg
-2. Remplacer le fichier existant
-3. Exécuter :
-   php artisan optimize:clear
-   npm run build
-4. Si npm run dev tourne déjà : Ctrl+C puis npm run dev
-5. Actualiser avec Ctrl+F5
+2. Exécuter :
+
+cd C:\Astreon\astreonheberg
+php install-astreon-about-status-v32.php
+composer dump-autoload
+npm run build
+php artisan serve
+
+Dans un autre PowerShell :
+cd C:\Astreon\astreonheberg
+npm run dev
+
+Puis Ctrl + F5.
+
+Pages :
+http://127.0.0.1:8000/a-propos
+http://127.0.0.1:8000/status
+
+Le menu « Autres » pointe déjà vers /a-propos et /status.

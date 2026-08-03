@@ -29,7 +29,7 @@ export default function Welcome() {
                             <p className="mt-7 max-w-xl text-lg leading-8 text-slate-300">Astreon propose des solutions d’hébergement performantes pour vos serveurs de jeux, VPS et projets web, avec une infrastructure française et une gestion entièrement automatisée.</p>
                             <div className="mt-9 flex flex-wrap gap-4">
                                 <Link href="/boutique" className="astreon-primary-button px-7 py-4"><Server className="h-5 w-5" />Découvrir nos offres</Link>
-                                <a href="#section-5" className="inline-flex items-center gap-2 rounded-2xl border border-indigo-400/30 bg-indigo-500/10 px-7 py-4 font-black text-indigo-100 transition hover:bg-indigo-500/20"><Gamepad2 className="h-5 w-5" />Notre Discord</a>
+                                <a href="https://discord.gg/3fZ6xye97x" className="inline-flex items-center gap-2 rounded-2xl border border-indigo-400/30 bg-indigo-500/10 px-7 py-4 font-black text-indigo-100 transition hover:bg-indigo-500/20"><Gamepad2 className="h-5 w-5" />Notre Discord</a>
                             </div>
                             <div className="mt-6 flex flex-wrap gap-6 text-sm text-slate-400"><span>⚡ Livraison automatisée</span><span>✓ Anti-DDoS inclus</span><span>📍 Hébergé en France</span></div>
                         </div>

@@ -7,4 +7,8 @@ return [
     App\Providers\FortifyServiceProvider::class,
     AppServiceProvider::class,
     FortifyServiceProvider::class,
+    \App\Providers\TwoFactorChallengeServiceProvider::class,
+    \App\Providers\NotificationCenterServiceProvider::class,
+    \App\Providers\AstreonMailServiceProvider::class,
+    \App\Providers\TransactionalMailServiceProvider::class,
 ];

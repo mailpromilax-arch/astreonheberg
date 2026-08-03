@@ -1,0 +1,281 @@
+import { Head, router, useForm } from '@inertiajs/react';
+import {
+    CheckCircle2,
+    Copy,
+    KeyRound,
+    RefreshCw,
+    ShieldCheck,
+    ShieldOff,
+} from 'lucide-react';
+import { FormEvent, useState } from 'react';
+import AccountLayout from '../components/account-layout';
+import { Card, Field, inputClass } from '../components/ui';
+
+type Props = {
+    security: {
+        two_factor_enabled: boolean;
+        two_factor_confirmed: boolean;
+        email_verified: boolean;
+        qr_code_svg?: string | null;
+        recovery_codes: string[];
+    };
+    status?: string | null;
+};
+
+export default function SecurityIndex({
+    security,
+    status,
+}: Props) {
+    const [copied, setCopied] = useState(false);
+    const confirmForm = useForm({ code: '' });
+
+    function enable() {
+        router.post(
+            '/user/two-factor-authentication',
+            {},
+            { preserveScroll: true },
+        );
+    }
+
+    function confirm(event: FormEvent) {
+        event.preventDefault();
+
+        confirmForm.post('/user/confirmed-two-factor-authentication', {
+            preserveScroll: true,
+            onSuccess: () => confirmForm.reset(),
+        });
+    }
+
+    function disable() {
+        if (!window.confirm('Désactiver la double authentification ?')) {
+            return;
+        }
+
+        router.delete('/user/two-factor-authentication', {
+            preserveScroll: true,
+        });
+    }
+
+    function regenerateCodes() {
+        router.post(
+            '/user/two-factor-recovery-codes',
+            {},
+            { preserveScroll: true },
+        );
+    }
+
+    async function copyCodes() {
+        await navigator.clipboard.writeText(
+            security.recovery_codes.join('\n'),
+        );
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1500);
+    }
+
+    return (
+        <AccountLayout section="security">
+            <Head title="Paramètres de sécurité" />
+
+            {status && (
+                <div className="mb-5 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-200">
+                    {status === 'two-factor-authentication-enabled'
+                        ? 'Scannez maintenant le QR code, puis confirmez avec le code à 6 chiffres.'
+                        : status === 'two-factor-authentication-confirmed'
+                          ? 'La double authentification est activée.'
+                          : status}
+                </div>
+            )}
+
+            <div className="space-y-6">
+                <Card
+                    title="Authentification à deux facteurs"
+                    description="À chaque connexion, un code généré par Google Authenticator, Microsoft Authenticator, Authy ou une autre application TOTP sera demandé."
+                >
+                    {!security.two_factor_enabled && (
+                        <div className="flex flex-col gap-4 rounded-xl border border-amber-400/20 bg-amber-500/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-center gap-3">
+                                <ShieldOff className="h-6 w-6 text-amber-300" />
+                                <div>
+                                    <p className="font-black">
+                                        Double authentification désactivée
+                                    </p>
+                                    <p className="mt-1 text-sm text-amber-100/70">
+                                        Activez-la pour sécuriser les connexions.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={enable}
+                                className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 text-sm font-black"
+                            >
+                                <ShieldCheck className="h-4 w-4" />
+                                Activer la 2FA
+                            </button>
+                        </div>
+                    )}
+
+                    {security.two_factor_enabled && (
+                        <div className="space-y-6">
+                            <div className="rounded-xl border border-violet-400/15 bg-black/10 p-5">
+                                <div className="flex items-center gap-3">
+                                    <ShieldCheck className="h-6 w-6 text-emerald-300" />
+                                    <div>
+                                        <p className="font-black">
+                                            {security.two_factor_confirmed
+                                                ? 'Double authentification active'
+                                                : 'Configuration à confirmer'}
+                                        </p>
+                                        <p className="mt-1 text-sm text-slate-500">
+                                            Scannez le QR code avec votre application d’authentification.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {security.qr_code_svg && (
+                                    <div className="mt-5 inline-block rounded-xl bg-white p-5">
+                                        <div
+                                            className="[&>svg]:h-52 [&>svg]:w-52"
+                                            dangerouslySetInnerHTML={{
+                                                __html: security.qr_code_svg,
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            {!security.two_factor_confirmed && (
+                                <form
+                                    onSubmit={confirm}
+                                    className="max-w-xl rounded-xl border border-white/5 bg-black/10 p-5"
+                                >
+                                    <Field label="Code à 6 chiffres">
+                                        <input
+                                            inputMode="numeric"
+                                            autoComplete="one-time-code"
+                                            maxLength={6}
+                                            className={inputClass}
+                                            value={confirmForm.data.code}
+                                            onChange={(event) =>
+                                                confirmForm.setData(
+                                                    'code',
+                                                    event.target.value.replace(
+                                                        /\D/g,
+                                                        '',
+                                                    ),
+                                                )
+                                            }
+                                            placeholder="123456"
+                                        />
+                                    </Field>
+
+                                    {confirmForm.errors.code && (
+                                        <p className="mt-2 text-sm text-rose-300">
+                                            {confirmForm.errors.code}
+                                        </p>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        disabled={confirmForm.processing}
+                                        className="mt-4 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 text-sm font-black disabled:opacity-50"
+                                    >
+                                        <KeyRound className="h-4 w-4" />
+                                        Confirmer et activer
+                                    </button>
+                                </form>
+                            )}
+
+                            {security.two_factor_confirmed
+                                && security.recovery_codes.length > 0 && (
+                                <div className="rounded-xl border border-white/5 bg-black/10 p-5">
+                                    <h3 className="font-black">
+                                        Codes de récupération
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-500">
+                                        Conservez-les hors de votre ordinateur.
+                                    </p>
+
+                                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                        {security.recovery_codes.map((code) => (
+                                            <code
+                                                key={code}
+                                                className="rounded-lg border border-violet-400/10 bg-[#080611] px-3 py-2 text-sm text-violet-200"
+                                            >
+                                                {code}
+                                            </code>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-4 flex flex-wrap gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={copyCodes}
+                                            className="inline-flex h-10 items-center gap-2 rounded-xl border border-violet-400/20 px-4 text-sm font-black text-violet-200"
+                                        >
+                                            <Copy className="h-4 w-4" />
+                                            {copied
+                                                ? 'Codes copiés'
+                                                : 'Copier les codes'}
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={regenerateCodes}
+                                            className="inline-flex h-10 items-center gap-2 rounded-xl border border-violet-400/20 px-4 text-sm font-black text-violet-200"
+                                        >
+                                            <RefreshCw className="h-4 w-4" />
+                                            Régénérer
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            <button
+                                type="button"
+                                onClick={disable}
+                                className="inline-flex h-11 items-center gap-2 rounded-xl bg-rose-500/10 px-5 text-sm font-black text-rose-300"
+                            >
+                                <ShieldOff className="h-4 w-4" />
+                                Désactiver la double authentification
+                            </button>
+                        </div>
+                    )}
+                </Card>
+
+                <Card title="État du compte">
+                    <div className="grid gap-3 md:grid-cols-2">
+                        <Status
+                            label="Adresse courriel vérifiée"
+                            ok={security.email_verified}
+                        />
+                        <Status
+                            label="Protection 2FA"
+                            ok={security.two_factor_confirmed}
+                        />
+                    </div>
+                </Card>
+            </div>
+        </AccountLayout>
+    );
+}
+
+function Status({
+    label,
+    ok,
+}: {
+    label: string;
+    ok: boolean;
+}) {
+    return (
+        <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-black/10 p-4">
+            <CheckCircle2
+                className={`h-5 w-5 ${
+                    ok ? 'text-emerald-300' : 'text-amber-300'
+                }`}
+            />
+            <span className="text-sm font-black">{label}</span>
+        </div>
+    );
+}

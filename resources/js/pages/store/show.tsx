@@ -1,4 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { CircleCheckBig } from 'lucide-react';
 
 type Plan = {
     id: number;
@@ -36,8 +38,16 @@ type Product = {
     plans: Plan[];
 };
 
+type ArkEdition = {
+    value: 'survival-evolved' | 'survival-ascended';
+    label: string;
+    description: string;
+};
+
 type Props = {
     product: Product;
+    catalogSlug?: string;
+    arkEditions?: ArkEdition[];
 };
 
 const euro = new Intl.NumberFormat('fr-FR', {
@@ -78,7 +88,15 @@ function displayValue(value: unknown): string {
     return String(value);
 }
 
-export default function StoreShow({ product }: Props) {
+export default function StoreShow({
+    product,
+    catalogSlug,
+    arkEditions = [],
+}: Props) {
+    const isArk = catalogSlug === 'ark';
+    const [arkEdition, setArkEdition] = useState<
+        ArkEdition['value'] | ''
+    >('');
     return (
         <>
             <Head title={`${product.name} — AstreonHeberg`} />
@@ -100,6 +118,114 @@ export default function StoreShow({ product }: Props) {
                                 product.short_description}
                         </p>
                     </section>
+
+                    {isArk && (
+                        <section className="mt-10 rounded-3xl border border-violet-400/25 bg-[#120d21] p-7">
+                            <p className="text-xs font-black uppercase tracking-[0.22em] text-violet-300">
+                                Étape obligatoire
+                            </p>
+
+                            <h2 className="mt-3 text-2xl font-black">
+                                Choisissez votre version de ARK
+                            </h2>
+
+                            <p className="mt-2 text-sm text-slate-400">
+                                Ce choix détermine automatiquement le bon Egg Pterodactyl lors de la création du serveur.
+                            </p>
+
+                            <div className="mt-6 grid gap-4 md:grid-cols-2">
+                                {arkEditions.map((edition) => {
+                                    const selected =
+                                        arkEdition === edition.value;
+
+                                    return (
+                                        <button
+                                            key={edition.value}
+                                            type="button"
+                                            aria-pressed={selected}
+                                            onClick={() =>
+                                                setArkEdition(edition.value)
+                                            }
+                                            className={`group relative overflow-hidden rounded-2xl border p-6 text-left transition-all duration-200 ${
+                                                selected
+                                                    ? 'border-violet-300 bg-violet-500/20 shadow-[0_0_38px_rgba(168,85,247,0.28)] ring-2 ring-violet-400/50'
+                                                    : 'border-violet-400/20 bg-[#0b0813] hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500/5'
+                                            }`}
+                                        >
+                                            {selected && (
+                                                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet-500 via-fuchsia-400 to-violet-500" />
+                                            )}
+
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div>
+                                                    <span
+                                                        className={`block text-lg font-black transition ${
+                                                            selected
+                                                                ? 'text-white'
+                                                                : 'text-slate-200'
+                                                        }`}
+                                                    >
+                                                        {edition.label}
+                                                    </span>
+
+                                                    <span
+                                                        className={`mt-2 block text-sm leading-6 ${
+                                                            selected
+                                                                ? 'text-violet-100'
+                                                                : 'text-slate-400'
+                                                        }`}
+                                                    >
+                                                        {edition.description}
+                                                    </span>
+                                                </div>
+
+                                                <div
+                                                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border transition ${
+                                                        selected
+                                                            ? 'border-violet-200 bg-violet-500 text-white shadow-lg shadow-violet-500/35'
+                                                            : 'border-violet-400/25 bg-[#120d21] text-slate-600 group-hover:border-violet-400/60 group-hover:text-violet-300'
+                                                    }`}
+                                                >
+                                                    {selected ? (
+                                                        <CircleCheckBig className="h-6 w-6" />
+                                                    ) : (
+                                                        <span className="h-3.5 w-3.5 rounded-full border-2 border-current" />
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {selected && (
+                                                <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-violet-300/30 bg-violet-500/20 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-violet-100">
+                                                    <CircleCheckBig className="h-4 w-4" />
+                                                    Version sélectionnée
+                                                </div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {arkEdition ? (
+                                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-100">
+                                    <CircleCheckBig className="h-5 w-5 shrink-0 text-emerald-400" />
+
+                                    <p>
+                                        Version sélectionnée :{' '}
+                                        <strong className="text-white">
+                                            {arkEdition ===
+                                            'survival-ascended'
+                                                ? 'ARK: Survival Ascended'
+                                                : 'ARK: Survival Evolved'}
+                                        </strong>
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="mt-4 text-sm font-bold text-amber-300">
+                                    Sélectionnez une version avant d’ajouter une offre au panier.
+                                </p>
+                            )}
+                        </section>
+                    )}
 
                     <section className="mt-14 grid gap-7 md:grid-cols-2 xl:grid-cols-4">
                         {product.plans.map((plan) => {
@@ -283,12 +409,16 @@ export default function StoreShow({ product }: Props) {
 
                                     <button
                                         type="button"
-                                        disabled={unavailable}
+                                        disabled={unavailable || (isArk && !arkEdition)}
                                         onClick={() => {
                                             router.post(
                                                 `/panier/${plan.id}`,
                                                 {
                                                     quantity: 1,
+                                                    ark_edition:
+                                                        isArk
+                                                            ? arkEdition
+                                                            : null,
                                                 },
                                             );
                                         }}
@@ -296,7 +426,9 @@ export default function StoreShow({ product }: Props) {
                                     >
                                         {unavailable
                                             ? 'Rupture de stock'
-                                            : 'Ajouter au panier'}
+                                            : isArk && !arkEdition
+                                              ? 'Choisissez une version'
+                                              : 'Ajouter au panier'}
                                     </button>
                                 </article>
                             );

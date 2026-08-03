@@ -1,33 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Ticket extends Model
+final class Ticket extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
+        'assigned_to',
         'subject',
-        'status', // open, pending, closed, suspended
-        'assigned_to', // ID de l'admin/support qui a pris le ticket
+        'priority',
+        'status',
+        'waiting_for',
+        'last_reply_by',
+        'last_replied_at',
+        'closed_at',
     ];
 
-    public function user()
+    protected $casts = [
+        'last_replied_at' => 'datetime',
+        'closed_at' => 'datetime',
+    ];
+
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function assignedAdmin()
+    public function assignee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
-    public function replies()
+    public function replies(): HasMany
     {
         return $this->hasMany(TicketReply::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TicketAttachment::class);
     }
 }

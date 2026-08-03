@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\ProductPlan;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
@@ -50,11 +51,11 @@ class OrderItem extends Model
     return $this->hasOne(Service::class);
 }
 
-    public function plan(): BelongsTo
-    {
-        return $this->belongsTo(
-            ProductPlan::class,
-            'product_plan_id',
-        );
-    }
+    public function productPlan(): BelongsTo
+{
+    return $this->belongsTo(
+        ProductPlan::class,
+        'product_plan_id',
+    );
+}
 }

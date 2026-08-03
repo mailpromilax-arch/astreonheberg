@@ -45,4 +45,10 @@ return [
     'docker_image' => env('PTERODACTYL_DOCKER_IMAGE'),
 ],
 
+
+    'paypal' => [
+        'mode' => env('PAYPAL_MODE', 'sandbox'),
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+    ],
 ];

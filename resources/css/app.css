@@ -3594,3 +3594,11 @@ nav[data-mobile],
         line-height: 1.15 !important;
     }
 }
+
+
+/* ASTREON_ADMIN_SETTINGS_INPUT */
+@layer components {
+    .input {
+        @apply h-12 w-full rounded-xl border border-violet-400/15 bg-black/20 px-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400/40;
+    }
+}

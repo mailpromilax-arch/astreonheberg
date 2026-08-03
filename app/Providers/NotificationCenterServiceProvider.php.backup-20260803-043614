@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use App\Observers\AdminLogObserver;
+use App\Observers\TicketObserver;
+use App\Observers\TicketReplyObserver;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\ServiceProvider;
+
+final class NotificationCenterServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->observeIfAvailable(
+            \App\Models\Ticket::class,
+            TicketObserver::class,
+        );
+
+        $this->observeIfAvailable(
+            \App\Models\TicketReply::class,
+            TicketReplyObserver::class,
+        );
+
+        $this->observeIfAvailable(
+            \App\Models\AdminLog::class,
+            AdminLogObserver::class,
+        );
+    }
+
+    private function observeIfAvailable(
+        string $modelClass,
+        string $observerClass,
+    ): void {
+        if (
+            class_exists($modelClass)
+            && is_subclass_of($modelClass, Model::class)
+        ) {
+            $modelClass::observe($observerClass);
+        }
+    }
+}

@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Client\Account;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+use Throwable;
+
+final class SecurityController extends Controller
+{
+    public function index(Request $request): Response
+    {
+        $user = $request->user()->fresh();
+
+        $enabled = ! empty($user->two_factor_secret);
+        $confirmed = ! empty($user->two_factor_confirmed_at);
+
+        $qrCodeSvg = null;
+        $secretKey = null;
+        $recoveryCodes = [];
+
+        if ($enabled) {
+            try {
+                $qrCodeSvg = $user->twoFactorQrCodeSvg();
+                $secretKey = $user->twoFactorSecretKey();
+                $recoveryCodes = $user->recoveryCodes();
+            } catch (Throwable $exception) {
+                report($exception);
+            }
+        }
+
+        return Inertia::render('client/account/security/index', [
+            'security' => [
+                'two_factor_enabled' => $enabled,
+                'two_factor_confirmed' => $confirmed,
+                'email_verified' => $user->hasVerifiedEmail(),
+                'qr_code_svg' => $qrCodeSvg,
+                'secret_key' => $secretKey,
+                'recovery_codes' => $recoveryCodes,
+            ],
+            'status' => session('status'),
+        ]);
+    }
+}

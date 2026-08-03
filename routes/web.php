@@ -1,7 +1,37 @@
 <?php
 
+
+use App\Http\Controllers\PublicStatusController;
+use App\Http\Controllers\Client\Account\ContactController;
+use App\Http\Controllers\Client\Account\EmailHistoryController;
+use App\Http\Controllers\Client\Account\MemberController;
+use App\Http\Controllers\Client\Account\PasswordController;
+use App\Http\Controllers\Client\Account\PaymentMethodController;
+use App\Http\Controllers\Client\Account\ProfileController;
+use App\Http\Controllers\Client\Account\SecurityController;
+
+use App\Http\Controllers\Admin\SettingsController;
+
+use App\Http\Controllers\Admin\LogController;
+
+use App\Http\Controllers\Admin\InfrastructureSyncController;
+
+use App\Http\Controllers\Admin\InfrastructureController;
+
+use App\Http\Controllers\Admin\PaymentController;
+
+use App\Http\Controllers\Admin\OrderController;
+
+use App\Http\Controllers\Client\ClientTicketController;
+
+use App\Http\Controllers\Admin\TicketController;
+
+use App\Http\Controllers\Admin\ServerController;
+
+use App\Http\Controllers\Admin\UserController;
+
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+
 use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanController;
@@ -27,6 +57,8 @@ use App\Http\Controllers\Client\ClientServerUserController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\StripeCheckoutController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserWalletController;
+use App\Http\Controllers\Client\WalletController;
 
 
 
@@ -277,6 +309,21 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::post('/checkout', [CheckoutController::class, 'store'])
         ->name('checkout.store');
 
+    Route::post('/checkout/paypal', [
+        CheckoutController::class,
+        'paypalCreate',
+    ])->name('checkout.paypal.create');
+
+    Route::get('/checkout/paypal/return', [
+        CheckoutController::class,
+        'paypalReturn',
+    ])->name('checkout.paypal.return');
+
+    Route::get('/checkout/paypal/cancel', [
+        CheckoutController::class,
+        'paypalCancel',
+    ])->name('checkout.paypal.cancel');
+
     Route::get('/checkout/success/{order}', [
         CheckoutController::class,
         'success',
@@ -291,6 +338,17 @@ Route::get('/offres', [CatalogController::class, 'index'])
 Route::get('/boutique', [StoreController::class, 'index'])
     ->name('store.index');
 
+
+Route::get('/boutique/{catalogSlug}', [StoreController::class, 'landing'])
+    ->whereIn('catalogSlug', [
+        'vps-cloud',
+        'fivem',
+        'minecraft-java',
+        'minecraft-bedrock',
+        'ark',
+        'palworld',
+    ])
+    ->name('store.landing');
 Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
     ->name('store.show');
 
@@ -318,7 +376,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 Route::middleware([
     'auth',
     'verified',
-    'can:access admin dashboard',
+    'admin',
 ])
     ->prefix('admin')
     ->name('admin.')
@@ -327,13 +385,13 @@ Route::middleware([
             ->name('dashboard');
 
         Route::middleware('can:manage orders')->group(function (): void {
-            Route::get('/orders', [AdminOrderController::class, 'index'])
+            Route::get('/orders', [OrderController::class, 'index'])
                 ->name('orders.index');
 
-            Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
+            Route::get('/orders/{order}', [OrderController::class, 'show'])
                 ->name('orders.show');
 
-            Route::patch('/orders/{order}', [AdminOrderController::class, 'update'])
+            Route::patch('/orders/{order}', [OrderController::class, 'update'])
                 ->name('orders.update');
         });
 
@@ -362,3 +420,348 @@ Route::middleware([
     });
 
 require __DIR__.'/settings.php';
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/users')
+    ->name('admin.users.')
+    ->group(function (): void {
+        Route::get('/', [UserController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{user}', [UserController::class, 'show'])
+            ->whereNumber('user')
+            ->name('show');
+
+        Route::put('/{user}', [UserController::class, 'update'])
+            ->whereNumber('user')
+            ->name('update');
+
+        Route::post('/{user}/temporary-password', [UserController::class, 'temporaryPassword'])
+            ->whereNumber('user')
+            ->name('temporary-password');
+
+        Route::post('/{user}/disable-2fa', [UserController::class, 'disableTwoFactor'])
+            ->whereNumber('user')
+            ->name('disable-2fa');
+
+        Route::post('/{user}/suspend', [UserController::class, 'suspend'])
+            ->whereNumber('user')
+            ->name('suspend');
+
+        Route::post('/{user}/activate', [UserController::class, 'activate'])
+            ->whereNumber('user')
+            ->name('activate');
+    });
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/servers')
+    ->name('admin.servers.')
+    ->group(function (): void {
+        Route::get('/', [ServerController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{service}', [ServerController::class, 'show'])
+            ->whereNumber('service')
+            ->name('show');
+
+        Route::put('/{service}', [ServerController::class, 'update'])
+            ->whereNumber('service')
+            ->name('update');
+
+        Route::post('/{service}/suspend', [ServerController::class, 'suspend'])
+            ->whereNumber('service')
+            ->name('suspend');
+
+        Route::post('/{service}/activate', [ServerController::class, 'activate'])
+            ->whereNumber('service')
+            ->name('activate');
+    });
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/tickets')
+    ->name('admin.tickets.')
+    ->group(function (): void {
+        Route::get('/', [TicketController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{ticket}', [TicketController::class, 'show'])
+            ->whereNumber('ticket')
+            ->name('show');
+
+        Route::post('/{ticket}/assign', [TicketController::class, 'assign'])
+            ->whereNumber('ticket')
+            ->name('assign');
+
+        Route::post('/{ticket}/reply', [TicketController::class, 'reply'])
+            ->whereNumber('ticket')
+            ->name('reply');
+
+        Route::post('/{ticket}/close', [TicketController::class, 'close'])
+            ->whereNumber('ticket')
+            ->name('close');
+
+        Route::post('/{ticket}/reopen', [TicketController::class, 'reopen'])
+            ->whereNumber('ticket')
+            ->name('reopen');
+    });
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->get('/admin/ticket-attachments/{attachment}', [TicketController::class, 'attachment'])
+    ->whereNumber('attachment')
+    ->name('admin.ticket-attachments.download');
+
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('client/support')
+    ->name('client.support.')
+    ->group(function (): void {
+        Route::get('/', [ClientTicketController::class, 'index'])
+            ->name('index');
+
+        Route::get('/create', [ClientTicketController::class, 'create'])
+            ->name('create');
+
+        Route::post('/', [ClientTicketController::class, 'store'])
+            ->name('store');
+
+        Route::get('/attachments/{attachment}', [ClientTicketController::class, 'attachment'])
+            ->whereNumber('attachment')
+            ->name('attachments.download');
+
+        Route::get('/{ticket}', [ClientTicketController::class, 'show'])
+            ->whereNumber('ticket')
+            ->name('show');
+
+        Route::post('/{ticket}/reply', [ClientTicketController::class, 'reply'])
+            ->whereNumber('ticket')
+            ->name('reply');
+    });
+
+
+Route::middleware(['auth', 'verified'])
+    ->get('/assistance', fn () => redirect()->route('client.support.index'))
+    ->name('support.redirect');
+
+Route::middleware(['auth', 'verified'])
+    ->get('/support', fn () => redirect()->route('client.support.index'));
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/orders')
+    ->name('admin.orders.')
+    ->group(function (): void {
+        Route::get('/', [OrderController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{order}', [OrderController::class, 'show'])
+            ->whereNumber('order')
+            ->name('show');
+
+        Route::patch('/{order}', [OrderController::class, 'update'])
+            ->whereNumber('order')
+            ->name('update');
+    });
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/payments')
+    ->name('admin.payments.')
+    ->group(function (): void {
+        Route::get('/', [PaymentController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{payment}', [PaymentController::class, 'show'])
+            ->where('payment', '(payment|order)-[0-9]+|[0-9]+')
+            ->name('show');
+    });
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->get('/admin/infrastructure', [InfrastructureController::class, 'index'])
+    ->name('admin.infrastructure.index');
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->post('/admin/infrastructure/sync', InfrastructureSyncController::class)
+    ->name('admin.infrastructure.sync');
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->get('/admin/logs', [LogController::class, 'index'])
+    ->name('admin.logs.index');
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/settings')
+    ->name('admin.settings.')
+    ->group(function (): void {
+        Route::get('/', [SettingsController::class, 'index'])
+            ->name('index');
+
+        Route::patch('/', [SettingsController::class, 'update'])
+            ->name('update');
+    });
+
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('client/account')
+    ->name('client.account.')
+    ->group(function (): void {
+        Route::get('/', [ProfileController::class, 'index'])
+            ->name('profile');
+        Route::patch('/', [ProfileController::class, 'update'])
+            ->name('profile.update');
+
+        Route::get('/members', [MemberController::class, 'index'])
+            ->name('members.index');
+        Route::post('/members', [MemberController::class, 'store'])
+            ->name('members.store');
+        Route::delete('/members/{member}', [MemberController::class, 'destroy'])
+            ->whereNumber('member')
+            ->name('members.destroy');
+
+        Route::get('/payment-methods', [PaymentMethodController::class, 'index'])
+            ->name('payment-methods.index');
+
+        Route::post(
+            '/payment-methods/setup',
+            [PaymentMethodController::class, 'setup'],
+        )->name('payment-methods.setup');
+
+        Route::patch(
+            '/payment-methods/{paymentMethod}/default',
+            [PaymentMethodController::class, 'makeDefault'],
+        )->name('payment-methods.default');
+
+        Route::delete(
+            '/payment-methods/{paymentMethod}',
+            [PaymentMethodController::class, 'destroy'],
+        )->name('payment-methods.destroy');
+
+        Route::get('/contacts', [ContactController::class, 'index'])
+            ->name('contacts.index');
+        Route::post('/contacts', [ContactController::class, 'store'])
+            ->name('contacts.store');
+        Route::patch('/contacts/{contact}', [ContactController::class, 'update'])
+            ->whereNumber('contact')
+            ->name('contacts.update');
+        Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])
+            ->whereNumber('contact')
+            ->name('contacts.destroy');
+
+        Route::get('/emails', [EmailHistoryController::class, 'index'])
+            ->name('emails.index');
+        Route::get('/emails/{email}', [EmailHistoryController::class, 'show'])
+            ->whereNumber('email')
+            ->name('emails.show');
+
+        Route::get('/password', [PasswordController::class, 'edit'])
+            ->name('password.edit');
+        Route::put('/password', [PasswordController::class, 'update'])
+            ->name('password.update');
+
+        Route::get('/security', [SecurityController::class, 'index'])
+            ->name('security.index');
+    });
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->delete(
+        '/admin/users/{user}/payment-methods/{paymentMethod}',
+        [\App\Http\Controllers\Admin\UserController::class, 'deletePaymentMethod'],
+    )
+    ->whereNumber('user')
+    ->name('admin.users.payment-methods.destroy');
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->post(
+        '/admin/users/{user}/disable-2fa',
+        [\App\Http\Controllers\Admin\UserController::class, 'disableTwoFactor'],
+    )
+    ->whereNumber('user')
+    ->name('admin.users.disable-two-factor');
+
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->delete(
+        '/admin/users/{user}/stripe-payment-methods/{paymentMethod}',
+        [\App\Http\Controllers\Admin\UserPaymentMethodController::class, 'destroy'],
+    )
+    ->whereNumber('user')
+    ->name('admin.users.payment-methods.secure-destroy');
+
+
+Route::middleware(['auth'])->group(function (): void {
+    Route::get(
+        '/notification-center/summary',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'summary'],
+    )->name('notification-center.summary');
+
+    Route::patch(
+        '/notification-center/{notification}/read',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'read'],
+    )->name('notification-center.read');
+
+    Route::post(
+        '/notification-center/read-all',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'readAll'],
+    )->name('notification-center.read-all');
+
+    Route::delete(
+        '/notification-center/{notification}',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'destroy'],
+    )->name('notification-center.destroy');
+
+    Route::get(
+        '/client/notifications',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'clientIndex'],
+    )->name('client.notifications.index');
+
+    Route::middleware('admin')->get(
+        '/admin/notifications',
+        [\App\Http\Controllers\Notifications\NotificationController::class, 'adminIndex'],
+    )->name('admin.notifications.index');
+});
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('client/wallet')
+    ->name('client.wallet.')
+    ->group(function (): void {
+        Route::get('/', [WalletController::class, 'index'])
+            ->name('index');
+
+        Route::post('/stripe/intent', [WalletController::class, 'stripeIntent'])
+            ->name('stripe.intent');
+
+        Route::post('/stripe/confirm', [WalletController::class, 'stripeConfirm'])
+            ->name('stripe.confirm');
+
+        Route::post('/paypal', [WalletController::class, 'paypalCreate'])
+            ->name('paypal.create');
+
+        Route::get('/paypal/{topup}/return', [WalletController::class, 'paypalReturn'])
+            ->whereNumber('topup')
+            ->name('paypal.return');
+
+        Route::get('/paypal/{topup}/cancel', [WalletController::class, 'paypalCancel'])
+            ->whereNumber('topup')
+            ->name('paypal.cancel');
+    });
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->post(
+        '/admin/users/{user}/wallet/adjust',
+        [UserWalletController::class, 'adjust'],
+    )
+    ->whereNumber('user')
+    ->name('admin.users.wallet.adjust');
+
+Route::get('/a-propos', function () {
+    return \Inertia\Inertia::render('public/about');
+})->name('about');
+
+Route::get('/status', PublicStatusController::class)
+    ->name('status');

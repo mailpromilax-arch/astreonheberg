@@ -60,7 +60,7 @@ class PterodactylUserService
             'first_name' => $firstName,
             'last_name' => $lastName,
             'password' => $temporaryPassword,
-            'language' => 'fr',
+            'language' => 'en',
             'root_admin' => false,
         ]);
 

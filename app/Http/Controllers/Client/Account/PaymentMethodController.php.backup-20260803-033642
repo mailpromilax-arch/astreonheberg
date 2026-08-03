@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Client\Account;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+use Throwable;
+
+final class PaymentMethodController extends Controller
+{
+    public function index(Request $request): Response
+    {
+        $user = $request->user();
+        $methods = [];
+        $billingError = null;
+
+        try {
+            if (method_exists($user, 'hasStripeId') && $user->hasStripeId()) {
+                $methods = collect($user->paymentMethods())
+                    ->map(fn ($method): array => [
+                        'id' => $method->id,
+                        'brand' => $method->card?->brand ?? 'card',
+                        'last4' => $method->card?->last4 ?? '----',
+                        'exp_month' => $method->card?->exp_month ?? null,
+                        'exp_year' => $method->card?->exp_year ?? null,
+                    ])
+                    ->values()
+                    ->all();
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+            $billingError = 'Impossible de récupérer les moyens de paiement pour le moment.';
+        }
+
+        return Inertia::render('client/account/payment-methods/index', [
+            'methods' => $methods,
+            'stripeConfigured' => filled(config('cashier.key'))
+                && filled(config('cashier.secret')),
+            'billingError' => $billingError,
+        ]);
+    }
+
+    public function portal(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        abort_unless(
+            method_exists($user, 'createOrGetStripeCustomer')
+            && method_exists($user, 'redirectToBillingPortal'),
+            501,
+        );
+
+        try {
+            $user->createOrGetStripeCustomer();
+
+            return $user->redirectToBillingPortal(
+                route('client.account.payment-methods.index'),
+            );
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()->with(
+                'error',
+                'Le portail de paiement est indisponible. Vérifiez les clés Stripe et la configuration du portail client.',
+            );
+        }
+    }
+}

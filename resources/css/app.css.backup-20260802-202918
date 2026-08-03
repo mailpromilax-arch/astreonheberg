@@ -1,0 +1,3596 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.87 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.87 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.985 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.985 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(0.269 0 0);
+    --sidebar-ring: oklch(0.439 0 0);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; }
+
+.astreon-primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #ff7a1a, #ef5b0c);
+    padding: .75rem 1.4rem;
+    color: white;
+    font-size: .875rem;
+    font-weight: 900;
+    box-shadow: 0 10px 28px rgba(249,115,22,.24);
+    transition: .2s ease;
+}
+.astreon-primary-button:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.astreon-nav-link { border-radius: .75rem; padding: .75rem .9rem; font-size: .875rem; font-weight: 800; color: #334155; transition: .2s ease; }
+.astreon-nav-link:hover { color: #ea580c; background: #fff7ed; }
+.astreon-mobile-link { display: block; border-radius: .75rem; padding: .85rem 1rem; font-weight: 800; color: #334155; }
+.astreon-mobile-link:hover { background: #fff7ed; color: #ea580c; }
+.astreon-dropdown-link { display: flex; align-items: center; gap: .65rem; border-radius: .75rem; padding: .8rem 1rem; font-size: .875rem; font-weight: 700; color: #334155; transition: .2s ease; }
+.astreon-dropdown-link:hover { background: #fff7ed; color: #ea580c; }
+.astreon-hero { background: linear-gradient(110deg,#111116 0%,#0c1119 52%,#241714 100%); }
+.astreon-grid { background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size: 42px 42px; }
+.astreon-section-title { font-size: clamp(2rem,4vw,3rem); line-height: 1.12; font-weight: 900; letter-spacing: -.035em; color: #0f172a; }
+.astreon-section-copy { margin: 1rem auto 0; max-width: 48rem; font-size: 1.05rem; line-height: 1.8; color: #64748b; }
+.astreon-card { border: 1px solid #e2e8f0; border-radius: 1.25rem; background: white; padding: 1.75rem; box-shadow: 0 12px 36px rgba(15,23,42,.05); transition: .25s ease; }
+.astreon-card:hover { transform: translateY(-4px); border-color: #fdba74; box-shadow: 0 20px 44px rgba(249,115,22,.1); }
+.astreon-icon-box { display: inline-grid; height: 3.4rem; width: 3.4rem; place-items: center; border-radius: 1rem; background: #fff1e8; color: #f97316; }
+
+
+/* Astreon manager — lot 2 */
+.astreon-client-card { border:1px solid #e2e8f0; border-radius:1.1rem; background:#fff; box-shadow:0 10px 30px rgba(15,23,42,.055); }
+.astreon-client-card-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; border-bottom:1px solid #e2e8f0; padding:1rem 1.25rem; }
+.astreon-client-card-head h2 { font-size:1rem; font-weight:900; }
+.astreon-client-card-body { padding:1.25rem; }
+.astreon-stat-card { display:grid; grid-template-columns:auto 1fr; gap:.2rem 1rem; align-items:center; border:1px solid #e2e8f0; border-top:3px solid #f97316; border-radius:1rem; background:#fff; padding:1.25rem; box-shadow:0 8px 24px rgba(15,23,42,.045); }
+.astreon-stat-card svg { grid-row:1/3; width:1.5rem; color:#f97316; }
+.astreon-stat-card span { color:#64748b; font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.astreon-stat-card strong { font-size:1.8rem; line-height:1; }
+.astreon-service-row { overflow:hidden; border:1px solid #e2e8f0; border-radius:1.15rem; background:white; box-shadow:0 10px 30px rgba(15,23,42,.05); }
+.astreon-service-row-head,.astreon-service-row-foot { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.2rem 1.3rem; }
+.astreon-service-row-head { border-bottom:1px solid #e2e8f0; }
+.astreon-service-row-foot { border-top:1px solid #e2e8f0; color:#64748b; font-size:.875rem; }
+.astreon-service-icon { display:grid; height:3.25rem; width:3.25rem; place-items:center; border-radius:1rem; background:#fff1e8; color:#f97316; }
+.astreon-service-icon svg { width:1.35rem; }
+.astreon-service-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); }
+.astreon-service-grid > div { min-width:0; border-right:1px solid #edf0f4; padding:1.1rem 1.25rem; }
+.astreon-service-grid > div:last-child { border-right:0; }
+.astreon-service-grid svg { width:1rem; color:#f97316; display:inline; margin-right:.35rem; }
+.astreon-service-grid span { display:block; color:#94a3b8; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.astreon-service-grid strong { display:block; overflow:hidden; margin-top:.35rem; text-overflow:ellipsis; white-space:nowrap; font-size:.9rem; }
+.astreon-status { display:inline-flex; align-items:center; width:max-content; border-radius:999px; padding:.35rem .7rem; font-size:.72rem; font-weight:900; text-transform:capitalize; }
+.astreon-status-active,.astreon-status-paid { background:#dcfce7; color:#15803d; }
+.astreon-status-provisioning,.astreon-status-pending_payment { background:#fef3c7; color:#b45309; }
+.astreon-status-suspended { background:#ffedd5; color:#c2410c; }
+.astreon-status-expired,.astreon-status-failed,.astreon-status-cancelled { background:#fee2e2; color:#b91c1c; }
+.astreon-outline-button,.astreon-secondary-button { display:inline-flex; align-items:center; justify-content:center; border-radius:.7rem; padding:.65rem 1rem; font-size:.82rem; font-weight:850; transition:.2s ease; }
+.astreon-outline-button { border:1px solid #dbe2ea; background:#fff; color:#334155; }
+.astreon-outline-button:hover { border-color:#fb923c; color:#ea580c; }
+.astreon-secondary-button { background:#fff1e8; color:#ea580c; }
+.astreon-secondary-button:hover { background:#ffdfca; }
+.astreon-empty-state { display:grid; min-height:18rem; place-items:center; align-content:center; gap:.8rem; border:1px dashed #cbd5e1; border-radius:1rem; background:#fff; padding:2rem; text-align:center; }
+.astreon-empty-state svg { width:2.2rem; color:#f97316; }
+.astreon-empty-state h2 { font-size:1.15rem; font-weight:900; }
+.astreon-empty-state p { color:#64748b; }
+.astreon-table-head,.astreon-order-row { display:grid; grid-template-columns:1.4fr .55fr 1fr .7fr .75fr; align-items:center; gap:1rem; padding:1rem 1.25rem; }
+.astreon-table-head { border-bottom:1px solid #e2e8f0; background:#f8fafc; color:#64748b; font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+.astreon-order-row { border-bottom:1px solid #edf0f4; color:#334155; transition:.15s ease; }
+.astreon-order-row:hover { background:#fff7ed; }
+.astreon-order-row > div { display:flex; align-items:center; gap:.7rem; }
+.astreon-order-row svg { width:1.1rem; color:#f97316; }
+.astreon-settings-nav { overflow:hidden; height:max-content; border:1px solid #e2e8f0; border-radius:1rem; background:#fff; box-shadow:0 8px 24px rgba(15,23,42,.05); }
+.astreon-settings-nav-title { background:linear-gradient(135deg,#f97316,#ea580c); padding:1rem 1.1rem; color:white; font-size:.9rem; font-weight:900; }
+.astreon-settings-nav a { display:flex; align-items:center; gap:.65rem; border-bottom:1px solid #edf0f4; padding:1rem 1.1rem; color:#334155; font-size:.87rem; font-weight:700; }
+.astreon-settings-nav a:last-child { border-bottom:0; }
+.astreon-settings-nav a:hover,.astreon-settings-nav a.active { background:#fff1e8; color:#ea580c; }
+.astreon-settings-content { border:1px solid #e2e8f0; border-radius:1rem; background:#fff; padding:1.4rem; box-shadow:0 10px 30px rgba(15,23,42,.05); }
+.astreon-settings-content input,.astreon-settings-content select { border-color:#dbe2ea!important; background:white!important; color:#0f172a!important; }
+.astreon-server-panel { border-radius:1.5rem; background:#050b18; color:white; padding:1.5rem; box-shadow:0 25px 60px rgba(15,23,42,.18); }
+.astreon-server-panel main { padding:0!important; }
+.astreon-order-detail { color:#0f172a; }
+.astreon-order-detail section,.astreon-order-detail article { border-color:#e2e8f0!important; background:#fff!important; color:#0f172a!important; }
+
+@media (max-width: 900px) {
+  .astreon-service-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .astreon-service-grid > div { border-bottom:1px solid #edf0f4; }
+  .astreon-table-head { display:none; }
+  .astreon-order-row { grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .astreon-service-row-head,.astreon-service-row-foot { align-items:flex-start; flex-direction:column; }
+  .astreon-service-grid { grid-template-columns:1fr; }
+  .astreon-service-grid > div { border-right:0; }
+  .astreon-order-row { grid-template-columns:1fr; }
+}
+
+
+/* Astreon server manager — lot 3 */
+.astreon-server-shell{display:grid;grid-template-columns:270px minmax(0,1fr);overflow:hidden;border:1px solid #e2e8f0;border-radius:1.35rem;background:#fff;box-shadow:0 22px 60px rgba(15,23,42,.10)}
+.astreon-server-sidebar{display:flex;min-height:900px;flex-direction:column;background:linear-gradient(180deg,#111827 0%,#172033 100%);padding:1.15rem;color:#cbd5e1}
+.astreon-server-back{display:flex;align-items:center;gap:.45rem;border-radius:.7rem;padding:.65rem .75rem;color:#94a3b8;font-size:.78rem;font-weight:800;transition:.2s}.astreon-server-back:hover{background:rgba(255,255,255,.06);color:#fff}.astreon-server-back svg{width:1rem}
+.astreon-server-identity{display:flex;align-items:center;gap:.8rem;margin-top:.7rem;border-bottom:1px solid rgba(255,255,255,.08);padding:1rem .55rem 1.3rem}.astreon-server-identity-icon{display:grid;flex:none;height:2.8rem;width:2.8rem;place-items:center;border-radius:.85rem;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;box-shadow:0 10px 25px rgba(249,115,22,.24)}.astreon-server-identity-icon svg{width:1.25rem}.astreon-server-identity p{color:#fb923c;font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}.astreon-server-identity h2{overflow:hidden;margin-top:.15rem;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:.95rem;font-weight:900}.astreon-server-identity span{display:block;overflow:hidden;margin-top:.2rem;text-overflow:ellipsis;white-space:nowrap;color:#64748b;font-size:.68rem}
+.astreon-server-state{display:flex;align-items:center;gap:.65rem;margin:.9rem .55rem;border:1px solid rgba(255,255,255,.07);border-radius:.8rem;background:rgba(255,255,255,.035);padding:.8rem}.astreon-server-state strong{display:block;color:#fff;font-size:.8rem}.astreon-server-state small{display:block;margin-top:.1rem;color:#64748b;font-size:.68rem}.astreon-live-dot{display:inline-block;flex:none;height:.55rem;width:.55rem;border-radius:999px;background:#94a3b8;box-shadow:0 0 0 4px rgba(148,163,184,.12)}.astreon-live-running{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.13)}.astreon-live-starting,.astreon-live-installing{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.13)}.astreon-live-offline,.astreon-live-stopping{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.13)}
+.astreon-server-nav{display:flex;flex-direction:column;gap:.25rem}.astreon-server-nav>p{margin:.9rem .7rem .35rem;color:#64748b;font-size:.64rem;font-weight:900;text-transform:uppercase;letter-spacing:.14em}.astreon-server-nav button,.astreon-server-nav a{display:flex;align-items:center;gap:.7rem;width:100%;border-radius:.72rem;padding:.7rem .75rem;color:#94a3b8;font-size:.79rem;font-weight:750;text-align:left;transition:.18s ease}.astreon-server-nav button svg,.astreon-server-nav a svg{width:1rem}.astreon-server-nav button:hover,.astreon-server-nav a:hover{background:rgba(255,255,255,.055);color:#fff}.astreon-server-nav button.active{background:linear-gradient(90deg,rgba(249,115,22,.22),rgba(249,115,22,.06));color:#fff;box-shadow:inset 3px 0 #f97316}.astreon-server-nav button.active svg{color:#fb923c}
+.astreon-server-panel-link{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:auto;border:1px solid rgba(249,115,22,.25);border-radius:.8rem;background:rgba(249,115,22,.08);padding:.8rem;color:#fdba74;font-size:.75rem;font-weight:850}.astreon-server-panel-link:hover{background:rgba(249,115,22,.15)}.astreon-server-panel-link svg{width:.95rem}
+.astreon-server-main{min-width:0;background:#f4f6fa;padding:1.35rem}.astreon-server-topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #e2e8f0;border-radius:1rem;background:#fff;padding:1.1rem 1.25rem;box-shadow:0 8px 25px rgba(15,23,42,.045)}.astreon-server-topbar h1{font-size:1.35rem;font-weight:950}.astreon-server-topbar>div>span{display:block;margin-top:.2rem;color:#64748b;font-size:.75rem}.astreon-eyebrow{color:#f97316;font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em}.astreon-power-actions{display:flex;flex-wrap:wrap;gap:.55rem}.astreon-power-actions button{display:flex;align-items:center;gap:.4rem;border-radius:.68rem;padding:.62rem .85rem;color:#fff;font-size:.76rem;font-weight:900;transition:.18s}.astreon-power-actions button svg{width:.95rem}.astreon-power-actions button:hover{transform:translateY(-1px)}.astreon-power-actions button:disabled{cursor:not-allowed;opacity:.4}.astreon-power-actions .start{background:#16a34a}.astreon-power-actions .restart{background:#f59e0b}.astreon-power-actions .stop{background:#ef4444}
+.astreon-server-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.7rem;margin-top:.9rem}.astreon-server-summary article{min-width:0;border:1px solid #e2e8f0;border-radius:.85rem;background:#fff;padding:.85rem;box-shadow:0 5px 18px rgba(15,23,42,.035)}.astreon-server-summary svg{width:1rem;color:#f97316}.astreon-server-summary span{display:block;margin-top:.5rem;color:#94a3b8;font-size:.62rem;font-weight:850;text-transform:uppercase;letter-spacing:.08em}.astreon-server-summary strong{display:block;overflow:hidden;margin-top:.22rem;text-overflow:ellipsis;white-space:nowrap;color:#0f172a;font-size:.78rem}
+.astreon-server-workspace{overflow:hidden;margin-top:.9rem;border:1px solid #e2e8f0;border-radius:1rem;background:#fff;box-shadow:0 12px 35px rgba(15,23,42,.055)}.astreon-server-workspace-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid #e2e8f0;padding:1rem 1.15rem}.astreon-server-workspace-head p{font-size:.95rem;font-weight:950}.astreon-server-workspace-head>div>span{display:block;margin-top:.15rem;color:#94a3b8;font-size:.7rem}.astreon-server-runtime-badge{display:flex;align-items:center;gap:.5rem;border-radius:999px;background:#f8fafc;padding:.45rem .7rem;color:#475569;font-size:.7rem;font-weight:850}.astreon-server-workspace-body{min-width:0;padding:1rem}.astreon-server-workspace-body>article{border-color:#e2e8f0!important}.astreon-server-workspace-body .bg-\[\#070d18\],.astreon-server-workspace-body .bg-\[\#050b18\]{background:#0b1220!important}.astreon-server-workspace-body .rounded-3xl{border-radius:.85rem!important}
+.astreon-server-bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:.9rem}.astreon-server-info-card{border:1px solid #e2e8f0;border-radius:1rem;background:#fff;padding:1.05rem;box-shadow:0 8px 25px rgba(15,23,42,.04)}.astreon-server-info-card>div:first-child{display:flex;align-items:center;gap:.6rem}.astreon-server-info-card>div:first-child svg{width:1rem;color:#f97316}.astreon-server-info-card h3{font-size:.9rem;font-weight:950}.astreon-server-info-card dl{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.85rem}.astreon-server-info-card dl>div{border-radius:.65rem;background:#f8fafc;padding:.65rem}.astreon-server-info-card dt{color:#94a3b8;font-size:.62rem;font-weight:850;text-transform:uppercase}.astreon-server-info-card dd{overflow:hidden;margin-top:.2rem;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;font-weight:850}.astreon-mini-monitoring{display:grid;gap:.65rem;margin-top:.85rem}.astreon-mini-monitoring>div{display:grid;grid-template-columns:75px 1fr;gap:.2rem .7rem;align-items:center}.astreon-mini-monitoring span{color:#64748b;font-size:.7rem;font-weight:800}.astreon-mini-monitoring strong{text-align:right;font-size:.7rem}.astreon-mini-monitoring i{grid-column:1/3;overflow:hidden;height:.28rem;border-radius:999px;background:#e2e8f0}.astreon-mini-monitoring b{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#f97316,#fb923c)}
+@media(max-width:1180px){.astreon-server-shell{grid-template-columns:225px minmax(0,1fr)}.astreon-server-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.astreon-server-shell{display:block}.astreon-server-sidebar{min-height:auto}.astreon-server-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.astreon-server-nav>p{grid-column:1/-1}.astreon-server-panel-link{margin-top:1rem}.astreon-server-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.astreon-server-bottom-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.astreon-server-main{padding:.7rem}.astreon-server-topbar{align-items:flex-start;flex-direction:column}.astreon-power-actions{width:100%}.astreon-power-actions button{flex:1;justify-content:center}.astreon-server-summary{grid-template-columns:1fr}.astreon-server-nav{grid-template-columns:1fr}.astreon-server-info-card dl{grid-template-columns:1fr}}
+
+
+/* ==========================================================
+   ASTREON GAME PANEL V2
+   Structure inspirée des panels de gestion de serveurs,
+   avec la direction artistique blanche, ardoise et orange.
+   ========================================================== */
+
+.astreon-server-shell {
+    display: grid !important;
+    grid-template-columns: 248px minmax(0, 1fr) !important;
+    width: calc(100vw - 2rem);
+    max-width: 1680px;
+    min-height: calc(100vh - 190px);
+    margin-left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    border: 1px solid #253248 !important;
+    border-radius: 14px !important;
+    background: #303d4d !important;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .2) !important;
+}
+
+.astreon-server-sidebar {
+    position: relative;
+    display: flex !important;
+    min-height: 100% !important;
+    flex-direction: column;
+    padding: 0 !important;
+    border-right: 1px solid rgba(255, 255, 255, .08);
+    background: #1c2735 !important;
+    color: #aebdcd;
+}
+
+.astreon-server-back {
+    min-height: 54px;
+    margin: 0 !important;
+    padding: 17px 19px !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-radius: 0 !important;
+    color: #d8e1eb !important;
+    font-size: 12px !important;
+    font-weight: 750 !important;
+}
+.astreon-server-back:hover { background: rgba(255,255,255,.035) !important; color: #fff !important; }
+
+.astreon-server-identity {
+    margin: 0 !important;
+    padding: 20px 18px !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: #202d3c !important;
+}
+.astreon-server-identity-icon {
+    background: rgba(249,115,22,.14) !important;
+    color: #fb923c !important;
+}
+.astreon-server-identity p { color: #fb923c !important; }
+.astreon-server-identity h2 { color: #fff !important; font-size: 14px !important; }
+.astreon-server-identity span { color: #7f91a5 !important; }
+
+.astreon-server-state {
+    margin: 0 !important;
+    padding: 14px 18px !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-radius: 0 !important;
+    background: rgba(0,0,0,.08) !important;
+}
+.astreon-server-state strong { color: #fff !important; font-size: 12px !important; }
+.astreon-server-state small { color: #7f91a5 !important; }
+
+.astreon-server-nav {
+    display: block !important;
+    padding: 14px 10px 22px !important;
+}
+.astreon-server-nav > p {
+    padding: 10px 10px 7px !important;
+    color: #667a91 !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: .14em !important;
+}
+.astreon-server-nav button,
+.astreon-server-nav a {
+    position: relative;
+    display: flex !important;
+    width: 100%;
+    min-height: 43px;
+    align-items: center;
+    gap: 11px;
+    margin: 1px 0;
+    padding: 0 12px !important;
+    border: 0 !important;
+    border-radius: 5px !important;
+    background: transparent !important;
+    color: #9fb0c1 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-align: left;
+}
+.astreon-server-nav button svg,
+.astreon-server-nav a svg { width: 16px !important; height: 16px !important; }
+.astreon-server-nav button:hover,
+.astreon-server-nav a:hover {
+    background: rgba(255,255,255,.045) !important;
+    color: #fff !important;
+}
+.astreon-server-nav button.active {
+    background: rgba(249,115,22,.13) !important;
+    color: #fff !important;
+}
+.astreon-server-nav button.active::before {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: #f97316;
+    content: "";
+}
+
+.astreon-server-main {
+    min-width: 0;
+    padding: 0 !important;
+    background: #303d4d !important;
+    color: #dce5ee;
+}
+
+.astreon-server-topbar {
+    min-height: 83px;
+    margin: 0 !important;
+    padding: 15px 22px !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 0 !important;
+    background: #354353 !important;
+    box-shadow: none !important;
+}
+.astreon-server-topbar h1 { color: #fff !important; font-size: 21px !important; }
+.astreon-server-topbar > div > span { color: #91a4b8 !important; }
+.astreon-eyebrow { color: #fb923c !important; }
+
+.astreon-power-actions button {
+    min-width: 104px;
+    justify-content: center;
+    border-radius: 4px !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 5px 16px rgba(0,0,0,.12);
+}
+.astreon-power-actions .start { background: #3b82f6 !important; }
+.astreon-power-actions .restart { background: #68798b !important; }
+.astreon-power-actions .stop { background: #ef2b32 !important; }
+
+.astreon-server-summary {
+    grid-template-columns: repeat(6, minmax(125px, 1fr)) !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: #2a3747 !important;
+}
+.astreon-server-summary article {
+    min-height: 88px;
+    border: 0 !important;
+    border-right: 1px solid rgba(255,255,255,.07) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.astreon-server-summary article:last-child { border-right: 0 !important; }
+.astreon-server-summary svg { color: #fb923c !important; }
+.astreon-server-summary span { color: #8093a8 !important; }
+.astreon-server-summary strong { color: #f8fafc !important; }
+
+.astreon-server-workspace {
+    margin: 22px !important;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 6px !important;
+    background: #354353 !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,.12) !important;
+}
+.astreon-server-workspace-head {
+    min-height: 58px;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid rgba(255,255,255,.09) !important;
+    background: #1d2936 !important;
+}
+.astreon-server-workspace-head p { color: #fff !important; }
+.astreon-server-workspace-head span { color: #8498ae !important; }
+.astreon-server-runtime-badge {
+    border-color: rgba(255,255,255,.09) !important;
+    background: rgba(255,255,255,.04) !important;
+    color: #d7e1ec !important;
+}
+.astreon-server-workspace-body {
+    min-width: 0;
+    padding: 18px !important;
+    background: #303d4d !important;
+}
+
+/* Harmonisation des modules déjà fonctionnels */
+.astreon-server-workspace-body > article,
+.astreon-server-workspace-body > section,
+.astreon-server-workspace-body > div {
+    max-width: 100% !important;
+}
+.astreon-server-workspace-body input,
+.astreon-server-workspace-body textarea,
+.astreon-server-workspace-body select {
+    border-color: #607184 !important;
+    background: #455567 !important;
+    color: #f8fafc !important;
+}
+.astreon-server-workspace-body input::placeholder,
+.astreon-server-workspace-body textarea::placeholder { color: #93a4b7 !important; }
+
+.astreon-server-bottom-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 18px !important;
+    margin: 0 22px 22px !important;
+}
+.astreon-server-info-card {
+    border-color: rgba(255,255,255,.09) !important;
+    border-radius: 6px !important;
+    background: #354353 !important;
+    color: #dce5ee !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,.1) !important;
+}
+.astreon-server-info-card h3,
+.astreon-server-info-card dd { color: #fff !important; }
+.astreon-server-info-card dt,
+.astreon-mini-monitoring span { color: #8498ae !important; }
+.astreon-server-info-card dl > div { background: #2a3747 !important; }
+.astreon-mini-monitoring i { background: #202d3b !important; }
+
+@media (max-width: 1250px) {
+    .astreon-server-shell {
+        width: 100%;
+        grid-template-columns: 220px minmax(0, 1fr) !important;
+        transform: none;
+        margin-left: 0;
+    }
+    .astreon-server-summary { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+}
+@media (max-width: 900px) {
+    .astreon-server-shell { display: block !important; width: 100%; min-height: auto; }
+    .astreon-server-sidebar { min-height: auto !important; }
+    .astreon-server-nav { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .astreon-server-nav > p { grid-column: 1 / -1; }
+    .astreon-server-main { min-height: 700px; }
+}
+@media (max-width: 640px) {
+    .astreon-server-nav { grid-template-columns: 1fr; }
+    .astreon-server-summary { grid-template-columns: 1fr 1fr !important; }
+    .astreon-server-summary article:nth-child(even) { border-right: 0 !important; }
+    .astreon-server-workspace { margin: 10px !important; }
+    .astreon-server-workspace-body { padding: 10px !important; }
+    .astreon-server-bottom-grid { grid-template-columns: 1fr !important; margin: 0 10px 10px !important; }
+}
+
+
+/* ==========================================================
+   ASTREON STANDALONE SERVER PANEL
+   Full-screen server manager. No client-site header or footer.
+   ========================================================== */
+
+body:has(.astreon-ptero-page) {
+    overflow-x: hidden;
+    background: #303d4d !important;
+}
+
+.astreon-ptero-page {
+    min-height: 100vh;
+    background: #303d4d;
+    color: #d9e3ed;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.astreon-ptero-globalbar {
+    height: 62px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: #1d2835;
+}
+
+.astreon-ptero-globalbar-inner,
+.astreon-ptero-tabs-inner,
+.astreon-ptero-main {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+}
+
+.astreon-ptero-globalbar-inner {
+    display: flex;
+    height: 62px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.astreon-ptero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.astreon-ptero-brand-mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 8px;
+    background: #f97316;
+    color: white;
+    font-weight: 950;
+}
+
+.astreon-ptero-global-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #9fb0c1;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.astreon-ptero-global-actions a {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 5px;
+    color: #9fb0c1;
+}
+
+.astreon-ptero-global-actions a:hover {
+    background: rgba(255,255,255,.06);
+    color: white;
+}
+
+.astreon-ptero-tabs {
+    min-height: 43px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: #405062;
+}
+
+.astreon-ptero-tabs-inner {
+    display: flex;
+    min-height: 43px;
+    align-items: stretch;
+    overflow-x: auto;
+}
+
+.astreon-ptero-tabs button {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 7px;
+    padding: 0 17px;
+    border: 0;
+    background: transparent;
+    color: #9fb2c6;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.astreon-ptero-tabs button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.astreon-ptero-tabs button:hover {
+    color: #fff;
+}
+
+.astreon-ptero-tabs button.active {
+    color: #fff;
+}
+
+.astreon-ptero-tabs button.active::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: #f97316;
+    content: "";
+}
+
+.astreon-ptero-main {
+    padding: 38px 0 70px;
+}
+
+.astreon-ptero-server-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 15px;
+}
+
+.astreon-ptero-server-head h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 850;
+}
+
+.astreon-ptero-server-head p {
+    margin-top: 3px;
+    color: #bfd0e0;
+    font-size: 12px;
+}
+
+.astreon-ptero-power {
+    display: flex;
+    gap: 8px;
+}
+
+.astreon-ptero-power button {
+    display: inline-flex;
+    min-width: 90px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 3px;
+    padding: 10px 14px;
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.astreon-ptero-power button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.astreon-ptero-power .start { background: #3d7dd8; }
+.astreon-ptero-power .restart { background: #697b8c; }
+.astreon-ptero-power .stop { background: #e52b32; }
+.astreon-ptero-power button:disabled { cursor: not-allowed; opacity: .45; }
+
+.astreon-ptero-console-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 15px;
+}
+
+.astreon-ptero-module {
+    min-width: 0;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.astreon-ptero-console {
+    min-height: 635px;
+}
+
+.astreon-ptero-console > article,
+.astreon-ptero-console > section,
+.astreon-ptero-console > div {
+    height: 100%;
+    min-height: 635px;
+    border-color: rgba(255,255,255,.08) !important;
+    border-radius: 4px !important;
+    background: #101820 !important;
+    box-shadow: none !important;
+}
+
+.astreon-ptero-resource-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.astreon-ptero-resource-column article {
+    display: flex;
+    min-height: 78px;
+    align-items: center;
+    gap: 14px;
+    border-radius: 4px;
+    background: #536474;
+    padding: 15px;
+    color: white;
+}
+
+.astreon-ptero-resource-column article > svg {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    background: rgba(25,36,48,.32);
+    padding: 12px;
+    color: #edf4fb;
+}
+
+.astreon-ptero-resource-column span {
+    display: block;
+    color: #c7d2dd;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.astreon-ptero-resource-column strong {
+    display: block;
+    margin-top: 3px;
+    color: white;
+    font-size: 15px;
+    font-weight: 850;
+}
+
+.astreon-ptero-full-module {
+    min-height: 420px;
+    padding: 0;
+}
+
+.astreon-ptero-full-module > article,
+.astreon-ptero-full-module > section,
+.astreon-ptero-full-module > div {
+    border-color: rgba(255,255,255,.08) !important;
+    border-radius: 4px !important;
+    background: #405062 !important;
+    color: #d9e3ed !important;
+    box-shadow: none !important;
+}
+
+.astreon-ptero-full-module h1,
+.astreon-ptero-full-module h2,
+.astreon-ptero-full-module h3,
+.astreon-ptero-full-module strong {
+    color: #fff !important;
+}
+
+.astreon-ptero-full-module p,
+.astreon-ptero-full-module span,
+.astreon-ptero-full-module label {
+    color: #b4c4d3;
+}
+
+.astreon-ptero-full-module input,
+.astreon-ptero-full-module textarea,
+.astreon-ptero-full-module select {
+    border-color: #687b8e !important;
+    background: #566879 !important;
+    color: #fff !important;
+}
+
+.astreon-ptero-full-module button {
+    border-radius: 3px !important;
+}
+
+@media (max-width: 900px) {
+    .astreon-ptero-console-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .astreon-ptero-resource-column {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .astreon-ptero-globalbar-inner,
+    .astreon-ptero-tabs-inner,
+    .astreon-ptero-main {
+        width: calc(100% - 20px);
+    }
+
+    .astreon-ptero-brand span:last-child {
+        display: none;
+    }
+
+    .astreon-ptero-server-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .astreon-ptero-power {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .astreon-ptero-resource-column {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================
+   CONSOLE ASTREON — VERSION ÉPURÉE ET ÉLARGIE
+   ========================================================== */
+
+.astreon-ptero-globalbar-inner,
+.astreon-ptero-tabs-inner,
+.astreon-ptero-main {
+    width: min(1500px, calc(100% - 28px)) !important;
+}
+
+.astreon-ptero-console-layout {
+    grid-template-columns: minmax(0, 1fr) 250px !important;
+    gap: 14px !important;
+}
+
+.astreon-ptero-console,
+.astreon-ptero-console > article,
+.astreon-ptero-console > section,
+.astreon-ptero-console > div {
+    min-height: 720px !important;
+}
+
+.astreon-console-clean {
+    display: flex;
+    min-height: 720px;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 4px;
+    background: #0d151d;
+}
+
+.astreon-console-actions {
+    display: flex;
+    min-height: 58px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    background: #17212c;
+}
+
+.astreon-console-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 4px;
+    padding: 9px 14px;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 800;
+    transition: .15s ease;
+}
+
+.astreon-console-actions button:hover:not(:disabled) {
+    background: rgba(255,255,255,.055);
+}
+
+.astreon-console-actions .download {
+    border-color: rgba(34,211,238,.3);
+    color: #67e8f9;
+}
+
+.astreon-console-actions .clear {
+    border-color: rgba(248,113,113,.3);
+    color: #fda4af;
+}
+
+.astreon-console-actions button:disabled {
+    cursor: not-allowed;
+    opacity: .35;
+}
+
+.astreon-console-output {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    background: #020406;
+    padding: 14px 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.72;
+    color: #00e7a8;
+}
+
+.astreon-console-line {
+    min-width: max-content;
+    border-bottom: 1px solid rgba(255,255,255,.025);
+    white-space: pre;
+}
+
+.astreon-console-line > span {
+    display: inline-block;
+    width: 48px;
+    margin-right: 10px;
+    user-select: none;
+    color: #32455b;
+}
+
+.astreon-console-empty {
+    display: grid;
+    height: 100%;
+    place-items: center;
+    align-content: center;
+    color: #526477;
+    text-align: center;
+}
+
+.astreon-console-empty p {
+    color: #7f91a5;
+    font-weight: 800;
+}
+
+.astreon-console-empty span {
+    margin-top: 6px;
+    font-size: 11px;
+}
+
+.astreon-console-command {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: 10px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    background: #101820;
+}
+
+.astreon-console-command input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #314155 !important;
+    border-radius: 4px !important;
+    background: #111927 !important;
+    padding: 13px 15px !important;
+    color: #f8fafc !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+    outline: none;
+}
+
+.astreon-console-command input:focus {
+    border-color: #f97316 !important;
+}
+
+.astreon-console-command input::placeholder {
+    color: #6f8092 !important;
+}
+
+.astreon-console-command button {
+    border-radius: 4px !important;
+    background: linear-gradient(135deg, #f97316, #ea580c) !important;
+    padding: 12px 18px !important;
+    color: white !important;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.astreon-console-command button:disabled {
+    cursor: not-allowed;
+    opacity: .4;
+}
+
+@media (max-width: 900px) {
+    .astreon-ptero-console-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .astreon-console-clean {
+        min-height: 620px;
+    }
+}
+
+@media (max-width: 640px) {
+    .astreon-console-actions {
+        flex-wrap: wrap;
+    }
+
+    .astreon-console-actions button {
+        flex: 1 1 auto;
+    }
+
+    .astreon-console-command {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================
+   CORRECTIF FINAL CONSOLE ASTREON
+   - boutons alignés en haut à droite
+   - logs confinés dans la console
+   - barre de commande toujours visible
+   - hauteur adaptée à l'écran
+   ========================================================== */
+
+.astreon-ptero-console-layout {
+    grid-template-columns: minmax(0, 1fr) 250px !important;
+    align-items: start !important;
+}
+
+.astreon-ptero-console,
+.astreon-ptero-console > article,
+.astreon-ptero-console > section,
+.astreon-ptero-console > div {
+    min-width: 0 !important;
+    width: 100% !important;
+    height: clamp(520px, calc(100vh - 245px), 650px) !important;
+    min-height: 520px !important;
+    max-height: 650px !important;
+    overflow: hidden !important;
+}
+
+.astreon-console-clean {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 4px !important;
+    background: #0d151d !important;
+}
+
+.astreon-console-actions {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    min-height: 56px !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    padding: 9px 12px !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+    background: #17212c !important;
+    white-space: nowrap !important;
+}
+
+.astreon-console-actions button {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+}
+
+.astreon-console-output {
+    display: block !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    padding: 12px 14px !important;
+    background: #020406 !important;
+    box-sizing: border-box !important;
+    overscroll-behavior: contain !important;
+}
+
+.astreon-console-line {
+    display: block !important;
+    width: max-content !important;
+    min-width: 100% !important;
+    max-width: none !important;
+    overflow: visible !important;
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    box-sizing: border-box !important;
+}
+
+.astreon-console-line > span {
+    display: inline-block !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    margin-right: 10px !important;
+}
+
+.astreon-console-command {
+    display: grid !important;
+    flex: 0 0 auto !important;
+    grid-template-columns: minmax(0, 1fr) 115px !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 11px 12px !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+    background: #101820 !important;
+    box-sizing: border-box !important;
+}
+
+.astreon-console-command input {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    box-sizing: border-box !important;
+}
+
+.astreon-console-command button {
+    width: 115px !important;
+    min-width: 115px !important;
+    height: 44px !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+    .astreon-ptero-console,
+    .astreon-ptero-console > article,
+    .astreon-ptero-console > section,
+    .astreon-ptero-console > div {
+        height: 600px !important;
+        max-height: 600px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .astreon-console-actions {
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+    }
+
+    .astreon-console-actions button {
+        flex: 0 0 auto !important;
+    }
+
+    .astreon-console-command {
+        grid-template-columns: minmax(0, 1fr) 92px !important;
+    }
+
+    .astreon-console-command button {
+        width: 92px !important;
+        min-width: 92px !important;
+    }
+}
+
+/* Lot 6 — Paramètres, SFTP, activité et sous-utilisateurs */
+.astreon-panel-section,.astreon-settings-card{background:#405062;border:1px solid rgba(255,255,255,.08);border-radius:4px;color:#d9e3ed}.astreon-panel-section{padding:18px}.astreon-panel-section-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:18px}.astreon-panel-section-head h2,.astreon-settings-card h3{color:#fff;font-weight:800}.astreon-panel-section-head p{color:#9fb2c6}.astreon-panel-section-head>div:last-child{display:flex;gap:8px}.astreon-panel-section button,.astreon-settings-card button,.astreon-user-modal button{display:inline-flex;align-items:center;gap:7px;border-radius:3px;padding:9px 13px;background:#536474;color:#fff;font-weight:700}.astreon-panel-section button svg,.astreon-settings-card button svg{width:15px}.astreon-panel-section button.primary,.astreon-settings-card button.primary,.astreon-user-modal button.primary{background:#f97316}.astreon-panel-empty{padding:70px 20px;text-align:center;color:#9fb2c6}.astreon-panel-alert{padding:12px 14px;border-radius:4px;margin-bottom:14px}.astreon-panel-alert.error{background:#4a2530;color:#fecdd3}.astreon-panel-alert.success{background:#17443b;color:#a7f3d0}.astreon-panel-alert.full{grid-column:1/-1}.astreon-settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.astreon-settings-card{padding:0 14px 16px}.astreon-settings-card h3{margin:0 -14px 15px;padding:13px 14px;background:#1d2835}.astreon-settings-card label{display:block;margin:12px 0 6px;color:#dce7f1;font-size:12px}.astreon-settings-card input,.astreon-settings-card textarea{width:100%;border:1px solid #687b8e;background:#566879;color:#fff;padding:12px;border-radius:3px}.astreon-settings-card textarea{min-height:88px}.astreon-copy-field{display:grid;grid-template-columns:1fr 42px;gap:7px}.astreon-copy-field button{padding:0;justify-content:center}.astreon-info-line{display:flex;gap:8px;align-items:center;margin-top:14px;border-left:3px solid #22d3ee;padding:10px;color:#dce7f1}.astreon-debug-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}.astreon-debug-row code{background:#1d2835;padding:5px 8px}.astreon-settings-card.danger button{float:right;background:#dc2626}.astreon-activity-list article,.astreon-user-list article{display:flex;align-items:center;gap:14px;padding:15px;border-top:1px solid rgba(255,255,255,.08)}.astreon-activity-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#f97316;color:#fff}.astreon-activity-list strong,.astreon-user-list strong{color:#fff}.astreon-activity-list p{color:#d9e3ed}.astreon-activity-list span,.astreon-user-list span,.astreon-user-list small{display:block;color:#9fb2c6}.astreon-user-list img{width:42px;height:42px;border-radius:50%}.astreon-user-list article>div{flex:1}.astreon-user-list article>button{background:#7f1d1d}.astreon-modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(3,8,14,.84);display:grid;place-items:center;padding:20px}.astreon-user-modal{width:min(960px,100%);max-height:92vh;overflow:auto;background:#303d4d;border:1px solid #607386;padding:20px;color:#d9e3ed}.astreon-user-modal header,.astreon-user-modal footer{display:flex;justify-content:space-between;align-items:center;gap:14px}.astreon-user-modal h2{color:#fff}.astreon-user-modal>label{display:block;margin:18px 0 6px}.astreon-user-modal>input{width:100%;background:#566879;border:1px solid #687b8e;padding:12px;color:#fff}.astreon-permission-toolbar{display:flex;gap:8px;margin:15px 0}.astreon-permission-groups{display:grid;gap:14px}.astreon-permission-groups section{background:#405062}.astreon-permission-groups .group-head{display:flex;justify-content:space-between;padding:12px;background:#1d2835}.astreon-permission-groups section>label{display:flex;gap:12px;padding:12px 18px}.astreon-permission-groups small{display:block;color:#9fb2c6}.astreon-user-modal footer{margin-top:18px;justify-content:flex-end}@media(max-width:800px){.astreon-settings-grid{grid-template-columns:1fr}.astreon-panel-section-head{align-items:flex-start;flex-direction:column}}
+
+
+/* ==========================================================
+   ASTREON COSMIC — identité visuelle officielle
+   Logo violet, fond spatial, composants premium.
+   ========================================================== */
+
+:root {
+    --astreon-bg: #070711;
+    --astreon-bg-soft: #0d0b1b;
+    --astreon-surface: #121022;
+    --astreon-surface-2: #19142d;
+    --astreon-surface-3: #21183b;
+    --astreon-border: rgba(173, 111, 255, .18);
+    --astreon-border-strong: rgba(173, 111, 255, .38);
+    --astreon-primary: #8b3dff;
+    --astreon-primary-2: #a855f7;
+    --astreon-primary-light: #c084fc;
+    --astreon-cyan: #22d3ee;
+    --astreon-success: #22c55e;
+    --astreon-danger: #ef3340;
+    --astreon-text: #f8f7ff;
+    --astreon-muted: #a9a3bd;
+    --astreon-shadow: 0 18px 55px rgba(3, 2, 12, .48);
+}
+
+/* Fond général */
+html,
+body,
+#app {
+    background:
+        radial-gradient(circle at 70% 5%, rgba(139, 61, 255, .16), transparent 28%),
+        radial-gradient(circle at 15% 70%, rgba(76, 29, 149, .13), transparent 32%),
+        linear-gradient(135deg, #070711 0%, #0a0815 52%, #080712 100%) !important;
+    color: var(--astreon-text);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: .55;
+    background-image:
+        radial-gradient(circle at 15% 18%, rgba(255,255,255,.5) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 74% 34%, rgba(192,132,252,.45) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 42% 76%, rgba(255,255,255,.38) 0 1px, transparent 1.3px);
+    background-size: 180px 180px, 250px 250px, 210px 210px;
+}
+
+.astreon-ptero-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    background: transparent !important;
+}
+
+/* Barre supérieure */
+.astreon-ptero-globalbar {
+    background: rgba(8, 7, 18, .93) !important;
+    border-bottom: 1px solid var(--astreon-border) !important;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 8px 35px rgba(0,0,0,.28);
+}
+
+.astreon-ptero-brand {
+    min-height: 72px;
+    gap: 14px !important;
+    color: var(--astreon-text) !important;
+    letter-spacing: .02em;
+}
+
+.astreon-ptero-brand-mark {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    overflow: hidden;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    background:
+        url('/images/astreon/astreon-icon.png') center/contain no-repeat !important;
+    box-shadow: none !important;
+}
+
+.astreon-ptero-brand > span:last-child {
+    font-size: 21px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.astreon-ptero-brand > span:last-child::after {
+    content: " PANEL";
+    margin-left: 7px;
+    color: var(--astreon-primary-light);
+    font-weight: 500;
+    letter-spacing: .28em;
+}
+
+.astreon-ptero-global-actions {
+    color: var(--astreon-muted) !important;
+}
+
+.astreon-live-dot {
+    box-shadow: 0 0 16px currentColor;
+}
+
+/* Navigation */
+.astreon-ptero-tabs {
+    background: rgba(14, 11, 29, .92) !important;
+    border-bottom: 1px solid var(--astreon-border) !important;
+    backdrop-filter: blur(16px);
+}
+
+.astreon-ptero-tabs-inner button {
+    position: relative;
+    color: #a9a3bd !important;
+    border-bottom-color: transparent !important;
+    transition: color .18s ease, background .18s ease, transform .18s ease;
+}
+
+.astreon-ptero-tabs-inner button:hover {
+    color: #fff !important;
+    background: rgba(139, 61, 255, .08) !important;
+}
+
+.astreon-ptero-tabs-inner button.active {
+    color: #fff !important;
+    background: linear-gradient(180deg, rgba(139,61,255,.15), rgba(139,61,255,.04)) !important;
+}
+
+.astreon-ptero-tabs-inner button.active::after {
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    height: 3px;
+    border-radius: 99px 99px 0 0;
+    background: linear-gradient(90deg, var(--astreon-primary), var(--astreon-primary-light));
+    box-shadow: 0 0 18px rgba(139,61,255,.65);
+}
+
+/* En-tête serveur */
+.astreon-ptero-main {
+    max-width: 1440px !important;
+}
+
+.astreon-ptero-server-head h1 {
+    color: #fff !important;
+    text-shadow: 0 0 28px rgba(139,61,255,.13);
+}
+
+.astreon-ptero-server-head p {
+    color: var(--astreon-muted) !important;
+}
+
+.astreon-ptero-power button {
+    border-radius: 7px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+
+.astreon-ptero-power button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.astreon-ptero-power .start {
+    background: linear-gradient(135deg, #7030d9, #9333ea) !important;
+    box-shadow: 0 12px 30px rgba(139,61,255,.27);
+}
+
+.astreon-ptero-power .restart {
+    background: linear-gradient(135deg, #242236, #343147) !important;
+}
+
+.astreon-ptero-power .stop {
+    background: linear-gradient(135deg, #991b2e, #dc263c) !important;
+}
+
+/* Modules et cartes */
+.astreon-ptero-module,
+.astreon-panel-section,
+.astreon-settings-card {
+    background:
+        linear-gradient(145deg, rgba(24,19,43,.97), rgba(13,11,27,.97)) !important;
+    border: 1px solid var(--astreon-border) !important;
+    box-shadow: var(--astreon-shadow);
+}
+
+.astreon-ptero-full-module {
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.astreon-ptero-resource-column article {
+    background:
+        linear-gradient(145deg, rgba(28,22,49,.98), rgba(16,13,31,.98)) !important;
+    border: 1px solid var(--astreon-border) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 14px 32px rgba(0,0,0,.22);
+}
+
+.astreon-ptero-resource-column article svg {
+    color: var(--astreon-primary-light) !important;
+    filter: drop-shadow(0 0 9px rgba(168,85,247,.38));
+}
+
+.astreon-ptero-resource-column article span {
+    color: var(--astreon-muted) !important;
+}
+
+.astreon-ptero-resource-column article strong {
+    color: #fff !important;
+}
+
+/* Console */
+.astreon-console-clean {
+    background: #070710 !important;
+    border-color: var(--astreon-border) !important;
+    border-radius: 10px !important;
+}
+
+.astreon-console-actions {
+    background: rgba(16, 13, 31, .98) !important;
+    border-color: var(--astreon-border) !important;
+}
+
+.astreon-console-actions button {
+    background: rgba(255,255,255,.025) !important;
+    border: 1px solid var(--astreon-border) !important;
+    color: #ded9ec !important;
+}
+
+.astreon-console-actions button:hover {
+    background: rgba(139,61,255,.12) !important;
+    border-color: var(--astreon-border-strong) !important;
+    color: #fff !important;
+}
+
+.astreon-console-output {
+    background:
+        linear-gradient(rgba(3,2,8,.96), rgba(3,2,8,.96)),
+        radial-gradient(circle at 75% 0%, rgba(139,61,255,.12), transparent 30%) !important;
+    scrollbar-color: var(--astreon-primary) #090813;
+}
+
+.astreon-console-line {
+    color: #d7d3e2 !important;
+    text-shadow: 0 0 10px rgba(139,61,255,.04);
+}
+
+.astreon-console-line > span {
+    color: #685f80 !important;
+}
+
+.astreon-console-command {
+    background: rgba(13,11,27,.98) !important;
+    border-color: var(--astreon-border) !important;
+}
+
+.astreon-console-command input {
+    background: #0a0815 !important;
+    border: 1px solid rgba(139,61,255,.55) !important;
+    color: #fff !important;
+    border-radius: 7px !important;
+    box-shadow: inset 0 0 22px rgba(139,61,255,.035);
+}
+
+.astreon-console-command input:focus {
+    outline: none !important;
+    border-color: var(--astreon-primary-light) !important;
+    box-shadow: 0 0 0 3px rgba(139,61,255,.14) !important;
+}
+
+.astreon-console-command button {
+    border-radius: 7px !important;
+    background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 26px rgba(139,61,255,.24);
+}
+
+/* Pages internes */
+.astreon-settings-card h3,
+.astreon-permission-groups .group-head {
+    background: rgba(9,8,20,.74) !important;
+    border-bottom: 1px solid var(--astreon-border);
+}
+
+.astreon-settings-card input,
+.astreon-settings-card textarea,
+.astreon-user-modal > input {
+    background: #0e0c1d !important;
+    border-color: var(--astreon-border-strong) !important;
+    color: #fff !important;
+}
+
+.astreon-settings-card button.primary,
+.astreon-panel-section button.primary,
+.astreon-user-modal button.primary {
+    background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+}
+
+.astreon-info-line {
+    border-left-color: var(--astreon-primary-light) !important;
+    background: rgba(139,61,255,.06);
+}
+
+.astreon-debug-row code {
+    background: #0c0a19 !important;
+    color: var(--astreon-primary-light) !important;
+}
+
+.astreon-activity-icon {
+    background: linear-gradient(135deg, #6d28d9, #a855f7) !important;
+    box-shadow: 0 0 22px rgba(139,61,255,.28);
+}
+
+.astreon-user-modal {
+    background: #100d20 !important;
+    border-color: var(--astreon-border-strong) !important;
+    box-shadow: 0 30px 90px rgba(0,0,0,.65);
+}
+
+.astreon-permission-groups section {
+    background: #171229 !important;
+    border: 1px solid var(--astreon-border);
+}
+
+/* Barre de défilement */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139,61,255,.75) rgba(10,8,21,.9);
+}
+
+*::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(10,8,21,.9);
+}
+
+*::-webkit-scrollbar-thumb {
+    border: 2px solid rgba(10,8,21,.9);
+    border-radius: 99px;
+    background: linear-gradient(#6d28d9, #a855f7);
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+    .astreon-ptero-brand > span:last-child {
+        font-size: 0;
+    }
+
+    .astreon-ptero-brand > span:last-child::after {
+        content: "ASTREON";
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: .08em;
+    }
+}
+
+
+/* ==========================================================
+   ASTREON COSMIC GLOBAL — application à TOUT le site
+   Public, boutique, authentification, espace client,
+   commandes, profil, administration et panel serveur.
+   ========================================================== */
+
+:root {
+    color-scheme: dark;
+    --global-bg: #070711;
+    --global-surface: #100d20;
+    --global-surface-2: #171229;
+    --global-surface-3: #201735;
+    --global-border: rgba(168, 85, 247, .22);
+    --global-border-strong: rgba(192, 132, 252, .44);
+    --global-purple: #8b3dff;
+    --global-purple-light: #c084fc;
+    --global-text: #f7f4ff;
+    --global-muted: #aaa3bd;
+}
+
+/* Structure universelle */
+html, body, #app, [data-page] {
+    min-height: 100%;
+    background:
+        radial-gradient(circle at 82% 8%, rgba(139,61,255,.18), transparent 26%),
+        radial-gradient(circle at 10% 76%, rgba(91,33,182,.13), transparent 31%),
+        linear-gradient(135deg,#070711 0%,#090714 52%,#080611 100%) !important;
+    color: var(--global-text) !important;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .48;
+    background-image:
+        radial-gradient(circle at 15% 18%, rgba(255,255,255,.6) 0 1px, transparent 1.35px),
+        radial-gradient(circle at 74% 34%, rgba(192,132,252,.55) 0 1px, transparent 1.45px),
+        radial-gradient(circle at 42% 76%, rgba(255,255,255,.38) 0 1px, transparent 1.3px);
+    background-size: 180px 180px,250px 250px,210px 210px;
+}
+
+#app > *, [data-page] > * { position: relative; z-index: 1; }
+
+/* Remplacement des grands fonds clairs Tailwind */
+.bg-white,
+.bg-white\/95,
+.bg-white\/90,
+.bg-\[\#f5f7fb\],
+.bg-\[\#f7f8fb\],
+.bg-\[\#eef1f5\],
+.bg-slate-50,
+.bg-slate-100,
+.bg-gray-50,
+.bg-gray-100 {
+    background-color: rgba(12,9,25,.94) !important;
+    color: var(--global-text) !important;
+}
+
+/* Texte global */
+.text-slate-950,.text-slate-900,.text-slate-800,.text-gray-950,.text-gray-900,.text-black {
+    color: var(--global-text) !important;
+}
+.text-slate-700,.text-slate-600,.text-slate-500,.text-slate-400,
+.text-gray-700,.text-gray-600,.text-gray-500,.text-gray-400 {
+    color: var(--global-muted) !important;
+}
+.text-orange-500,.text-orange-600,.text-orange-700 {
+    color: var(--global-purple-light) !important;
+}
+
+/* Bordures */
+.border-slate-100,.border-slate-200,.border-slate-300,
+.border-gray-100,.border-gray-200,.border-gray-300,
+.border-orange-100,.border-orange-200,.border-orange-300 {
+    border-color: var(--global-border) !important;
+}
+
+/* En-têtes généraux */
+header:not(.astreon-ptero-globalbar) {
+    background: rgba(8,6,18,.92) !important;
+    border-color: var(--global-border) !important;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 35px rgba(0,0,0,.28);
+}
+
+header nav a, header nav button {
+    color: #c8c2d8 !important;
+}
+header nav a:hover, header nav button:hover {
+    color: #fff !important;
+    background: rgba(139,61,255,.11) !important;
+}
+
+/* Menus déroulants */
+header .absolute,
+[role='menu'],
+[role='dialog'],
+[data-radix-popper-content-wrapper] > * {
+    background: rgba(16,13,32,.98) !important;
+    border-color: var(--global-border-strong) !important;
+    color: var(--global-text) !important;
+    box-shadow: 0 24px 80px rgba(0,0,0,.58) !important;
+}
+
+/* Logo global */
+.astreon-global-logo {
+    display: block;
+    width: auto;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(139,61,255,.2));
+}
+.astreon-global-logo--compact { height: 43px; }
+
+/* Boutons */
+.astreon-primary-button,
+button.bg-orange-500,button.bg-orange-600,
+a.bg-orange-500,a.bg-orange-600,
+.bg-orange-500,.bg-orange-600 {
+    background: linear-gradient(135deg,#6d28d9,#9333ea) !important;
+    color: #fff !important;
+    border-color: rgba(192,132,252,.32) !important;
+    box-shadow: 0 12px 30px rgba(139,61,255,.25) !important;
+}
+.astreon-primary-button:hover,
+button.bg-orange-500:hover,button.bg-orange-600:hover,
+a.bg-orange-500:hover,a.bg-orange-600:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.bg-orange-50,.bg-orange-100,.hover\:bg-orange-50:hover,.hover\:bg-orange-100:hover {
+    background: rgba(139,61,255,.12) !important;
+}
+
+/* Cartes universelles */
+.astreon-card,
+.rounded-xl.border,
+.rounded-2xl.border,
+.rounded-3xl.border,
+section[class*='border'],
+article[class*='border'] {
+    background: linear-gradient(145deg,rgba(24,19,43,.97),rgba(12,10,25,.97)) !important;
+    border-color: var(--global-border) !important;
+    color: var(--global-text) !important;
+    box-shadow: 0 18px 52px rgba(2,1,10,.34);
+}
+
+.astreon-card:hover {
+    border-color: var(--global-border-strong) !important;
+    box-shadow: 0 24px 58px rgba(88,28,135,.18) !important;
+}
+
+/* Formulaires */
+input, textarea, select {
+    background: rgba(8,6,18,.92) !important;
+    color: var(--global-text) !important;
+    border-color: rgba(168,85,247,.30) !important;
+}
+input::placeholder, textarea::placeholder { color: #756e88 !important; }
+input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    border-color: var(--global-purple-light) !important;
+    box-shadow: 0 0 0 3px rgba(139,61,255,.15) !important;
+}
+
+/* Tableaux */
+table, thead, tbody, tr, th, td {
+    border-color: var(--global-border) !important;
+}
+thead, th {
+    background: rgba(139,61,255,.10) !important;
+    color: #eee9fa !important;
+}
+tbody tr { background: rgba(255,255,255,.018) !important; }
+tbody tr:hover { background: rgba(139,61,255,.075) !important; }
+
+/* Badges */
+.bg-green-50,.bg-green-100 { background: rgba(34,197,94,.12) !important; }
+.bg-red-50,.bg-red-100 { background: rgba(239,51,64,.12) !important; }
+.bg-blue-50,.bg-blue-100 { background: rgba(139,61,255,.12) !important; }
+.text-blue-500,.text-blue-600,.text-blue-700 { color: var(--global-purple-light) !important; }
+
+/* Sections publiques */
+.astreon-hero {
+    background:
+        radial-gradient(circle at 74% 20%,rgba(139,61,255,.23),transparent 30%),
+        linear-gradient(115deg,#06050e 0%,#0d091c 53%,#160b28 100%) !important;
+}
+.astreon-grid {
+    background-image:
+        linear-gradient(rgba(168,85,247,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(168,85,247,.045) 1px,transparent 1px) !important;
+}
+.astreon-section-title { color: #fff !important; }
+.astreon-section-copy { color: var(--global-muted) !important; }
+.astreon-icon-box {
+    background: rgba(139,61,255,.14) !important;
+    color: var(--global-purple-light) !important;
+    border: 1px solid var(--global-border);
+}
+
+/* Liens et navigation spécifiques */
+.astreon-nav-link,.astreon-mobile-link,.astreon-dropdown-link {
+    color: #c5bfd5 !important;
+}
+.astreon-nav-link:hover,.astreon-mobile-link:hover,.astreon-dropdown-link:hover {
+    color: #fff !important;
+    background: rgba(139,61,255,.11) !important;
+}
+
+/* Breadcrumbs */
+main + *, .text-xs a, [aria-label='breadcrumb'] a { color: var(--global-purple-light) !important; }
+
+/* Footer global */
+footer {
+    background:
+        radial-gradient(circle at 20% 10%,rgba(139,61,255,.14),transparent 28%),
+        #07060f !important;
+    color: #d7d1e3 !important;
+    border-top: 1px solid var(--global-border) !important;
+}
+
+/* Pages d'authentification */
+main .max-w-lg.rounded-2xl,
+main .max-w-md.rounded-2xl,
+main .max-w-xl.rounded-2xl {
+    background: linear-gradient(145deg,#171229,#0c0a19) !important;
+    border-color: var(--global-border-strong) !important;
+    box-shadow: 0 30px 90px rgba(0,0,0,.52) !important;
+}
+
+/* Ombres claires supprimées */
+.shadow-slate-200\/60,.shadow-slate-200,.shadow-gray-200 { --tw-shadow-color: rgba(0,0,0,.38) !important; }
+
+/* Administration / sidebar Laravel */
+[data-sidebar],aside,.sidebar {
+    background: rgba(9,7,20,.97) !important;
+    border-color: var(--global-border) !important;
+    color: var(--global-text) !important;
+}
+
+/* Sélection */
+::selection { background: rgba(139,61,255,.55); color: #fff; }
+
+@media (max-width: 680px) {
+    .astreon-global-logo { height: 39px; max-width: 190px; }
+}
+
+/* ==========================================================
+   CORRECTIF ASTREON GLOBAL V2
+   - contraste renforcé sur toutes les pages
+   - suppression du menu latéral public
+   - suppression du second header dans l'espace client
+   ========================================================== */
+
+/* Tous les titres et textes principaux restent lisibles,
+   même lorsqu'une ancienne section conserve un fond clair. */
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+main h6,
+[role='main'] h1,
+[role='main'] h2,
+[role='main'] h3,
+[role='main'] h4,
+[role='main'] h5,
+[role='main'] h6 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 22px rgba(0, 0, 0, .32);
+}
+
+main p,
+main li,
+main label,
+main span:not(.astreon-ptero-brand-mark),
+[role='main'] p,
+[role='main'] li,
+[role='main'] label {
+    color: #c7c1d6;
+}
+
+/* Anciennes sections publiques blanches : conversion complète
+   vers la DA Astreon pour éviter du blanc sur blanc. */
+main section,
+[role='main'] section {
+    color: var(--global-text) !important;
+}
+
+main section[class*='bg-white'],
+main section[class*='bg-gray'],
+main section[class*='bg-slate'],
+main section[style*='background: white'],
+main section[style*='background:#fff'],
+main section[style*='background: #fff'],
+main section[style*='background-color: white'],
+main section[style*='background-color:#fff'],
+main section[style*='background-color: #fff'] {
+    background:
+        radial-gradient(circle at 75% 10%, rgba(139,61,255,.14), transparent 30%),
+        linear-gradient(145deg, #0d0a1c, #080712) !important;
+}
+
+/* Couleurs de texte héritées de l'ancien thème clair. */
+.text-white,
+.text-white\/80,
+.text-white\/70,
+.text-white\/60 {
+    color: #ffffff !important;
+}
+
+main .text-gray-300,
+main .text-slate-300,
+main .text-zinc-300,
+main .text-neutral-300 {
+    color: #d8d2e5 !important;
+}
+
+/* Menu vertical de navigation de la page d'accueil : retiré. */
+.astreon-section-navigation,
+.astreon-scroll-navigation,
+.astreon-scrollspy,
+.home-section-navigation,
+.home-scroll-navigation,
+.section-navigation,
+.scroll-navigation,
+.scrollspy-navigation,
+nav[aria-label='Navigation des sections'],
+nav[aria-label='Sections'],
+[data-scrollspy],
+[data-section-navigation],
+.fixed.left-0:has(a[href='#accueil']),
+.fixed.left-4:has(a[href='#accueil']),
+.fixed.left-6:has(a[href='#accueil']),
+.fixed.left-8:has(a[href='#accueil']) {
+    display: none !important;
+}
+
+/* Le header global est déjà présent hors du contenu principal.
+   On retire donc toute seconde barre complète rendue dans l'espace client. */
+main > header,
+[role='main'] > header,
+main .client-layout > header,
+main .client-shell > header,
+main .account-layout > header,
+main .account-shell > header,
+main [data-client-header],
+main .astreon-client-header,
+main .client-header,
+main .account-header {
+    display: none !important;
+}
+
+/* Certaines versions encapsulent le second header dans un bloc avec
+   une mini barre de notification, la navigation puis le fil d'Ariane. */
+main .client-layout > .site-header-wrapper,
+main .client-shell > .site-header-wrapper,
+main .account-layout > .site-header-wrapper,
+main .account-shell > .site-header-wrapper,
+main .astreon-client-shell > .astreon-site-header,
+main .astreon-account-shell > .astreon-site-header {
+    display: none !important;
+}
+
+/* Si le fil d'Ariane est directement attaché au header dupliqué,
+   il disparaît avec lui sans toucher aux fils d'Ariane normaux. */
+main > header + [aria-label='breadcrumb'],
+main > header + nav[aria-label='breadcrumb'],
+[role='main'] > header + [aria-label='breadcrumb'] {
+    display: none !important;
+}
+
+/* Les cartes de l'espace client restent entièrement sombres. */
+main .astreon-client-card,
+main [class*='client-card'],
+main [class*='account-card'] {
+    background: linear-gradient(145deg, rgba(24,19,43,.98), rgba(11,9,23,.98)) !important;
+    border-color: var(--global-border) !important;
+    color: var(--global-text) !important;
+}
+
+/* Empêche les anciens fonds de page clairs de réapparaître. */
+main,
+[role='main'] {
+    background-color: transparent !important;
+}
+
+@media (max-width: 900px) {
+    main h1,
+    main h2 {
+        text-shadow: 0 2px 14px rgba(0,0,0,.4);
+    }
+}
+
+
+/* ==========================================================
+   ASTREON GLOBAL — CORRECTIF V3 RENFORCÉ
+   Ce bloc est volontairement placé tout en bas du fichier afin
+   d'écraser les anciennes règles Tailwind et les styles de page.
+   ========================================================== */
+
+/* ---------- 1. CONTRASTE GLOBAL ---------- */
+
+body,
+#app,
+main,
+[role="main"] {
+    color: #f7f4ff !important;
+}
+
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+main h6,
+[role="main"] h1,
+[role="main"] h2,
+[role="main"] h3,
+[role="main"] h4,
+[role="main"] h5,
+[role="main"] h6 {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+main p,
+main li,
+main label,
+main dt,
+main dd,
+main small,
+main figcaption,
+main blockquote,
+[role="main"] p,
+[role="main"] li,
+[role="main"] label {
+    color: #cfc8df !important;
+    opacity: 1 !important;
+}
+
+/* Écrase les classes de texte sombres ou trop pâles de l'ancien thème. */
+main :is(
+    .text-black,
+    .text-gray-900,
+    .text-gray-800,
+    .text-gray-700,
+    .text-gray-600,
+    .text-gray-500,
+    .text-slate-950,
+    .text-slate-900,
+    .text-slate-800,
+    .text-slate-700,
+    .text-slate-600,
+    .text-slate-500,
+    .text-zinc-950,
+    .text-zinc-900,
+    .text-zinc-800,
+    .text-zinc-700,
+    .text-neutral-950,
+    .text-neutral-900,
+    .text-neutral-800,
+    .text-neutral-700
+) {
+    color: #d9d2e7 !important;
+    -webkit-text-fill-color: #d9d2e7 !important;
+}
+
+main :is(
+    .text-gray-400,
+    .text-gray-300,
+    .text-slate-400,
+    .text-slate-300,
+    .text-zinc-400,
+    .text-zinc-300,
+    .text-neutral-400,
+    .text-neutral-300
+) {
+    color: #bdb4cf !important;
+}
+
+/* Les titres ne doivent jamais rester blancs sur un ancien fond clair. */
+main section,
+main article,
+main [class*="rounded"],
+[role="main"] section,
+[role="main"] article {
+    color: #f7f4ff !important;
+}
+
+/* ---------- 2. SUPPRESSION DES ANCIENS FONDS CLAIRS ---------- */
+
+/* Classes Tailwind classiques. */
+main :is(
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-slate-50,
+    .bg-slate-100,
+    .bg-zinc-50,
+    .bg-zinc-100,
+    .bg-neutral-50,
+    .bg-neutral-100
+),
+[role="main"] :is(
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-slate-50,
+    .bg-slate-100,
+    .bg-zinc-50,
+    .bg-zinc-100,
+    .bg-neutral-50,
+    .bg-neutral-100
+) {
+    background-color: #0b0917 !important;
+    background-image:
+        radial-gradient(circle at 76% 8%, rgba(139,61,255,.13), transparent 30%),
+        linear-gradient(145deg, rgba(18,14,34,.98), rgba(8,7,18,.98)) !important;
+}
+
+/* Classes arbitraires Tailwind du type bg-[#f8fafc]. */
+main [class*="bg-[#f"],
+main [class*="bg-[#F"],
+main [class*="bg-[rgb(2"],
+main [class*="bg-[rgb(24"],
+main [style*="background-color: rgb(248"],
+main [style*="background-color:rgb(248"],
+main [style*="background-color: #f"],
+main [style*="background-color:#f"],
+main [style*="background: #f"],
+main [style*="background:#f"] {
+    background:
+        radial-gradient(circle at 76% 8%, rgba(139,61,255,.13), transparent 30%),
+        linear-gradient(145deg, #100c21, #080712) !important;
+}
+
+/* Page d'accueil : toutes les grandes zones deviennent sombres.
+   On exclut les petits éléments interactifs. */
+body:not(:has(.astreon-ptero-page)) main > section,
+body:not(:has(.astreon-ptero-page)) main > div > section {
+    background-color: #0a0815 !important;
+    background-image:
+        radial-gradient(circle at 78% 0%, rgba(139,61,255,.14), transparent 28%),
+        linear-gradient(145deg, #100c21, #080712) !important;
+}
+
+/* ---------- 3. MENU VERTICAL ACCUEIL / ÉCOSYSTÈME / ... ---------- */
+
+/* Cible exacte par combinaison de liens. */
+nav:has(a[href="#accueil"]):has(a[href="#ecosysteme"]),
+nav:has(a[href="#accueil"]):has(a[href="#univers"]),
+nav:has(a[href="#accueil"]):has(a[href="#garanties"]),
+nav:has(a[href="#accueil"]):has(a[href="#chiffres"]),
+nav:has(a[href="#accueil"]):has(a[href="#avis"]),
+nav:has(a[href="#accueil"]):has(a[href="#reseau"]),
+aside:has(a[href="#accueil"]):has(a[href="#univers"]),
+div:has(> a[href="#accueil"]):has(> a[href="#univers"]):has(> a[href="#garanties"]),
+ul:has(> li > a[href="#accueil"]):has(> li > a[href="#univers"]) {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Variantes d'ancres accentuées ou anglaises. */
+nav:has(a[href*="accueil"]):has(a[href*="garantie"]):has(a[href*="avis"]),
+aside:has(a[href*="accueil"]):has(a[href*="garantie"]):has(a[href*="avis"]),
+div[class*="fixed"]:has(a[href*="accueil"]):has(a[href*="univers"]):has(a[href*="reseau"]),
+div[class*="sticky"]:has(a[href*="accueil"]):has(a[href*="univers"]):has(a[href*="reseau"]) {
+    display: none !important;
+}
+
+/* ---------- 4. SUPPRESSION SÛRE DU MENU DUPLIQUÉ DANS L'ESPACE CLIENT ---------- */
+
+/*
+   IMPORTANT :
+   On ne masque plus aucun div ou section générique.
+   Les anciennes règles pouvaient cacher toute la page Accueil,
+   Mes services ou Assistance car leurs conteneurs contenaient
+   eux aussi plusieurs liens.
+*/
+
+/* Cible seulement un véritable header/nav imbriqué dans le contenu. */
+main > :is(header, nav):has(a[href*="/client/services"]):has(a[href*="/client/orders"]),
+main > div > :is(header, nav):has(a[href*="/client/services"]):has(a[href*="/client/orders"]),
+[role="main"] > :is(header, nav):has(a[href*="/client/services"]):has(a[href*="/client/orders"]) {
+    display: none !important;
+}
+
+/* Classes explicites prévues pour les en-têtes dupliqués. */
+.client-embedded-header,
+.client-duplicate-header,
+.account-embedded-header,
+.account-duplicate-header,
+.embedded-site-header,
+.inner-site-header,
+.nested-site-header {
+    display: none !important;
+}
+
+/* Le vrai contenu client doit toujours rester visible. */
+main > div,
+main > section,
+main article,
+main [data-page],
+main [data-client-content],
+main [data-account-content],
+[role="main"] > div,
+[role="main"] > section {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Réactive les zones interactives et les liens de navigation. */
+main a,
+main button,
+main form,
+main input,
+main textarea,
+main select,
+[role="main"] a,
+[role="main"] button {
+    pointer-events: auto !important;
+}
+
+/* ---------- FIN DU BLOC 4 SÛR ---------- */
+
+/* ---------- 5. ESPACE CLIENT : ESPACEMENT APRÈS SUPPRESSION ---------- */
+
+main .client-content,
+main .account-content,
+main [data-client-content],
+main [data-account-content] {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Les cartes et panneaux client restent lisibles. */
+main :is(
+    .client-card,
+    .account-card,
+    [class*="client-card"],
+    [class*="account-card"],
+    [class*="dashboard-card"]
+) {
+    background:
+        linear-gradient(145deg, rgba(22,17,40,.98), rgba(10,8,21,.98)) !important;
+    border-color: rgba(168,85,247,.22) !important;
+    color: #f7f4ff !important;
+}
+
+/* ---------- 6. BOUTONS, LIENS ET CHAMPS ---------- */
+
+main a:not([class*="button"]):not([class*="btn"]) {
+    color: #c084fc !important;
+}
+
+main button,
+main [role="button"] {
+    color: #ffffff;
+}
+
+main input,
+main textarea,
+main select {
+    color: #ffffff !important;
+    background-color: #0b0917 !important;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+    color: #8f87a2 !important;
+}
+
+/* ---------- 7. NAVIGATEURS SANS PRISE EN CHARGE COMPLÈTE DE :has ---------- */
+
+/* Noms de classes déjà utilisés dans les versions précédentes du site. */
+.home-rail,
+.home-timeline,
+.home-scrollspy,
+.section-rail,
+.sections-rail,
+.landing-rail,
+.landing-scrollspy,
+.page-scrollspy,
+.fixed-section-nav,
+.desktop-section-nav {
+    display: none !important;
+}
+
+.client-embedded-header,
+.client-duplicate-header,
+.account-embedded-header,
+.account-duplicate-header,
+.embedded-site-header,
+.inner-site-header,
+.nested-site-header {
+    display: none !important;
+}
+
+/* ==========================================================
+   FIN DU CORRECTIF V3
+   ========================================================== */
+
+
+/* ==========================================================
+   GARDE-FOU V4 — NE JAMAIS MASQUER LE CONTENU CLIENT
+   ========================================================== */
+
+main .page-content,
+main .client-content,
+main .account-content,
+main .dashboard-content,
+main [class*="page-content"],
+main [class*="client-content"],
+main [class*="account-content"],
+main [class*="dashboard-content"],
+main [data-page-content],
+main [data-client-content],
+main [data-account-content] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+main form,
+main table,
+main ul,
+main ol {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Les panneaux Inertia/React ne doivent jamais être supprimés. */
+main > [data-page],
+main > [data-props],
+main > [data-component],
+#app > main {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Conserve le thème sans désactiver les clics. */
+main,
+main * {
+    pointer-events: auto;
+}
+
+
+/* ==========================================================
+   ASTREON GLOBAL V5 — MENUS, DROPDOWNS, MODALES ET NAVIGATION
+   Harmonisation complète avec la DA cosmique violette.
+   ========================================================== */
+
+:root {
+    --astreon-menu-bg: rgba(14, 10, 28, .98);
+    --astreon-menu-bg-hover: rgba(139, 61, 255, .13);
+    --astreon-menu-border: rgba(168, 85, 247, .24);
+    --astreon-menu-border-strong: rgba(192, 132, 252, .42);
+    --astreon-menu-text: #f7f4ff;
+    --astreon-menu-muted: #b8afca;
+}
+
+/* ---------- NAVIGATION PRINCIPALE ---------- */
+
+header,
+nav,
+[role="navigation"] {
+    color: var(--astreon-menu-text);
+}
+
+header a,
+nav a,
+[role="navigation"] a {
+    color: var(--astreon-menu-muted) !important;
+    text-decoration: none !important;
+    transition:
+        color .16s ease,
+        background .16s ease,
+        border-color .16s ease,
+        transform .16s ease;
+}
+
+header a:hover,
+nav a:hover,
+[role="navigation"] a:hover {
+    color: #ffffff !important;
+}
+
+header a[aria-current="page"],
+nav a[aria-current="page"],
+[role="navigation"] a[aria-current="page"],
+header a.active,
+nav a.active {
+    color: #ffffff !important;
+}
+
+/* ---------- MENUS DÉROULANTS ---------- */
+
+[role="menu"],
+[role="listbox"],
+[data-radix-menu-content],
+[data-radix-dropdown-menu-content],
+[data-headlessui-state="open"][role="menu"],
+.dropdown-menu,
+.dropdown-content,
+.menu-dropdown,
+.context-menu,
+.popover-content,
+.command-menu,
+.select-content,
+.autocomplete-menu {
+    background:
+        radial-gradient(circle at 85% 0%, rgba(139,61,255,.14), transparent 35%),
+        linear-gradient(145deg, rgba(21,15,39,.99), rgba(9,7,19,.99)) !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    border-radius: 12px !important;
+    color: var(--astreon-menu-text) !important;
+    box-shadow:
+        0 24px 70px rgba(0,0,0,.58),
+        0 0 0 1px rgba(139,61,255,.04) inset !important;
+    backdrop-filter: blur(18px);
+    overflow: hidden;
+}
+
+/* Éléments de menu */
+[role="menuitem"],
+[role="option"],
+[data-radix-menu-item],
+[data-radix-dropdown-menu-item],
+.dropdown-item,
+.menu-item,
+.context-menu-item,
+.select-option,
+.command-item {
+    color: var(--astreon-menu-muted) !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+    transition:
+        color .14s ease,
+        background .14s ease,
+        transform .14s ease;
+}
+
+[role="menuitem"]:hover,
+[role="menuitem"]:focus,
+[role="option"]:hover,
+[role="option"][aria-selected="true"],
+[data-radix-menu-item]:hover,
+[data-radix-dropdown-menu-item]:hover,
+.dropdown-item:hover,
+.menu-item:hover,
+.context-menu-item:hover,
+.select-option:hover,
+.command-item:hover,
+.command-item[aria-selected="true"] {
+    color: #ffffff !important;
+    background:
+        linear-gradient(90deg, rgba(139,61,255,.18), rgba(139,61,255,.07)) !important;
+    outline: none !important;
+}
+
+[role="menuitem"][data-active],
+[role="option"][data-active],
+.dropdown-item.active,
+.menu-item.active {
+    color: #ffffff !important;
+    background: rgba(139,61,255,.2) !important;
+}
+
+/* Icônes dans les menus */
+[role="menu"] svg,
+[role="listbox"] svg,
+.dropdown-menu svg,
+.menu-dropdown svg,
+.popover-content svg {
+    color: #b66cff !important;
+}
+
+/* Séparateurs */
+[role="separator"],
+.dropdown-divider,
+.menu-separator,
+.context-menu-separator {
+    height: 1px !important;
+    border: 0 !important;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(168,85,247,.24),
+        transparent
+    ) !important;
+}
+
+/* Titres et descriptions dans les menus */
+[role="menu"] strong,
+[role="menu"] h3,
+[role="menu"] h4,
+.dropdown-menu strong,
+.dropdown-menu h3,
+.menu-dropdown strong {
+    color: #ffffff !important;
+}
+
+[role="menu"] p,
+[role="menu"] small,
+.dropdown-menu p,
+.dropdown-menu small,
+.menu-dropdown p,
+.menu-dropdown small {
+    color: #9f96b2 !important;
+}
+
+/* ---------- BOUTONS DE MENU / PROFIL ---------- */
+
+button[aria-haspopup="menu"],
+button[aria-haspopup="listbox"],
+button[aria-expanded],
+.dropdown-trigger,
+.menu-trigger,
+.profile-trigger,
+.account-trigger {
+    border-color: var(--astreon-menu-border) !important;
+    color: #ffffff !important;
+}
+
+button[aria-haspopup="menu"]:hover,
+button[aria-haspopup="listbox"]:hover,
+.dropdown-trigger:hover,
+.menu-trigger:hover,
+.profile-trigger:hover,
+.account-trigger:hover {
+    border-color: var(--astreon-menu-border-strong) !important;
+    background: rgba(139,61,255,.1) !important;
+}
+
+/* ---------- SELECTS ---------- */
+
+select,
+[role="combobox"],
+.select-trigger,
+[data-radix-select-trigger] {
+    background: #0d0a1b !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    color: #ffffff !important;
+    border-radius: 9px !important;
+}
+
+select:focus,
+[role="combobox"]:focus,
+.select-trigger:focus,
+[data-radix-select-trigger]:focus {
+    outline: none !important;
+    border-color: var(--astreon-menu-border-strong) !important;
+    box-shadow: 0 0 0 3px rgba(139,61,255,.14) !important;
+}
+
+option {
+    background: #120d24 !important;
+    color: #ffffff !important;
+}
+
+/* ---------- MODALES ---------- */
+
+[role="dialog"],
+.modal,
+.modal-content,
+.dialog-content,
+.drawer,
+.drawer-content,
+.sheet,
+.sheet-content {
+    background:
+        radial-gradient(circle at 82% 0%, rgba(139,61,255,.14), transparent 32%),
+        linear-gradient(145deg, #17102c, #090714) !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    color: var(--astreon-menu-text) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 30px 100px rgba(0,0,0,.68) !important;
+}
+
+[role="dialog"] h1,
+[role="dialog"] h2,
+[role="dialog"] h3,
+.modal h1,
+.modal h2,
+.modal h3 {
+    color: #ffffff !important;
+}
+
+[role="dialog"] p,
+[role="dialog"] label,
+[role="dialog"] small,
+.modal p,
+.modal label,
+.modal small {
+    color: #c1b8d2 !important;
+}
+
+[data-overlay],
+.modal-backdrop,
+.dialog-overlay,
+.drawer-overlay,
+.sheet-overlay {
+    background: rgba(3,2,8,.76) !important;
+    backdrop-filter: blur(5px);
+}
+
+/* ---------- TOOLTIPS ---------- */
+
+[role="tooltip"],
+.tooltip,
+.tooltip-content {
+    background: #171029 !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    color: #ffffff !important;
+    border-radius: 7px !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,.48) !important;
+}
+
+/* ---------- TABLES ET MENUS D'ACTIONS ---------- */
+
+table {
+    color: #ece8f5 !important;
+}
+
+thead,
+table thead tr {
+    background: rgba(18,13,33,.95) !important;
+}
+
+thead th {
+    color: #bcb3cd !important;
+    border-color: rgba(168,85,247,.16) !important;
+}
+
+tbody tr {
+    border-color: rgba(168,85,247,.12) !important;
+}
+
+tbody tr:hover {
+    background: rgba(139,61,255,.06) !important;
+}
+
+table button,
+table [role="button"] {
+    border-color: var(--astreon-menu-border) !important;
+}
+
+/* ---------- PAGINATION ---------- */
+
+.pagination,
+[aria-label*="Pagination"],
+nav[aria-label*="pagination"] {
+    color: var(--astreon-menu-muted) !important;
+}
+
+.pagination a,
+.pagination button,
+nav[aria-label*="pagination"] a,
+nav[aria-label*="pagination"] button {
+    background: rgba(16,12,30,.9) !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    color: var(--astreon-menu-muted) !important;
+    border-radius: 7px !important;
+}
+
+.pagination a:hover,
+.pagination button:hover,
+nav[aria-label*="pagination"] a:hover,
+nav[aria-label*="pagination"] button:hover {
+    color: #ffffff !important;
+    background: rgba(139,61,255,.15) !important;
+    border-color: var(--astreon-menu-border-strong) !important;
+}
+
+.pagination .active,
+.pagination [aria-current="page"],
+nav[aria-label*="pagination"] [aria-current="page"] {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+    border-color: #a855f7 !important;
+}
+
+/* ---------- BREADCRUMBS ---------- */
+
+.breadcrumb,
+.breadcrumbs,
+nav[aria-label="breadcrumb"] {
+    color: #978da9 !important;
+}
+
+.breadcrumb a,
+.breadcrumbs a,
+nav[aria-label="breadcrumb"] a {
+    color: #b66cff !important;
+}
+
+.breadcrumb a:hover,
+.breadcrumbs a:hover,
+nav[aria-label="breadcrumb"] a:hover {
+    color: #d8b4fe !important;
+}
+
+/* ---------- SIDEBARS / SOUS-MENUS ---------- */
+
+aside nav,
+.sidebar,
+.side-menu,
+.account-sidebar,
+.client-sidebar,
+.settings-sidebar {
+    background:
+        linear-gradient(180deg, rgba(20,14,38,.97), rgba(10,8,20,.97)) !important;
+    border-color: var(--astreon-menu-border) !important;
+}
+
+aside nav a,
+.sidebar a,
+.side-menu a,
+.account-sidebar a,
+.client-sidebar a,
+.settings-sidebar a {
+    color: var(--astreon-menu-muted) !important;
+}
+
+aside nav a:hover,
+.sidebar a:hover,
+.side-menu a:hover,
+.account-sidebar a:hover,
+.client-sidebar a:hover,
+.settings-sidebar a:hover {
+    color: #ffffff !important;
+    background: rgba(139,61,255,.1) !important;
+}
+
+aside nav a.active,
+aside nav a[aria-current="page"],
+.sidebar a.active,
+.side-menu a.active,
+.account-sidebar a.active,
+.client-sidebar a.active,
+.settings-sidebar a.active {
+    color: #ffffff !important;
+    background:
+        linear-gradient(90deg, rgba(139,61,255,.23), rgba(139,61,255,.07)) !important;
+    border-left: 3px solid #a855f7 !important;
+}
+
+/* ---------- ACCORDÉONS ---------- */
+
+details,
+.accordion,
+.accordion-item {
+    background: rgba(16,12,30,.9) !important;
+    border-color: var(--astreon-menu-border) !important;
+    color: #ffffff !important;
+}
+
+summary,
+.accordion-trigger {
+    color: #ffffff !important;
+}
+
+details[open],
+.accordion-item[data-state="open"] {
+    border-color: var(--astreon-menu-border-strong) !important;
+}
+
+/* ---------- NOTIFICATIONS / ALERTES ---------- */
+
+[role="alert"],
+.alert,
+.toast,
+.notification {
+    background:
+        linear-gradient(135deg, rgba(30,20,52,.98), rgba(13,10,27,.98)) !important;
+    border: 1px solid var(--astreon-menu-border) !important;
+    color: #f5f1ff !important;
+    box-shadow: 0 18px 45px rgba(0,0,0,.44) !important;
+}
+
+.alert-success,
+.toast-success {
+    border-color: rgba(34,197,94,.38) !important;
+}
+
+.alert-error,
+.alert-danger,
+.toast-error {
+    border-color: rgba(239,51,64,.42) !important;
+}
+
+.alert-warning,
+.toast-warning {
+    border-color: rgba(245,158,11,.42) !important;
+}
+
+/* ---------- MENUS MOBILES ---------- */
+
+.mobile-menu,
+.mobile-navigation,
+nav[data-mobile],
+[data-mobile-menu] {
+    background:
+        linear-gradient(180deg, rgba(14,10,28,.995), rgba(8,6,17,.995)) !important;
+    border-color: var(--astreon-menu-border) !important;
+    color: #ffffff !important;
+}
+
+/* ---------- GARDE-FOU : AUCUN MENU NE DOIT RESTER BLANC ---------- */
+
+:is(
+    [role="menu"],
+    [role="listbox"],
+    [role="dialog"],
+    .dropdown-menu,
+    .dropdown-content,
+    .menu-dropdown,
+    .popover-content,
+    .modal,
+    .modal-content,
+    .drawer,
+    .sheet-content
+) :is(
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-slate-50,
+    .bg-slate-100
+) {
+    background: transparent !important;
+}
+
+/* ==========================================================
+   FIN ASTREON GLOBAL V5
+   ========================================================== */
+
+
+/* ==========================================================
+   ASTREON V7 — AUTHENTIFICATION ET NAVIGATION
+   ========================================================== */
+
+/* Le menu vertical de la landing page est définitivement retiré. */
+.home-rail,
+.home-timeline,
+.home-scrollspy,
+.section-rail,
+.sections-rail,
+.landing-rail,
+.landing-scrollspy,
+.page-scrollspy,
+.fixed-section-nav,
+.desktop-section-nav {
+    display: none !important;
+}
+
+/* Cartes de connexion et d'inscription. */
+.astreon-auth-card {
+    width: min(100%, 540px);
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(168, 85, 247, .24);
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 85% 0%, rgba(139, 61, 255, .16), transparent 34%),
+        linear-gradient(145deg, rgba(22, 16, 42, .99), rgba(8, 7, 18, .99));
+    color: #f8f5ff;
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, .58),
+        inset 0 0 0 1px rgba(255,255,255,.018);
+}
+
+.astreon-register-card {
+    width: min(100%, 820px);
+}
+
+.astreon-auth-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 30px;
+    border-bottom: 1px solid rgba(168, 85, 247, .17);
+}
+
+.astreon-auth-heading h1 {
+    margin: 0;
+    color: #fff !important;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: -.025em;
+}
+
+.astreon-auth-heading p {
+    margin: 5px 0 0;
+    color: #aaa1bd !important;
+    font-size: 14px;
+}
+
+.astreon-auth-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    place-items: center;
+    border: 1px solid rgba(192,132,252,.28);
+    border-radius: 15px;
+    color: #c084fc;
+    background: rgba(139,61,255,.12);
+    box-shadow: 0 0 30px rgba(139,61,255,.14);
+}
+
+.astreon-auth-form {
+    display: grid;
+    gap: 14px;
+    padding: 28px 30px;
+}
+
+.astreon-register-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.astreon-auth-form label,
+.astreon-register-grid label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ddd6ea !important;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.astreon-auth-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.astreon-auth-label-row label {
+    margin: 0;
+}
+
+.astreon-auth-label-row a,
+.astreon-auth-check a,
+.astreon-auth-login-link a {
+    color: #c084fc !important;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.astreon-auth-input {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border: 1px solid rgba(168,85,247,.27);
+    border-radius: 12px;
+    background: rgba(5,4,13,.72);
+    transition:
+        border-color .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+}
+
+.astreon-auth-input:focus-within {
+    border-color: rgba(192,132,252,.72);
+    background: rgba(8,6,18,.95);
+    box-shadow: 0 0 0 4px rgba(139,61,255,.12);
+}
+
+.astreon-auth-input > svg {
+    flex: 0 0 auto;
+    color: #9f67e9;
+}
+
+.astreon-auth-input input {
+    width: 100%;
+    min-width: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+.astreon-auth-input input::placeholder {
+    color: #716a82 !important;
+}
+
+.astreon-auth-input button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 0;
+    border-radius: 8px;
+    color: #aaa1bd;
+    background: transparent;
+}
+
+.astreon-auth-input button:hover {
+    color: #fff;
+    background: rgba(139,61,255,.14);
+}
+
+.astreon-auth-check {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 4px 0 0 !important;
+    color: #aaa1bd !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+
+.astreon-auth-check input {
+    width: 17px;
+    height: 17px;
+    margin-top: 1px;
+    accent-color: #9333ea;
+}
+
+.astreon-auth-submit {
+    display: inline-flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+    border: 1px solid rgba(216,180,254,.16);
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #6d28d9, #9333ea);
+    font-weight: 900;
+    box-shadow: 0 15px 35px rgba(139,61,255,.25);
+    transition:
+        transform .16s ease,
+        filter .16s ease,
+        box-shadow .16s ease;
+}
+
+.astreon-auth-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 19px 42px rgba(139,61,255,.32);
+}
+
+.astreon-auth-submit:disabled {
+    cursor: wait;
+    opacity: .6;
+}
+
+.astreon-auth-register {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 30px;
+    border-top: 1px solid rgba(168,85,247,.15);
+    background: rgba(139,61,255,.045);
+}
+
+.astreon-auth-register strong,
+.astreon-auth-register span {
+    display: block;
+}
+
+.astreon-auth-register strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+.astreon-auth-register span {
+    margin-top: 4px;
+    color: #90889f;
+    font-size: 12px;
+}
+
+.astreon-auth-register > a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 15px;
+    border: 1px solid rgba(192,132,252,.28);
+    border-radius: 10px;
+    color: #d8b4fe !important;
+    background: rgba(139,61,255,.1);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.astreon-auth-login-link {
+    padding: 20px 30px 26px;
+    text-align: center;
+    color: #aaa1bd;
+    font-size: 14px;
+}
+
+.astreon-auth-error {
+    margin: -5px 0 0;
+    color: #fb7185 !important;
+    font-size: 12px;
+}
+
+.astreon-auth-success {
+    margin: 22px 30px 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(34,197,94,.26);
+    border-radius: 10px;
+    color: #86efac;
+    background: rgba(34,197,94,.08);
+    font-size: 13px;
+}
+
+.astreon-dashboard-redirect {
+    display: grid;
+    min-height: 100vh;
+    place-content: center;
+    gap: 18px;
+    color: #cfc7df;
+    text-align: center;
+    background:
+        radial-gradient(circle at 50% 40%, rgba(139,61,255,.18), transparent 30%),
+        #070711;
+}
+
+.astreon-dashboard-spinner {
+    width: 44px;
+    height: 44px;
+    margin: auto;
+    border: 4px solid rgba(192,132,252,.18);
+    border-top-color: #a855f7;
+    border-radius: 999px;
+    animation: astreon-spin .75s linear infinite;
+}
+
+@keyframes astreon-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 700px) {
+    .astreon-register-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .astreon-auth-heading,
+    .astreon-auth-form,
+    .astreon-auth-register {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .astreon-auth-register {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .astreon-auth-register > a {
+        justify-content: center;
+    }
+}
+
+
+/* ==========================================================
+   ASTREON V11 — CARTES SOMBRES DE L'ESPACE CLIENT
+   Harmonisation : Mes services + Mes commandes
+   ========================================================== */
+
+:root {
+    --astreon-client-surface: rgba(18, 12, 37, .94);
+    --astreon-client-surface-soft: rgba(23, 15, 46, .92);
+    --astreon-client-surface-hover: rgba(35, 21, 67, .96);
+    --astreon-client-border: rgba(168, 85, 247, .28);
+    --astreon-client-border-soft: rgba(168, 85, 247, .16);
+    --astreon-client-text: #f7f3ff;
+    --astreon-client-muted: #b9afc9;
+    --astreon-client-muted-2: #8e849f;
+}
+
+/* Supprime toutes les cartes blanches visibles sur les listes client. */
+.astreon-stat-card,
+.astreon-empty-state,
+.astreon-client-card,
+.astreon-table-head,
+.astreon-order-row {
+    border-color: var(--astreon-client-border) !important;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(139, 61, 255, .12), transparent 35%),
+        linear-gradient(145deg, var(--astreon-client-surface-soft), var(--astreon-client-surface)) !important;
+    color: var(--astreon-client-text) !important;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, .24),
+        inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
+}
+
+/* Compteurs de la page Mes services. */
+.astreon-stat-card {
+    position: relative;
+    min-height: 116px;
+    overflow: hidden;
+    border: 1px solid var(--astreon-client-border) !important;
+    border-top-color: rgba(168, 85, 247, .65) !important;
+    border-radius: 16px !important;
+}
+
+.astreon-stat-card::after {
+    position: absolute;
+    right: -30px;
+    bottom: -42px;
+    width: 125px;
+    height: 125px;
+    border-radius: 999px;
+    background: rgba(139, 61, 255, .10);
+    content: "";
+    filter: blur(4px);
+    pointer-events: none;
+}
+
+.astreon-stat-card > svg {
+    color: #a855f7 !important;
+    filter: drop-shadow(0 0 12px rgba(168, 85, 247, .32));
+}
+
+.astreon-stat-card span {
+    color: var(--astreon-client-muted) !important;
+}
+
+.astreon-stat-card strong {
+    color: #ffffff !important;
+}
+
+/* États vides : aucun service / aucune commande. */
+.astreon-empty-state {
+    min-height: 260px;
+    border: 1px dashed rgba(168, 85, 247, .38) !important;
+    border-radius: 17px !important;
+    text-align: center;
+}
+
+.astreon-empty-state > svg {
+    color: #a855f7 !important;
+    filter: drop-shadow(0 0 16px rgba(168, 85, 247, .32));
+}
+
+.astreon-empty-state h2 {
+    color: #ffffff !important;
+}
+
+.astreon-empty-state p {
+    color: var(--astreon-client-muted) !important;
+}
+
+/* Tableau des commandes. */
+.astreon-client-card {
+    overflow: hidden;
+    border: 1px solid var(--astreon-client-border) !important;
+    border-radius: 17px !important;
+}
+
+.astreon-table-head {
+    border: 0 !important;
+    border-bottom: 1px solid var(--astreon-client-border-soft) !important;
+    border-radius: 0 !important;
+    background: rgba(139, 61, 255, .085) !important;
+    box-shadow: none !important;
+}
+
+.astreon-table-head span {
+    color: #c8bdd8 !important;
+    font-weight: 900 !important;
+    letter-spacing: .055em;
+}
+
+.astreon-order-row {
+    border: 0 !important;
+    border-bottom: 1px solid var(--astreon-client-border-soft) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition:
+        background .16s ease,
+        transform .16s ease;
+}
+
+.astreon-order-row:last-child {
+    border-bottom: 0 !important;
+}
+
+.astreon-order-row:hover {
+    background: var(--astreon-client-surface-hover) !important;
+}
+
+.astreon-order-row,
+.astreon-order-row strong,
+.astreon-order-row span {
+    color: var(--astreon-client-text) !important;
+}
+
+.astreon-order-row svg {
+    color: #a855f7 !important;
+}
+
+/* Empêche les anciens styles clairs de revenir sur les enfants. */
+.astreon-stat-card *,
+.astreon-empty-state *,
+.astreon-client-card * {
+    border-color: var(--astreon-client-border-soft);
+}
+
+.astreon-client-card .astreon-empty-state {
+    margin: 0;
+    min-height: 285px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(139, 61, 255, .13), transparent 30%),
+        rgba(10, 7, 22, .34) !important;
+    box-shadow: none !important;
+}
+
+/* Pagination cohérente. */
+.astreon-client-card + .mt-5 .astreon-outline-button,
+.astreon-outline-button {
+    border-color: rgba(168, 85, 247, .34) !important;
+    color: #d8b4fe !important;
+    background: rgba(139, 61, 255, .08) !important;
+}
+
+.astreon-outline-button:hover {
+    border-color: rgba(192, 132, 252, .68) !important;
+    color: #ffffff !important;
+    background: rgba(139, 61, 255, .18) !important;
+}
+
+/* Responsive : conserve des cartes compactes sur mobile. */
+@media (max-width: 768px) {
+    .astreon-stat-card {
+        min-height: 100px;
+    }
+
+    .astreon-table-head {
+        display: none !important;
+    }
+
+    .astreon-order-row {
+        gap: 10px;
+        padding: 18px !important;
+        border-bottom: 1px solid var(--astreon-client-border-soft) !important;
+    }
+
+    .astreon-empty-state,
+    .astreon-client-card .astreon-empty-state {
+        min-height: 220px;
+    }
+}
+
+
+/* ==========================================================
+   ASTREON V12 — CARTES DE SERVICES SOMBRES
+   Corrige les fiches de services encore blanches.
+   ========================================================== */
+
+.astreon-service-row {
+    overflow: hidden !important;
+    border: 1px solid rgba(168, 85, 247, .30) !important;
+    border-radius: 18px !important;
+    background:
+        radial-gradient(circle at 88% 0%, rgba(139, 61, 255, .14), transparent 34%),
+        linear-gradient(145deg, rgba(24, 15, 48, .98), rgba(12, 8, 27, .98)) !important;
+    color: #f8f5ff !important;
+    box-shadow:
+        0 20px 48px rgba(0, 0, 0, .30),
+        inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
+}
+
+.astreon-service-row + .astreon-service-row {
+    margin-top: 18px;
+}
+
+.astreon-service-row-head,
+.astreon-service-row-foot {
+    border-color: rgba(168, 85, 247, .16) !important;
+    background: rgba(139, 61, 255, .035) !important;
+    color: #b9afc9 !important;
+}
+
+.astreon-service-row-head {
+    border-bottom: 1px solid rgba(168, 85, 247, .18) !important;
+}
+
+.astreon-service-row-foot {
+    border-top: 1px solid rgba(168, 85, 247, .18) !important;
+}
+
+.astreon-service-row-head h2,
+.astreon-service-row-head h3,
+.astreon-service-row-head strong,
+.astreon-service-row strong {
+    color: #ffffff !important;
+}
+
+.astreon-service-row-head p,
+.astreon-service-row-head span,
+.astreon-service-row-foot,
+.astreon-service-row-foot span {
+    color: #b9afc9 !important;
+}
+
+.astreon-service-icon {
+    border: 1px solid rgba(168, 85, 247, .24) !important;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(192, 132, 252, .25), transparent 55%),
+        rgba(139, 61, 255, .12) !important;
+    color: #c084fc !important;
+    box-shadow: 0 0 26px rgba(139, 61, 255, .18) !important;
+}
+
+.astreon-service-grid {
+    background: rgba(7, 5, 18, .20) !important;
+}
+
+.astreon-service-grid > div {
+    border-color: rgba(168, 85, 247, .14) !important;
+    background: transparent !important;
+}
+
+.astreon-service-grid > div:hover {
+    background: rgba(139, 61, 255, .055) !important;
+}
+
+.astreon-service-grid svg {
+    color: #a855f7 !important;
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, .25));
+}
+
+.astreon-service-grid span {
+    color: #9186a5 !important;
+}
+
+.astreon-service-grid strong {
+    color: #f8f5ff !important;
+}
+
+/* Badges d'état */
+.astreon-service-row [class*="badge"],
+.astreon-service-row [class*="status"],
+.astreon-service-row .rounded-full {
+    border-color: rgba(34, 197, 94, .28) !important;
+    color: #86efac !important;
+    background: rgba(34, 197, 94, .10) !important;
+}
+
+/* Boutons de gestion */
+.astreon-service-row a,
+.astreon-service-row button {
+    transition:
+        transform .16s ease,
+        border-color .16s ease,
+        background .16s ease,
+        color .16s ease,
+        box-shadow .16s ease;
+}
+
+.astreon-service-row-foot a,
+.astreon-service-row-foot button {
+    border-color: rgba(168, 85, 247, .30) !important;
+    color: #d8b4fe !important;
+    background: rgba(139, 61, 255, .09) !important;
+}
+
+.astreon-service-row-foot a:hover,
+.astreon-service-row-foot button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(192, 132, 252, .62) !important;
+    color: #ffffff !important;
+    background: rgba(139, 61, 255, .18) !important;
+    box-shadow: 0 10px 24px rgba(139, 61, 255, .16) !important;
+}
+
+/* Bouton Renouveler */
+.astreon-service-row-foot a:last-child,
+.astreon-service-row-foot button:last-child {
+    border-color: rgba(168, 85, 247, .40) !important;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+    box-shadow: 0 10px 25px rgba(139, 61, 255, .22) !important;
+}
+
+/* Sécurité supplémentaire contre les anciennes classes Tailwind claires. */
+.astreon-service-row.bg-white,
+.astreon-service-row [class~="bg-white"],
+.astreon-service-row [class*="bg-white"] {
+    background-color: transparent !important;
+}
+
+.astreon-service-row [class*="text-slate-"],
+.astreon-service-row [class*="text-gray-"],
+.astreon-service-row [class*="text-zinc-"] {
+    color: #b9afc9 !important;
+}
+
+.astreon-service-row [class*="border-slate-"],
+.astreon-service-row [class*="border-gray-"],
+.astreon-service-row [class*="border-zinc-"] {
+    border-color: rgba(168, 85, 247, .15) !important;
+}
+
+@media (max-width: 768px) {
+    .astreon-service-row {
+        border-radius: 15px !important;
+    }
+
+    .astreon-service-grid > div {
+        border-right: 0 !important;
+        border-bottom: 1px solid rgba(168, 85, 247, .14) !important;
+    }
+
+    .astreon-service-grid > div:last-child {
+        border-bottom: 0 !important;
+    }
+}
+
+
+/* ==========================================================
+   ASTREON V13 — DÉTAIL D'UNE COMMANDE
+   Corrige aussi les anciens styles blancs forcés.
+   ========================================================== */
+
+.astreon-order-detail {
+    color: #f7f3ff !important;
+}
+
+.astreon-order-detail main {
+    padding-top: 8px;
+    padding-bottom: 48px;
+}
+
+.astreon-order-detail a {
+    color: #c084fc !important;
+}
+
+.astreon-order-detail h1,
+.astreon-order-detail h2,
+.astreon-order-detail strong {
+    color: #ffffff !important;
+}
+
+.astreon-order-detail p,
+.astreon-order-detail address {
+    color: #b9afc9 !important;
+}
+
+.astreon-order-detail-card,
+.astreon-order-detail section,
+.astreon-order-detail article {
+    border-color: rgba(168, 85, 247, .28) !important;
+    background:
+        radial-gradient(circle at 88% 0%, rgba(139, 61, 255, .14), transparent 36%),
+        linear-gradient(145deg, rgba(24, 15, 48, .98), rgba(12, 8, 27, .98)) !important;
+    color: #f7f3ff !important;
+    box-shadow:
+        0 22px 55px rgba(0, 0, 0, .30),
+        inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
+}
+
+.astreon-order-detail-card > div:first-child {
+    border-color: rgba(168, 85, 247, .18) !important;
+    background: rgba(139, 61, 255, .055) !important;
+}
+
+.astreon-order-detail-card .divide-y > div,
+.astreon-order-detail-card > div > div {
+    border-color: rgba(168, 85, 247, .14) !important;
+}
+
+.astreon-order-detail-card .divide-y > div:hover {
+    background: rgba(139, 61, 255, .055) !important;
+}
+
+.astreon-order-detail button {
+    border: 1px solid rgba(192, 132, 252, .34) !important;
+    background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+    color: #ffffff !important;
+    box-shadow: 0 12px 28px rgba(139, 61, 255, .24) !important;
+}
+
+.astreon-order-detail button:hover {
+    border-color: rgba(216, 180, 254, .66) !important;
+    box-shadow: 0 16px 34px rgba(139, 61, 255, .30) !important;
+}
+
+@media (max-width: 768px) {
+    .astreon-order-detail main {
+        padding-inline: 4px;
+    }
+
+    .astreon-order-detail h1 {
+        font-size: 2rem !important;
+        line-height: 1.15 !important;
+    }
+}

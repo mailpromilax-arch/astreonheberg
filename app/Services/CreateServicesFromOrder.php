@@ -20,9 +20,9 @@ class CreateServicesFromOrder
     public function handle(Order $order): void
     {
         $order->loadMissing([
-            'user',
-            'items.plan.product',
-        ]);
+    'user',
+    'items.productPlan.product',
+]);
 
         foreach ($order->items as $item) {
             $this->createForItem($order, $item);
@@ -33,7 +33,7 @@ class CreateServicesFromOrder
         Order $order,
         OrderItem $item,
     ): void {
-        $plan = $item->plan;
+        $plan = $item->productPlan;
 
         $snapshotConfig = data_get(
     $item->plan_snapshot,
