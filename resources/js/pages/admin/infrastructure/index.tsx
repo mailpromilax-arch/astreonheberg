@@ -1,4 +1,4 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import {
     Boxes,
     Building2,
@@ -37,6 +37,8 @@ type LocationItem = {
 
 type ServerItem = {
     id: number;
+    pterodactyl_id?: number | null;
+    identifier?: string | null;
     name: string;
     status: string;
     node?: string | number | null;
@@ -55,6 +57,7 @@ type Props = {
     nodes: NodeItem[];
     locations: LocationItem[];
     servers: ServerItem[];
+    pterodactyl_panel_url: string;
     stats: {
         nodes: number;
         online_nodes: number;
@@ -90,6 +93,7 @@ export default function AdminInfrastructureIndex({
     nodes,
     locations,
     servers,
+    pterodactyl_panel_url,
     stats,
 }: Props) {
     const [syncing, setSyncing] = useState(false);
@@ -281,9 +285,20 @@ export default function AdminInfrastructureIndex({
                                             </span>
                                         </td>
                                         <td className="px-5 py-4 text-right">
-                                            <Link href={`/admin/servers/${server.id}`} className="inline-flex h-10 items-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 text-sm font-black text-violet-200">
-                                                Gérer
-                                            </Link>
+                                            {server.pterodactyl_id && pterodactyl_panel_url ? (
+                                                <a
+                                                    href={`${pterodactyl_panel_url}/admin/servers/view/${server.pterodactyl_id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex h-10 items-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 text-sm font-black text-violet-200 transition hover:border-violet-300/40 hover:bg-violet-500/20"
+                                                >
+                                                    Gérer
+                                                </a>
+                                            ) : (
+                                                <span className="inline-flex h-10 cursor-not-allowed items-center rounded-xl border border-slate-700 bg-slate-800/40 px-4 text-sm font-black text-slate-500">
+                                                    Indisponible
+                                                </span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

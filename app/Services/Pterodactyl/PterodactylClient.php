@@ -154,6 +154,16 @@ public function findUserByEmail(
             ->json();
     }
 
+    public function suspendServer(int $serverId): void
+    {
+        $this->request()->post("/api/application/servers/{$serverId}/suspend")->throw();
+    }
+
+    public function unsuspendServer(int $serverId): void
+    {
+        $this->request()->post("/api/application/servers/{$serverId}/unsuspend")->throw();
+    }
+
 
 public function powerAction(
     string $identifier,

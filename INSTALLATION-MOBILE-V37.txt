@@ -1,0 +1,46 @@
+ASTREON — RESPONSIVE MOBILE V37
+
+Ce pack améliore l'ensemble du site sur téléphone :
+
+- menu public latéral avec sous-menus déroulants ;
+- Service Gaming, Service Web et Autres entièrement cliquables ;
+- blocage du scroll derrière les menus ouverts ;
+- menu client plein écran, défilable et tactile ;
+- header client compact sur petits écrans ;
+- menu admin identique sur toutes les pages ;
+- ajout de Codes promo et Sauvegardes au menu admin ;
+- sidebar admin tactile avec overlay et fermeture automatique ;
+- formulaires sans zoom automatique sur iPhone ;
+- tableaux scrollables horizontalement ;
+- modales limitées à la hauteur de l'écran ;
+- espacements et titres adaptés aux petits écrans ;
+- footer public réorganisé et liens corrigés.
+
+INSTALLATION
+
+1. Décompresser directement dans :
+   C:\Astreon\astreonheberg
+
+2. Exécuter :
+
+   cd C:\Astreon\astreonheberg
+   php install-astreon-mobile-v37.php
+   composer dump-autoload
+   npm run build
+   php artisan optimize:clear
+
+3. Si le serveur Vite tourne :
+   npm run dev
+
+4. Sur téléphone ou navigateur :
+   Ctrl + F5, ou vider le cache du navigateur.
+
+TESTS CONSEILLÉS
+
+- 320 px : petit téléphone
+- 375 px : iPhone standard
+- 390 px : iPhone récent
+- 412 px : Android récent
+- 768 px : tablette
+
+Les fichiers remplacés sont sauvegardés avec .backup-DATE.

@@ -61,6 +61,30 @@ use App\Http\Controllers\Admin\UserWalletController;
 use App\Http\Controllers\Client\WalletController;
 
 
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/promos')
+    ->name('admin.promos.')
+    ->group(function (): void {
+        Route::get(
+            '/',
+            [\App\Http\Controllers\Admin\PromoController::class, 'index'],
+        )->name('index');
+
+        Route::post(
+            '/',
+            [\App\Http\Controllers\Admin\PromoController::class, 'store'],
+        )->name('store');
+
+        Route::patch(
+            '/{promo}',
+            [\App\Http\Controllers\Admin\PromoController::class, 'update'],
+        )->name('update');
+
+        Route::delete(
+            '/{promo}',
+            [\App\Http\Controllers\Admin\PromoController::class, 'destroy'],
+        )->name('destroy');
+    });
 
 Route::middleware([
     'auth',
@@ -309,6 +333,16 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::post('/checkout', [CheckoutController::class, 'store'])
         ->name('checkout.store');
 
+Route::post('/checkout/promo', [
+    CheckoutController::class,
+    'applyPromo',
+])->name('checkout.promo.apply');
+
+Route::post('/checkout/promo/remove', [
+    CheckoutController::class,
+    'removePromo',
+])->name('checkout.promo.remove');
+
     Route::post('/checkout/paypal', [
         CheckoutController::class,
         'paypalCreate',
@@ -338,6 +372,13 @@ Route::get('/offres', [CatalogController::class, 'index'])
 Route::get('/boutique', [StoreController::class, 'index'])
     ->name('store.index');
 
+Route::get('/boutique/categorie/{universe}', [
+    StoreController::class,
+    'category',
+])
+    ->whereIn('universe', ['gaming', 'vps', 'web'])
+    ->name('store.category');
+
 
 Route::get('/boutique/{catalogSlug}', [StoreController::class, 'landing'])
     ->whereIn('catalogSlug', [
@@ -347,6 +388,7 @@ Route::get('/boutique/{catalogSlug}', [StoreController::class, 'landing'])
         'minecraft-bedrock',
         'ark',
         'palworld',
+        'hebergement-web',
     ])
     ->name('store.landing');
 Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
@@ -765,3 +807,21 @@ Route::get('/a-propos', function () {
 
 Route::get('/status', PublicStatusController::class)
     ->name('status');
+Route::middleware(['auth', 'verified'])
+    ->get('/client/invoices/order/{order}/download', function (\Illuminate\Http\Request $request, \App\Models\Order $order) {
+        abort_unless($order->user_id === $request->user()->id && $order->status === 'paid', 403);
+        $invoice = app(\App\Services\Billing\InvoiceService::class)->forPaidOrder($order, false);
+        return redirect()->route('client.invoices.download', $invoice);
+    })->whereNumber('order')->name('client.invoices.order-download');
+
+Route::middleware(['auth', 'verified'])
+    ->get('/client/invoices/{invoice}/download', [\App\Http\Controllers\Client\InvoiceController::class, 'download'])
+    ->whereNumber('invoice')->name('client.invoices.download');
+Route::middleware(['auth', 'verified', 'admin'])->group(function (): void {
+    Route::get('/admin/backups', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'index'])
+        ->name('admin.backups.index');
+    Route::patch('/admin/backups/{service}', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'update'])
+        ->whereNumber('service')->name('admin.backups.update');
+    Route::post('/admin/backups/{service}/create', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'create'])
+        ->whereNumber('service')->name('admin.backups.create');
+});

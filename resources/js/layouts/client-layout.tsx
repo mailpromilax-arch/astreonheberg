@@ -94,6 +94,14 @@ export default function ClientLayout({
         return () => document.removeEventListener('mousedown', close);
     }, []);
 
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? 'hidden' : '';
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileOpen]);
+
     function isActive(href: string): boolean {
         return href === '/client'
             ? path === href
@@ -117,7 +125,7 @@ export default function ClientLayout({
                 </div>
 
                 <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">
-                    <div className="mx-auto flex h-[78px] max-w-6xl items-center justify-between px-5">
+                    <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-2 px-3 sm:h-[78px] sm:px-5">
                         <AstreonLogo compact />
 
                         <nav className="hidden items-center gap-1 lg:flex">
@@ -149,7 +157,7 @@ export default function ClientLayout({
                             </Link>
                         </nav>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
                             <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2.5 xl:flex">
                                 <Search className="h-4 w-4 text-slate-400" />
                                 <input
@@ -162,7 +170,7 @@ export default function ClientLayout({
 <Link
                                 href="/panier"
                                 aria-label="Ouvrir le panier"
-                                className={`relative grid h-12 w-12 place-items-center rounded-full border transition ${
+                                className={`relative grid h-10 w-10 shrink-0 place-items-center rounded-full border transition sm:h-12 sm:w-12 ${
                                     path === '/panier' || path === '/checkout'
                                         ? 'border-purple-400/60 bg-purple-500/20 text-purple-200'
                                         : 'border-purple-500/25 bg-[#100a1e] text-slate-300 hover:border-purple-400/60 hover:text-white'
@@ -175,7 +183,7 @@ export default function ClientLayout({
                                 <button
                                     type="button"
                                     onClick={() => setAccountOpen((open) => !open)}
-                                    className="astreon-primary-button px-5 py-3"
+                                    className="astreon-primary-button hidden px-4 py-3 md:inline-flex xl:px-5"
                                 >
                                     Bonjour, {user?.name.split(' ')[0] ?? 'Client'} !
                                     <ChevronDown
@@ -186,7 +194,7 @@ export default function ClientLayout({
                                 </button>
 
                                 {accountOpen && (
-                                    <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                                    <div className="fixed inset-x-3 top-[116px] max-h-[calc(100dvh-132px)] overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-3 sm:w-80 sm:max-h-[75vh]">
                                         <div className="border-b border-slate-100 px-5 py-4">
                                             <p className="font-black text-slate-950">
                                                 {user?.name}
@@ -269,8 +277,8 @@ export default function ClientLayout({
                     </div>
 
                     {mobileOpen && (
-                        <div className="border-t border-slate-200 px-5 py-4 lg:hidden">
-                            <div className="space-y-1">
+                        <div className="fixed inset-x-0 bottom-0 top-[104px] z-40 overflow-y-auto border-t border-slate-200 bg-white px-4 py-4 shadow-2xl lg:hidden">
+                            <div className="mx-auto max-w-lg space-y-1 pb-8">
                                 {links.map(([label, href]) => (
                                     <Link
                                         key={href}
@@ -333,9 +341,9 @@ export default function ClientLayout({
                     </div>
                 </div>
 
-                <main className="mx-auto max-w-6xl px-5 py-7">
+                <main className="mx-auto max-w-6xl px-3 py-5 sm:px-5 sm:py-7">
                     <div className="mb-7">
-                        <h1 className="text-3xl font-black tracking-tight">
+                        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
                             {title}
                         </h1>
 

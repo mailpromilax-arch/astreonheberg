@@ -3602,3 +3602,125 @@ nav[data-mobile],
         @apply h-12 w-full rounded-xl border border-violet-400/15 bg-black/20 px-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400/40;
     }
 }
+
+
+
+/* ==========================================================
+   ASTREON V37 — RESPONSIVE MOBILE GLOBAL
+   ========================================================== */
+
+html {
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+@media (max-width: 767px) {
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        touch-action: manipulation;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    h1 {
+        overflow-wrap: anywhere;
+    }
+
+    .astreon-primary-button {
+        min-height: 44px;
+    }
+
+    .astreon-mobile-link {
+        display: flex !important;
+        min-height: 46px;
+        align-items: center;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    main,
+    section,
+    article,
+    form,
+    fieldset {
+        min-width: 0;
+    }
+
+    table {
+        white-space: nowrap;
+    }
+
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    [role="dialog"] {
+        max-height: calc(100dvh - 24px);
+        max-width: calc(100vw - 24px);
+        overflow-y: auto;
+    }
+
+    .fixed.inset-0 {
+        overscroll-behavior: contain;
+    }
+
+    pre,
+    code {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .grid {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 639px) {
+    .rounded-\[2rem\] {
+        border-radius: 1.25rem !important;
+    }
+
+    .p-8,
+    .p-10,
+    .p-12 {
+        padding: 1.25rem !important;
+    }
+
+    .px-8,
+    .px-10,
+    .px-12 {
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+    }
+
+    .py-16,
+    .py-20,
+    .py-24,
+    .py-28 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+}

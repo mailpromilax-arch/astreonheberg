@@ -1,23 +1,36 @@
-ASTREON — À PROPOS + ÉTAT DES SERVICES V32
+ASTREON — CORRECTIF ADMIN + SAUVEGARDES V36.1
 
-Installation :
-1. Décompresser dans C:\Astreon\astreonheberg
+Ce correctif :
+- ajoute « Codes promo » et « Sauvegardes » dans tous les menus admin
+  détectés dans resources/js/pages/admin ;
+- conserve toutes les autres catégories du menu ;
+- répare les colonnes manquantes dans la table services :
+  backup_enabled, backup_frequency_hours, next_backup_at, last_backup_at ;
+- sauvegarde chaque fichier TSX modifié avec une extension .backup-DATE ;
+- ne supprime aucune donnée.
+
+INSTALLATION
+
+1. Décompresser cette archive directement dans :
+   C:\Astreon\astreonheberg
+
 2. Exécuter :
 
-cd C:\Astreon\astreonheberg
-php install-astreon-about-status-v32.php
-composer dump-autoload
-npm run build
-php artisan serve
+   cd C:\Astreon\astreonheberg
+   php install-astreon-admin-backups-fix-v36-1.php
+   composer dump-autoload
+   npm run build
+   php artisan optimize:clear
 
-Dans un autre PowerShell :
-cd C:\Astreon\astreonheberg
-npm run dev
+3. Recharger l'administration avec Ctrl + F5.
 
-Puis Ctrl + F5.
+VÉRIFICATION
 
-Pages :
-http://127.0.0.1:8000/a-propos
-http://127.0.0.1:8000/status
+php artisan tinker --execute="dump([
+    'backup_enabled' => Schema::hasColumn('services', 'backup_enabled'),
+    'backup_frequency_hours' => Schema::hasColumn('services', 'backup_frequency_hours'),
+    'next_backup_at' => Schema::hasColumn('services', 'next_backup_at'),
+    'last_backup_at' => Schema::hasColumn('services', 'last_backup_at'),
+]);"
 
-Le menu « Autres » pointe déjà vers /a-propos et /status.
+Les quatre valeurs doivent être true.

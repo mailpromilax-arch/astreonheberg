@@ -23,6 +23,10 @@ final class InfrastructureController extends Controller
             'nodes' => $nodes,
             'locations' => $locations,
             'servers' => $servers,
+            'pterodactyl_panel_url' => rtrim(
+                (string) config('services.pterodactyl.url'),
+                '/',
+            ),
             'stats' => [
                 'nodes' => count($nodes),
                 'online_nodes' => collect($nodes)
@@ -54,6 +58,10 @@ final class InfrastructureController extends Controller
 
                 return [
                     'id' => $row['id'],
+                    'pterodactyl_id' => isset($row['pterodactyl_id'])
+                        ? (int) $row['pterodactyl_id']
+                        : (int) $row['id'],
+                    'identifier' => $row['identifier'] ?? null,
                     'name' => $row['name']
                         ?? $row['hostname']
                         ?? 'Node #'.$row['id'],
@@ -102,6 +110,10 @@ final class InfrastructureController extends Controller
 
                 return [
                     'id' => $row['id'],
+                    'pterodactyl_id' => isset($row['pterodactyl_id'])
+                        ? (int) $row['pterodactyl_id']
+                        : (int) $row['id'],
+                    'identifier' => $row['identifier'] ?? null,
                     'name' => $row['name']
                         ?? $row['short']
                         ?? 'Location #'.$row['id'],
@@ -133,6 +145,7 @@ final class InfrastructureController extends Controller
             'name',
             'reference',
             'identifier',
+            'pterodactyl_id',
             'status',
             'node_id',
             'node',
@@ -184,6 +197,10 @@ final class InfrastructureController extends Controller
 
                 return [
                     'id' => $row['id'],
+                    'pterodactyl_id' => isset($row['pterodactyl_id'])
+                        ? (int) $row['pterodactyl_id']
+                        : (int) $row['id'],
+                    'identifier' => $row['identifier'] ?? null,
                     'name' => $row['name']
                         ?? $row['reference']
                         ?? $row['identifier']

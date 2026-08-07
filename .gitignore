@@ -28,3 +28,17 @@ yarn-error.log
 /.vscode
 /.zed
 compose.local.yml
+*.backup-*
+install-astreon-*.php
+repair-astreon-*.php
+
+node_modules/
+vendor/
+
+.env
+.env.*
+
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*

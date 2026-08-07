@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\ProductPlan;
+use App\Services\Promotions\PromoCodeService;
 use App\Services\CreateServicesFromOrder;
 use App\Services\Payments\PayPalClient;
 use App\Services\Wallet\WalletService;
@@ -26,8 +27,9 @@ final class CheckoutController extends Controller
         Request $request,
         WalletService $wallets,
         PayPalClient $paypal,
+        PromoCodeService $promotions,
     ): Response|RedirectResponse {
-        $checkout = $this->checkoutData($request);
+        $checkout = $this->checkoutData($request, $promotions);
 
         if ($checkout['items']->isEmpty()) {
             return to_route('cart.index')->with(
@@ -36,21 +38,9 @@ final class CheckoutController extends Controller
             );
         }
 
-        $fingerprint = hash(
-            'sha256',
-            json_encode([
-                'user' => $request->user()->id,
-                'amount' => $checkout['summary']['due_today_cents'],
-                'items' => $checkout['items']
-                    ->map(fn (array $item): array => [
-                        $item['plan_id'],
-                        $item['quantity'],
-                        $item['line_monthly_cents'],
-                        $item['line_setup_cents'],
-                        $item['options'] ?? [],
-                    ])
-                    ->all(),
-            ], JSON_THROW_ON_ERROR),
+        $fingerprint = $this->checkoutFingerprint(
+            $request,
+            $checkout,
         );
 
         $paymentIntent = $this->paymentIntentForCheckout(
@@ -79,6 +69,118 @@ final class CheckoutController extends Controller
                     >= $checkout['summary']['due_today_cents'],
             ],
             'paypalConfigured' => $paypal->configured(),
+            'promo' => $checkout['promo'],
+        ]);
+    }
+
+    public function applyPromo(
+        Request $request,
+        PromoCodeService $promotions,
+        WalletService $wallets,
+    ): JsonResponse {
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:80'],
+        ]);
+
+        $baseCheckout = $this->checkoutData(
+            $request,
+            $promotions,
+            false,
+        );
+
+        if ($baseCheckout['items']->isEmpty()) {
+            return response()->json([
+                'message' => 'Votre panier est vide.',
+            ], 422);
+        }
+
+        try {
+            $promo = $promotions->resolve(
+                $validated['code'],
+                $request->user(),
+                $baseCheckout['summary']['before_discount_cents'],
+            );
+        } catch (ValidationException $exception) {
+            throw $exception;
+        }
+
+        $request->session()->put(
+            'checkout_promo_code',
+            $promo->code,
+        );
+
+        $checkout = $this->checkoutData(
+            $request,
+            $promotions,
+        );
+
+        $fingerprint = $this->checkoutFingerprint(
+            $request,
+            $checkout,
+        );
+
+        $paymentIntent = $this->paymentIntentForCheckout(
+            $request,
+            $checkout['summary']['due_today_cents'],
+            $fingerprint,
+        );
+
+        $wallet = $wallets->walletFor($request->user());
+
+        return response()->json([
+            'ok' => true,
+            'message' => 'Code promo appliqué.',
+            'summary' => $checkout['summary'],
+            'promo' => $checkout['promo'],
+            'clientSecret' => $paymentIntent->client_secret,
+            'paymentIntentId' => $paymentIntent->id,
+            'wallet' => [
+                'balance_cents' => $wallet->balance_cents,
+                'currency' => $wallet->currency,
+                'can_pay' => $wallet->balance_cents
+                    >= $checkout['summary']['due_today_cents'],
+            ],
+        ]);
+    }
+
+    public function removePromo(
+        Request $request,
+        PromoCodeService $promotions,
+        WalletService $wallets,
+    ): JsonResponse {
+        $request->session()->forget('checkout_promo_code');
+
+        $checkout = $this->checkoutData(
+            $request,
+            $promotions,
+        );
+
+        $fingerprint = $this->checkoutFingerprint(
+            $request,
+            $checkout,
+        );
+
+        $paymentIntent = $this->paymentIntentForCheckout(
+            $request,
+            $checkout['summary']['due_today_cents'],
+            $fingerprint,
+        );
+
+        $wallet = $wallets->walletFor($request->user());
+
+        return response()->json([
+            'ok' => true,
+            'message' => 'Code promo retiré.',
+            'summary' => $checkout['summary'],
+            'promo' => null,
+            'clientSecret' => $paymentIntent->client_secret,
+            'paymentIntentId' => $paymentIntent->id,
+            'wallet' => [
+                'balance_cents' => $wallet->balance_cents,
+                'currency' => $wallet->currency,
+                'can_pay' => $wallet->balance_cents
+                    >= $checkout['summary']['due_today_cents'],
+            ],
         ]);
     }
 
@@ -495,6 +597,12 @@ final class CheckoutController extends Controller
                 'subtotal_cents' => $checkout['summary']['monthly_cents'],
                 'setup_total_cents' => $checkout['summary']['setup_cents'],
                 'tax_total_cents' => 0,
+                'discount_cents' =>
+                    $checkout['summary']['discount_cents'],
+                'promo_code_id' =>
+                    $checkout['promo']['id'] ?? null,
+                'promo_code' =>
+                    $checkout['promo']['code'] ?? null,
                 'total_cents' => $checkout['summary']['due_today_cents'],
                 'billing_name' => $billing['billing_name'],
                 'billing_email' => $billing['billing_email'],
@@ -512,6 +620,7 @@ final class CheckoutController extends Controller
                 'paid_at' => now(),
                 'metadata' => array_merge($metadata, [
                     'ip' => $request->ip(),
+                    'promo' => $checkout['promo'],
                 ]),
             ]);
 
@@ -540,6 +649,15 @@ final class CheckoutController extends Controller
                         + $item['line_setup_cents'],
                     'plan_snapshot' => $item['snapshot'],
                 ]);
+            }
+
+            if ($checkout['promo'] !== null) {
+                app(PromoCodeService::class)->recordUsage(
+                    (int) $checkout['promo']['id'],
+                    $request->user(),
+                    $order,
+                    (int) $checkout['summary']['discount_cents'],
+                );
             }
 
             activity()
@@ -640,6 +758,29 @@ final class CheckoutController extends Controller
         }
     }
 }
+
+    private function checkoutFingerprint(
+        Request $request,
+        array $checkout,
+    ): string {
+        return hash(
+            'sha256',
+            json_encode([
+                'user' => $request->user()->id,
+                'amount' => $checkout['summary']['due_today_cents'],
+                'promo' => $checkout['promo']['code'] ?? null,
+                'items' => $checkout['items']
+                    ->map(fn (array $item): array => [
+                        $item['plan_id'],
+                        $item['quantity'],
+                        $item['line_monthly_cents'],
+                        $item['line_setup_cents'],
+                        $item['options'] ?? [],
+                    ])
+                    ->all(),
+            ], JSON_THROW_ON_ERROR),
+        );
+    }
 
     private function paymentIntentForCheckout(
         Request $request,
@@ -748,7 +889,11 @@ final class CheckoutController extends Controller
         ]);
     }
 
-    private function checkoutData(Request $request): array
+    private function checkoutData(
+        Request $request,
+        ?PromoCodeService $promotions = null,
+        bool $applySessionPromo = true,
+    ): array
     {
         $cart = $request->session()->get('cart', []);
 
@@ -835,17 +980,70 @@ final class CheckoutController extends Controller
             ->filter()
             ->values();
 
+        $monthlyCents = (int) $items->sum(
+            'line_monthly_cents',
+        );
+
+        $setupCents = (int) $items->sum(
+            'line_setup_cents',
+        );
+
+        $beforeDiscountCents =
+            $monthlyCents + $setupCents;
+
+        $promoPayload = null;
+        $discountCents = 0;
+
+        if ($applySessionPromo) {
+            $promotions ??= app(PromoCodeService::class);
+
+            $sessionCode = $request->session()->get(
+                'checkout_promo_code',
+            );
+
+            if (is_string($sessionCode) && $sessionCode !== '') {
+                try {
+                    $promo = $promotions->resolve(
+                        $sessionCode,
+                        $request->user(),
+                        $beforeDiscountCents,
+                    );
+
+                    $discountCents = $promotions->discountCents(
+                        $promo,
+                        $beforeDiscountCents,
+                    );
+
+                    $promoPayload = [
+                        'id' => $promo->id,
+                        'code' => $promo->code,
+                        'label' => $promo->label,
+                        'type' => $promo->type,
+                        'value' => $promo->value,
+                        'discount_cents' => $discountCents,
+                    ];
+                } catch (ValidationException) {
+                    $request->session()->forget(
+                        'checkout_promo_code',
+                    );
+                }
+            }
+        }
+
         return [
             'items' => $items,
+            'promo' => $promoPayload,
             'summary' => [
                 'quantity' => $items->sum('quantity'),
-                'monthly_cents' =>
-                    $items->sum('line_monthly_cents'),
-                'setup_cents' =>
-                    $items->sum('line_setup_cents'),
-                'due_today_cents' =>
-                    $items->sum('line_monthly_cents')
-                    + $items->sum('line_setup_cents'),
+                'monthly_cents' => $monthlyCents,
+                'setup_cents' => $setupCents,
+                'before_discount_cents' =>
+                    $beforeDiscountCents,
+                'discount_cents' => $discountCents,
+                'due_today_cents' => max(
+                    0,
+                    $beforeDiscountCents - $discountCents,
+                ),
             ],
         ];
     }
@@ -858,6 +1056,7 @@ final class CheckoutController extends Controller
             'cart_options',
             'checkout_payment_intent_id',
             'checkout_payment_fingerprint',
+            'checkout_promo_code',
         ]);
     }
 

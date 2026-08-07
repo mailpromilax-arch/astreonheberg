@@ -1,0 +1,51 @@
+ASTREON — CODES PROMO V34
+
+FONCTIONNALITÉS
+- Création de codes promo depuis l’administration
+- Réduction en pourcentage ou montant fixe
+- Montant minimum de commande
+- Plafond de réduction
+- Limite globale d’utilisation
+- Une utilisation maximum par client
+- Date de début et date de fin
+- Activation et désactivation immédiates
+- Application instantanée dans le checkout
+- Actualisation automatique du total Stripe
+- Compatibilité Stripe, PayPal et portefeuille Astreon
+- Enregistrement du code et de la remise sur la commande
+- Compteur d’utilisation sécurisé
+
+INSTALLATION
+
+1. Décompresser l’archive dans :
+C:\Astreon\astreonheberg
+
+2. Exécuter :
+
+cd C:\Astreon\astreonheberg
+php install-astreon-promo-codes-v34.php
+php artisan migrate
+composer dump-autoload
+npm run build
+php artisan serve
+
+3. Dans un second PowerShell :
+
+cd C:\Astreon\astreonheberg
+npm run dev
+
+4. Recharger le navigateur avec Ctrl + F5.
+
+ADMINISTRATION
+http://127.0.0.1:8000/admin/promos
+
+CHECKOUT
+http://127.0.0.1:8000/checkout
+
+IMPORTANT
+- Pour une remise fixe, saisir le montant en centimes.
+  Exemple : 500 = 5,00 €.
+- Une commande ne peut pas descendre sous 0,50 €, afin de respecter
+  le montant minimal accepté par Stripe.
+- L’installateur crée automatiquement des sauvegardes
+  « .backup-DATE » avant de remplacer un fichier.

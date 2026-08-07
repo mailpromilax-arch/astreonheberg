@@ -72,6 +72,8 @@ const navigation = [
     { label: 'Services', href: '/admin/servers', icon: Server },
     { label: 'Commandes', href: '/admin/orders', icon: ShoppingCart },
     { label: 'Paiements', href: '/admin/payments', icon: CreditCard },
+    { label: 'Codes promo', href: '/admin/promos', icon: CreditCard },
+    { label: 'Sauvegardes', href: '/admin/backups', icon: Boxes },
     { label: 'Tickets', href: '/admin/tickets', icon: LifeBuoy },
     { label: 'Infrastructure', href: '/admin/infrastructure', icon: Boxes },
     { label: 'Activité', href: '/admin/logs', icon: Activity },

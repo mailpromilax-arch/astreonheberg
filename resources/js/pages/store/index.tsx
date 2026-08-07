@@ -1,38 +1,25 @@
 import { Head, Link } from '@inertiajs/react';
+import {
+    ArrowRight,
+    Cloud,
+    Gamepad2,
+    Globe2,
+    Layers3,
+    Server,
+} from 'lucide-react';
+import PublicLayout from '@/layouts/PublicLayout';
 
-
-type Plan = {
-    id: number;
-    name: string;
-    slug: string;
-    price_monthly_cents: number;
-    ram_mb: number | null;
-    disk_gb: number | null;
-    cpu_percent: number | null;
-    cpu_cores: number | null;
-    player_slots: number | null;
-    is_popular: boolean;
-};
-
-type Product = {
-    id: number;
-    name: string;
-    slug: string;
-    short_description: string | null;
-    is_featured: boolean;
-    plans: Plan[];
-};
-
-type Category = {
-    id: number;
-    name: string;
-    slug: string;
-    description: string | null;
-    products: Product[];
+type Universe = {
+    slug: 'gaming' | 'vps' | 'web';
+    title: string;
+    description: string;
+    items: string[];
+    available_count: number;
+    lowest_price_cents: number | null;
 };
 
 type Props = {
-    categories: Category[];
+    universes: Universe[];
 };
 
 const euro = new Intl.NumberFormat('fr-FR', {
@@ -40,132 +27,126 @@ const euro = new Intl.NumberFormat('fr-FR', {
     currency: 'EUR',
 });
 
-function lowestPrice(product: Product): string {
-    if (product.plans.length === 0) {
-        return 'Indisponible';
-    }
+const icons = {
+    gaming: Gamepad2,
+    vps: Cloud,
+    web: Globe2,
+};
 
-    const cents = Math.min(
-        ...product.plans.map((plan) => plan.price_monthly_cents),
-    );
+const accents = {
+    gaming: {
+        border: 'hover:border-violet-300',
+        icon: 'bg-violet-500/15 text-violet-300',
+        badge: 'bg-violet-500/15 text-violet-200',
+    },
+    vps: {
+        border: 'hover:border-violet-300',
+        icon: 'bg-violet-500/15 text-violet-300',
+        badge: 'bg-violet-500/15 text-violet-200',
+    },
+    web: {
+        border: 'hover:border-violet-300',
+        icon: 'bg-violet-500/15 text-violet-300',
+        badge: 'bg-violet-500/15 text-violet-200',
+    },
+};
 
-    return euro.format(cents / 100);
-}
-
-export default function StoreIndex({ categories }: Props) {
+export default function StoreIndex({ universes }: Props) {
     return (
-        <>
-            <Head title="Boutique — AstreonHeberg" />
+        <PublicLayout>
+            <Head title="Boutique — Astreon" />
 
-            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
+            <main className="min-h-screen bg-[#f5f7fb] text-slate-950">
+                <section className="relative overflow-hidden border-b border-slate-200 bg-white">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,.14),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(124,58,237,.10),transparent_36%)]" />
 
-                <main className="mx-auto max-w-7xl px-6 py-20">
-                    <section
-                        className="mx-auto max-w-3xl border-0 !bg-transparent text-center shadow-none"
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            boxShadow: 'none',
-                        }}
-                    >
-                        <p className="text-sm font-black uppercase tracking-[0.25em] text-orange-500">
-                            Boutique
-                        </p>
+                    <div className="relative mx-auto max-w-6xl px-5 py-20 text-center lg:px-8 lg:py-28">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-black uppercase tracking-[.22em] text-orange-600">
+                            <Layers3 className="h-4 w-4" />
+                            Boutique Astreon
+                        </span>
 
-                        <h1 className="mt-4 text-5xl font-black">
-                            Choisissez votre prochaine infrastructure
+                        <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">
+                            Choisissez votre
+                            <span className="text-orange-500"> univers d’hébergement.</span>
                         </h1>
 
-                        <p className="mt-6 text-lg leading-8 text-slate-500">
-                            Serveurs Gaming, VPS et hébergements Web,
-                            tous administrables depuis un seul espace client.
+                        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                            Sélectionnez Game, VPS ou Web. Vous verrez ensuite uniquement les offres disponibles dans cette gamme.
                         </p>
-                    </section>
+                    </div>
+                </section>
 
-                    <div className="mt-20 space-y-24">
-                        {categories.map((category) => (
-                            <section key={category.id}>
-                                <div>
-                                    <h2 className="text-3xl font-black">
-                                        {category.name}
+                <section className="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+                    <div className="grid gap-7 lg:grid-cols-3">
+                        {universes.map((universe) => {
+                            const Icon = icons[universe.slug];
+                            const accent = accents[universe.slug];
+
+                            return (
+                                <Link
+                                    key={universe.slug}
+                                    href={`/boutique/categorie/${universe.slug}`}
+                                    className={`group flex min-h-[410px] flex-col rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-2xl ${accent.border}`}
+                                >
+                                    <div className="flex items-start justify-between gap-4">
+                                        <span className={`grid h-14 w-14 place-items-center rounded-2xl ${accent.icon}`}>
+                                            <Icon className="h-7 w-7" />
+                                        </span>
+
+                                        <span className={`rounded-full px-3 py-1.5 text-xs font-black ${accent.badge}`}>
+                                            {universe.available_count} disponible{universe.available_count > 1 ? 's' : ''}
+                                        </span>
+                                    </div>
+
+                                    <h2 className="mt-8 text-3xl font-black">
+                                        {universe.title}
                                     </h2>
 
-                                    <p className="mt-3 max-w-3xl text-slate-500">
-                                        {category.description}
+                                    <p className="mt-3 min-h-14 leading-7 text-slate-500">
+                                        {universe.description}
                                     </p>
-                                </div>
 
-                                <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                                    {category.products.map((product) => (
-                                        <article
-                                            key={product.id}
-                                            className="group rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:border-emerald-400/30"
-                                        >
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div>
-                                                    <p className="text-sm font-bold text-orange-500">
-                                                        {category.name}
-                                                    </p>
+                                    <div className="mt-7 flex flex-wrap gap-2">
+                                        {universe.items.map((item) => (
+                                            <span
+                                                key={item}
+                                                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600"
+                                            >
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </div>
 
-                                                    <h3 className="mt-2 text-2xl font-black">
-                                                        {product.name}
-                                                    </h3>
-                                                </div>
-
-                                                {product.is_featured && (
-                                                    <span className="rounded-full bg-purple-400/10 px-3 py-1 text-xs font-bold text-purple-300">
-                                                        Recommandé
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <p className="mt-4 min-h-16 leading-7 text-slate-500">
-                                                {product.short_description ??
-                                                    'Découvrez cette offre AstreonHeberg.'}
-                                            </p>
-
-                                            <div className="mt-7 border-t border-slate-200 pt-6">
-                                                <p className="text-xs uppercase tracking-wider text-slate-500">
+                                    <div className="mt-auto border-t border-slate-100 pt-7">
+                                        <div className="flex items-end justify-between gap-5">
+                                            <div>
+                                                <p className="text-xs font-black uppercase tracking-wider text-slate-400">
                                                     À partir de
                                                 </p>
-
-                                                <div className="mt-2 flex items-end gap-2">
-                                                    <span className="text-3xl font-black">
-                                                        {lowestPrice(product)}
-                                                    </span>
-
-                                                    {product.plans.length > 0 && (
-                                                        <span className="pb-1 text-sm text-slate-500">
-                                                            / mois
-                                                        </span>
-                                                    )}
-                                                </div>
+                                                <p className="mt-2 text-2xl font-black">
+                                                    {universe.lowest_price_cents === null
+                                                        ? 'Bientôt disponible'
+                                                        : `${euro.format(universe.lowest_price_cents / 100)} / mois`}
+                                                </p>
                                             </div>
 
-                                            <div className="mt-6 flex items-center justify-between">
-                                                <span className="text-sm text-slate-500">
-                                                    {product.plans.length}{' '}
-                                                    offre
-                                                    {product.plans.length > 1
-                                                        ? 's'
-                                                        : ''}
-                                                </span>
-
-                                                <Link
-                                                    href={`/boutique/${product.slug}`}
-                                                    className="rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 text-sm font-black"
-                                                >
-                                                    Voir les offres
-                                                </Link>
-                                            </div>
-                                        </article>
-                                    ))}
-                                </div>
-                            </section>
-                        ))}
+                                            <span className="grid h-11 w-11 place-items-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-500">
+                                                <ArrowRight className="h-5 w-5" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
-                </main>
-            </div>
-        </>
+
+                    <div className="mt-10 flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-bold text-slate-500">
+                        <Server className="h-5 w-5 text-emerald-500" />
+                        Toutes les offres affichées restent reliées au panier, au checkout et au provisionnement existants.
+                    </div>
+                </section>
+            </main>
+        </PublicLayout>
     );
 }

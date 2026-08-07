@@ -64,6 +64,15 @@ export default function ClientOrderShow({ order }: Props) {
                             Statut : {order.status}
                         </p>
 
+                        {order.status === 'paid' && (
+                            <a
+                                href={`/client/invoices/order/${order.id}/download`}
+                                className="mt-6 inline-flex rounded-xl border border-violet-400/20 bg-violet-500/10 px-5 py-3 font-black text-violet-200 transition hover:bg-violet-500/20"
+                            >
+                                Télécharger la facture PDF
+                            </a>
+                        )}
+
 {order.status === 'pending_payment' && (
     <button
         type="button"

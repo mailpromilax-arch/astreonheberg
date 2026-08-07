@@ -46,8 +46,18 @@ type Props = {
         quantity: number;
         monthly_cents: number;
         setup_cents: number;
+        before_discount_cents: number;
+        discount_cents: number;
         due_today_cents: number;
     };
+    promo: {
+        id: number;
+        code: string;
+        label: string | null;
+        type: 'percent' | 'fixed';
+        value: number;
+        discount_cents: number;
+    } | null;
     customer: {
         name: string;
         email: string;
@@ -238,6 +248,7 @@ function PaymentCard({
 export default function Checkout({
     items,
     summary,
+    promo,
     customer,
     stripeKey,
     clientSecret,
@@ -256,6 +267,30 @@ export default function Checkout({
         billing_country: 'FR',
         terms_accepted: false,
     });
+
+    const [checkoutSummary, setCheckoutSummary] =
+        useState(summary);
+
+    const [activePromo, setActivePromo] =
+        useState(promo);
+
+    const [promoCode, setPromoCode] =
+        useState(promo?.code ?? '');
+
+    const [promoBusy, setPromoBusy] =
+        useState(false);
+
+    const [promoMessage, setPromoMessage] =
+        useState<string | null>(null);
+
+    const [currentClientSecret, setCurrentClientSecret] =
+        useState(clientSecret);
+
+    const [currentPaymentIntentId, setCurrentPaymentIntentId] =
+        useState(paymentIntentId);
+
+    const [currentWallet, setCurrentWallet] =
+        useState(wallet);
 
     const stripeRef =
         useRef<StripeClient | null>(null);
@@ -280,6 +315,7 @@ export default function Checkout({
 
     useEffect(() => {
         let cancelled = false;
+        setReady(false);
 
         const mount = () => {
             if (
@@ -296,7 +332,7 @@ export default function Checkout({
 
             const elements =
                 stripe.elements({
-                    clientSecret,
+                    clientSecret: currentClientSecret,
                     appearance: {
                         theme: 'night',
                         variables: {
@@ -363,7 +399,7 @@ export default function Checkout({
             cancelled = true;
             paymentElementRef.current?.unmount();
         };
-    }, [stripeKey, clientSecret]);
+    }, [stripeKey, currentClientSecret]);
 
     const payload = () => ({
         ...form.data,
@@ -391,6 +427,67 @@ export default function Checkout({
             error?.data?.message
                 ?? 'Impossible de finaliser le paiement.',
         );
+    };
+
+    const applyPromo = async () => {
+    if (promoBusy || promoCode.trim() === '') {
+        return;
+    }
+
+    setPromoBusy(true);
+    setPromoMessage(null);
+    setPaymentError(null);
+
+    try {
+        await jsonPost('/checkout/promo', {
+            code: promoCode.trim(),
+        });
+
+        /*
+         * Le montant Stripe a changé.
+         * On recharge le checkout afin de recréer proprement
+         * le PaymentIntent et le Payment Element.
+         */
+        window.location.assign('/checkout');
+    } catch (error: any) {
+        setPromoMessage(
+            error?.data?.errors?.code?.[0]
+                ?? error?.data?.message
+                ?? 'Ce code promo ne peut pas être appliqué.',
+        );
+
+        setPromoBusy(false);
+    }
+};
+
+
+    const removePromo = async () => {
+        if (promoBusy) {
+            return;
+        }
+
+        setPromoBusy(true);
+        setPromoMessage(null);
+
+        try {
+            const data = await jsonPost(
+                '/checkout/promo/remove',
+                {},
+            );
+
+            refreshCheckoutFromPromo(data);
+            setPromoCode('');
+            setPromoMessage(
+                data.message ?? 'Code promo retiré.',
+            );
+        } catch (error: any) {
+            setPromoMessage(
+                error?.data?.message
+                    ?? 'Impossible de retirer le code promo.',
+            );
+        } finally {
+            setPromoBusy(false);
+        }
     };
 
     const submit = async (
@@ -448,7 +545,7 @@ export default function Checkout({
             }
 
             if (paymentMethod === 'wallet') {
-                if (!wallet.can_pay) {
+                if (!currentWallet.can_pay) {
                     setPaymentError(
                         'Le solde du portefeuille est insuffisant.',
                     );
@@ -540,7 +637,7 @@ export default function Checkout({
                 await jsonPost('/checkout', {
                     action: 'finalize',
                     payment_intent_id:
-                        paymentIntentId,
+                        currentPaymentIntentId,
                     ...payload(),
                 });
 
@@ -561,14 +658,14 @@ export default function Checkout({
         ? 'Paiement en cours…'
         : paymentMethod === 'paypal'
           ? `Continuer avec PayPal — ${euro.format(
-              summary.due_today_cents / 100,
+              checkoutSummary.due_today_cents / 100,
           )}`
           : paymentMethod === 'wallet'
             ? `Payer avec le portefeuille — ${euro.format(
-                summary.due_today_cents / 100,
+                checkoutSummary.due_today_cents / 100,
             )}`
             : `Payer par carte — ${euro.format(
-                summary.due_today_cents / 100,
+                checkoutSummary.due_today_cents / 100,
             )}`;
 
     const submitDisabled =
@@ -583,7 +680,7 @@ export default function Checkout({
         )
         || (
             paymentMethod === 'wallet'
-            && !wallet.can_pay
+            && !currentWallet.can_pay
         );
 
     return (
@@ -807,17 +904,17 @@ export default function Checkout({
                                             === 'wallet'
                                         }
                                         disabled={
-                                            !wallet.can_pay
+                                            !currentWallet.can_pay
                                         }
                                         title="Portefeuille Astreon"
                                         description={
-                                            wallet.can_pay
+                                            currentWallet.can_pay
                                                 ? `Solde disponible : ${euro.format(
-                                                    wallet.balance_cents
+                                                    currentWallet.balance_cents
                                                         / 100,
                                                 )}`
                                                 : `Solde insuffisant : ${euro.format(
-                                                    wallet.balance_cents
+                                                    currentWallet.balance_cents
                                                         / 100,
                                                 )}`
                                         }
@@ -912,8 +1009,8 @@ export default function Checkout({
                                                 Solde après paiement :{' '}
                                                 {euro.format(
                                                     (
-                                                        wallet.balance_cents
-                                                        - summary.due_today_cents
+                                                        currentWallet.balance_cents
+                                                        - checkoutSummary.due_today_cents
                                                     ) / 100,
                                                 )}
                                             </p>
@@ -1017,12 +1114,89 @@ export default function Checkout({
                                 Récapitulatif
                             </h2>
 
+                            <div className="mt-6 rounded-2xl border border-violet-400/20 bg-[#0d0819] p-4">
+                                <label
+                                    htmlFor="promo-code"
+                                    className="text-xs font-black uppercase tracking-[.16em] text-violet-300"
+                                >
+                                    Code promo
+                                </label>
+
+                                {activePromo ? (
+                                    <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-4 py-3">
+                                        <div className="min-w-0">
+                                            <p className="truncate font-black text-emerald-200">
+                                                {activePromo.code}
+                                            </p>
+                                            <p className="mt-1 text-xs text-emerald-300/70">
+                                                {activePromo.label
+                                                    ?? 'Réduction appliquée'}
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={removePromo}
+                                            disabled={promoBusy}
+                                            className="shrink-0 rounded-lg border border-emerald-300/20 px-3 py-2 text-xs font-black text-emerald-200 transition hover:bg-emerald-400/10 disabled:opacity-50"
+                                        >
+                                            Retirer
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="mt-3 flex gap-2">
+                                        <input
+                                            id="promo-code"
+                                            value={promoCode}
+                                            onChange={(event) =>
+                                                setPromoCode(
+                                                    event.target.value
+                                                        .toUpperCase(),
+                                                )
+                                            }
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter') {
+                                                    event.preventDefault();
+                                                    void applyPromo();
+                                                }
+                                            }}
+                                            placeholder="ASTREON10"
+                                            className="min-w-0 flex-1 rounded-xl border border-violet-400/20 bg-[#130d25] px-4 py-3 text-sm font-black uppercase tracking-wider text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400"
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={applyPromo}
+                                            disabled={
+                                                promoBusy
+                                                || promoCode.trim() === ''
+                                            }
+                                            className="rounded-xl bg-violet-600 px-4 py-3 text-sm font-black text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {promoBusy
+                                                ? '...'
+                                                : 'Appliquer'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {promoMessage && (
+                                    <p className={`mt-3 text-xs font-bold ${
+                                        activePromo
+                                            ? 'text-emerald-300'
+                                            : 'text-rose-300'
+                                    }`}>
+                                        {promoMessage}
+                                    </p>
+                                )}
+                            </div>
+
                             <dl className="mt-7 space-y-4 text-slate-300">
                                 <div className="flex justify-between">
                                     <dt>Abonnements</dt>
                                     <dd className="font-bold text-white">
                                         {euro.format(
-                                            summary.monthly_cents
+                                            checkoutSummary.monthly_cents
                                                 / 100,
                                         )}
                                     </dd>
@@ -1032,11 +1206,28 @@ export default function Checkout({
                                     <dt>Installation</dt>
                                     <dd className="font-bold text-white">
                                         {euro.format(
-                                            summary.setup_cents
+                                            checkoutSummary.setup_cents
                                                 / 100,
                                         )}
                                     </dd>
                                 </div>
+
+                                {checkoutSummary.discount_cents > 0 && (
+                                    <div className="flex justify-between text-emerald-300">
+                                        <dt>
+                                            Réduction
+                                            {activePromo
+                                                ? ` (${activePromo.code})`
+                                                : ''}
+                                        </dt>
+                                        <dd className="font-black">
+                                            - {euro.format(
+                                                checkoutSummary.discount_cents
+                                                    / 100,
+                                            )}
+                                        </dd>
+                                    </div>
+                                )}
 
                                 <div className="flex justify-between">
                                     <dt>TVA</dt>
@@ -1054,7 +1245,7 @@ export default function Checkout({
 
                                     <span className="text-3xl font-black">
                                         {euro.format(
-                                            summary.due_today_cents
+                                            checkoutSummary.due_today_cents
                                                 / 100,
                                         )}
                                     </span>

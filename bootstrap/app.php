@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ShareNotificationCenter;
+use App\Http\Middleware\GuardPaymentRequests;
 
 use App\Http\Middleware\ShareFlashData;
 
@@ -34,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             
             
             ShareNotificationCenter::class,
+            GuardPaymentRequests::class,
 ShareFlashData::class,
 HandleAppearance::class,
             HandleInertiaRequests::class,

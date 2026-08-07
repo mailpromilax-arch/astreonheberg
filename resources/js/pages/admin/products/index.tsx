@@ -51,6 +51,8 @@ type Props = {
 };
 
 const navigation = [
+    { label: 'Codes promo', href: '/admin/promos' },
+    { label: 'Sauvegardes', href: '/admin/backups' },
     { label: 'Tableau de bord', href: '/admin' },
     { label: 'Clients', href: '#' },
     { label: 'Catégories', href: '/admin/categories' },

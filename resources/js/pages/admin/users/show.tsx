@@ -427,70 +427,93 @@ export default function AdminUserShow({
                 </div>
 
                 <div className="p-5 sm:p-6">
-                    <h2 className="text-lg font-black">
-                        Dernières opérations
-                    </h2>
+    <div className="flex items-center justify-between gap-4">
+        <div>
+            <h2 className="text-lg font-black">
+                Dernières opérations
+            </h2>
 
-                    <div className="mt-4 divide-y divide-violet-400/10">
-                        {wallet_transactions.length === 0 && (
-                            <p className="py-8 text-center text-sm text-slate-500">
-                                Aucune transaction enregistrée.
+            <p className="mt-1 text-xs text-slate-500">
+                {wallet_transactions.length}{' '}
+                opération
+                {wallet_transactions.length > 1 ? 's' : ''}
+            </p>
+        </div>
+
+        <span className="rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1 text-xs font-black text-violet-300">
+            Historique
+        </span>
+    </div>
+
+    <div className="mt-4 max-h-[260px] overflow-y-auto rounded-2xl border border-violet-400/10 bg-[#0c0915]/70">
+        {wallet_transactions.length === 0 && (
+            <p className="px-4 py-10 text-center text-sm text-slate-500">
+                Aucune transaction enregistrée.
+            </p>
+        )}
+
+        <div className="divide-y divide-violet-400/10">
+            {wallet_transactions.map((transaction) => {
+                const isCredit =
+                    transaction.direction === 'credit';
+
+                return (
+                    <div
+                        key={transaction.id}
+                        className="flex items-center justify-between gap-4 px-4 py-3 transition hover:bg-violet-500/5"
+                    >
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span
+                                    className={`h-2 w-2 shrink-0 rounded-full ${
+                                        isCredit
+                                            ? 'bg-emerald-400'
+                                            : 'bg-rose-400'
+                                    }`}
+                                />
+
+                                <p className="truncate text-sm font-bold text-white">
+                                    {transaction.description
+                                        ?? transaction.source}
+                                </p>
+                            </div>
+
+                            <p className="mt-1 pl-4 text-[11px] text-slate-500">
+                                {transaction.created_at
+                                    ? new Date(
+                                        transaction.created_at,
+                                    ).toLocaleString('fr-FR')
+                                    : '—'}
                             </p>
-                        )}
+                        </div>
 
-                        {wallet_transactions.map(
-                            (transaction) => (
-                                <div
-                                    key={transaction.id}
-                                    className="flex items-center justify-between gap-5 py-4"
-                                >
-                                    <div>
-                                        <p className="text-sm font-black text-white">
-                                            {transaction.description
-                                                ?? transaction.source}
-                                        </p>
-                                        <p className="mt-1 text-xs text-slate-500">
-                                            {transaction.created_at
-                                                ? new Date(
-                                                    transaction.created_at,
-                                                ).toLocaleString(
-                                                    'fr-FR',
-                                                )
-                                                : '—'}
-                                        </p>
-                                    </div>
+                        <div className="shrink-0 text-right">
+                            <p
+                                className={`text-sm font-black ${
+                                    isCredit
+                                        ? 'text-emerald-300'
+                                        : 'text-rose-300'
+                                }`}
+                            >
+                                {isCredit ? '+' : '-'}
+                                {euro.format(
+                                    transaction.amount_cents / 100,
+                                )}
+                            </p>
 
-                                    <div className="text-right">
-                                        <p
-                                            className={`font-black ${
-                                                transaction.direction
-                                                === 'credit'
-                                                    ? 'text-emerald-300'
-                                                    : 'text-rose-300'
-                                            }`}
-                                        >
-                                            {transaction.direction
-                                            === 'credit'
-                                                ? '+'
-                                                : '-'}
-                                            {euro.format(
-                                                transaction.amount_cents
-                                                / 100,
-                                            )}
-                                        </p>
-                                        <p className="mt-1 text-xs text-slate-500">
-                                            Solde{' '}
-                                            {euro.format(
-                                                transaction.balance_after_cents
-                                                / 100,
-                                            )}
-                                        </p>
-                                    </div>
-                                </div>
-                            ),
-                        )}
+                            <p className="mt-1 text-[11px] text-slate-500">
+                                {euro.format(
+                                    transaction.balance_after_cents
+                                    / 100,
+                                )}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                );
+            })}
+        </div>
+    </div>
+</div>
             </section>
             <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {cards.map((card) => {

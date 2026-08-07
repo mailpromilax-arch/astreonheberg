@@ -1,0 +1,73 @@
+ASTREON — REFONTE BOUTIQUE V33
+
+Ce pack modifie uniquement :
+- StoreController
+- page Boutique
+- nouvelle page de catégorie
+- menu public
+- section Gaming de l'accueil
+- routes publiques de boutique
+
+Il ne modifie pas :
+- le panier
+- le checkout
+- Stripe
+- PayPal
+- le portefeuille
+- les commandes
+- le provisionnement Pterodactyl
+- les produits ou plans en base de données
+
+NOUVELLE STRUCTURE
+
+/boutique
+- Game
+- VPS
+- Web
+
+/boutique/categorie/gaming
+- FiveM
+- Minecraft Java
+- Minecraft Bedrock
+- ARK
+- Palworld
+
+/boutique/categorie/vps
+- VPS Cloud
+
+/boutique/categorie/web
+- Hébergement Web
+
+Les pages finales existantes restent :
+/boutique/fivem
+/boutique/minecraft-java
+/boutique/minecraft-bedrock
+/boutique/ark
+/boutique/palworld
+/boutique/vps-cloud
+/boutique/hebergement-web
+
+INSTALLATION
+
+Décompresser dans :
+C:\Astreon\astreonheberg
+
+Puis :
+
+cd C:\Astreon\astreonheberg
+php install-astreon-store-universes-v33.php
+composer dump-autoload
+npm run build
+php artisan serve
+
+Dans un autre terminal :
+
+cd C:\Astreon\astreonheberg
+npm run dev
+
+Faire ensuite Ctrl + F5.
+
+SAUVEGARDES
+
+Chaque fichier remplacé reçoit automatiquement une copie :
+.backup-AAAAMMJJ-HHMMSS
