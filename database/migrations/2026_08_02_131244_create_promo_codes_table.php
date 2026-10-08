@@ -1,27 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('promo_codes', function (Blueprint $table) {
+        if (Schema::hasTable('promo_code_usages')) {
+            return;
+        }
+
+        Schema::create('promo_code_usages', function (Blueprint $table): void {
             $table->id();
+
+            $table->foreignId('promo_code_id')
+                ->constrained('promo_codes')
+                ->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $table->foreignId('order_id')
+                ->nullable()
+                ->constrained('orders')
+                ->nullOnDelete();
+
+            $table->unsignedInteger('discount_cents')->default(0);
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('promo_codes');
+        // Ne pas supprimer la table : elle peut avoir été créée
+        // par une autre migration et contenir des données.
     }
 };
