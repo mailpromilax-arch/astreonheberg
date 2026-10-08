@@ -10,11 +10,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Cette table peut déjà avoir été créée par une migration précédente.
-        if (Schema::hasTable('promo_code_usages')) {
-            return;
-        }
-
         Schema::create('promo_code_usages', function (Blueprint $table): void {
             $table->id();
 
@@ -33,6 +28,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->unsignedInteger('discount_cents')->default(0);
+
             $table->timestamps();
 
             $table->index(['promo_code_id', 'user_id']);
@@ -42,6 +38,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // On conserve la table et ses données.
+        Schema::dropIfExists('promo_code_usages');
     }
 };
