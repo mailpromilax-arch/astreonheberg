@@ -10,6 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Cette table peut déjà avoir été créée par une migration précédente.
         if (Schema::hasTable('promo_code_usages')) {
             return;
         }
@@ -32,14 +33,15 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->unsignedInteger('discount_cents')->default(0);
-
             $table->timestamps();
+
+            $table->index(['promo_code_id', 'user_id']);
+            $table->index('order_id');
         });
     }
 
     public function down(): void
     {
-        // Ne pas supprimer la table : elle peut avoir été créée
-        // par une autre migration et contenir des données.
+        // On conserve la table et ses données.
     }
 };
