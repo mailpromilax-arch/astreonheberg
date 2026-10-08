@@ -10,6 +10,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('promo_code_usages')) {
+            return;
+        }
+
         Schema::create('promo_code_usages', function (Blueprint $table): void {
             $table->id();
 
@@ -38,6 +42,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('promo_code_usages');
+        // La table peut avoir été créée par une autre migration.
+        // On ne la supprime donc pas ici.
     }
 };
