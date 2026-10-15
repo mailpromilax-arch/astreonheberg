@@ -40,8 +40,8 @@ return [
     'application_key' => env('PTERODACTYL_APPLICATION_KEY'),
     'client_key' => env('PTERODACTYL_CLIENT_KEY'),
     'location_id' => env('PTERODACTYL_LOCATION_ID'),
-    'nest_id' => env('PTERODACTYL_NEST_ID'),
-    'egg_id' => env('PTERODACTYL_EGG_ID'),
+'egg_java'    => env('PTERO_EGG_MC_JAVA', 4),
+'egg_bedrock' => env('PTERO_EGG_MC_BEDROCK', 21),
     'docker_image' => env('PTERODACTYL_DOCKER_IMAGE'),
 ],
 

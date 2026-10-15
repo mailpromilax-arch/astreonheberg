@@ -212,9 +212,8 @@ export default function ClientDashboard({
                         </h2>
 
                         <p className="mt-3 max-w-2xl leading-7 text-slate-500">
-                            Découvrez nos offres Minecraft,
-                            FiveM, Palworld, ARK et bien plus
-                            encore.
+                            Découvrez nos offres Minecraft ou
+                            Web.
                         </p>
                     </div>
 

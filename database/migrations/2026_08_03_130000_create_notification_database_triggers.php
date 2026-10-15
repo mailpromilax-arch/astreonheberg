@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         if (
-            DB::getDriverName() !== 'mysql'
+            ! in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)
             || ! Schema::hasTable('platform_notifications')
             || ! Schema::hasTable('tickets')
         ) {
@@ -202,7 +202,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        if (DB::getDriverName() === 'mysql') {
+        if (in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)) {
             $this->dropTriggers();
         }
     }

@@ -22,8 +22,8 @@ class StoreController extends Controller
             'names' => ['FiveM'],
         ],
         'minecraft-java' => [
-            'label' => 'Minecraft Java',
-            'description' => 'Serveurs Java avec panel complet.',
+            'label' => 'Minecraft',
+            'description' => 'Serveurs Java et Bedrock avec panel complet.',
             'slugs' => ['minecraft-java', 'minecraft'],
             'names' => ['Minecraft Java'],
         ],
@@ -72,17 +72,9 @@ class StoreController extends Controller
                     [
                         'fivem',
                         'minecraft-java',
-                        'minecraft-bedrock',
                         'ark',
                         'palworld',
                     ],
-                    $products,
-                ),
-                $this->universe(
-                    'vps',
-                    'VPS',
-                    'VPS Cloud performants et administrables.',
-                    ['vps-cloud'],
                     $products,
                 ),
                 $this->universe(
@@ -105,7 +97,6 @@ class StoreController extends Controller
                 'entries' => [
                     'fivem',
                     'minecraft-java',
-                    'minecraft-bedrock',
                     'ark',
                     'palworld',
                 ],
@@ -159,17 +150,57 @@ class StoreController extends Controller
                 }
             })
             ->orderByRaw(
-                'FIELD(slug, '.collect($definition['slugs'])
-                    ->map(fn (string $slug) => "'".addslashes($slug)."'")
-                    ->implode(',').')',
+                'CASE slug '.collect($definition['slugs'])
+                    ->map(fn (string $slug, int $index) => 'WHEN ? THEN '.$index)
+                    ->implode(' ').' ELSE 999 END',
+                $definition['slugs'],
             )
             ->firstOrFail();
 
-        return $this->renderProduct($product, $catalogSlug);
+        $allPlans = null;
+
+        if ($catalogSlug === 'minecraft-java') {
+            $product->load([
+                'category:id,name,slug',
+                'plans' => fn ($query) => $query
+                    ->where('status', 'active')
+                    ->orderBy('sort_order')
+                    ->orderBy('price_monthly_cents'),
+            ]);
+
+            $javaPlans = $product->plans->map(fn ($plan) => array_merge(
+                $plan->toArray(),
+                ['edition' => 'java'],
+            ));
+
+            $bedrock = Product::query()
+                ->where('slug', 'minecraft-bedrock')
+                ->where('status', 'active')
+                ->with([
+                    'plans' => fn ($query) => $query
+                        ->where('status', 'active')
+                        ->orderBy('sort_order')
+                        ->orderBy('price_monthly_cents'),
+                ])
+                ->first();
+
+            $bedrockPlans = $bedrock
+                ? $bedrock->plans->map(fn ($plan) => array_merge(
+                    $plan->toArray(),
+                    ['edition' => 'bedrock'],
+                ))
+                : collect();
+
+            $allPlans = $javaPlans->concat($bedrockPlans)->values();
+        }
+
+        return $this->renderProduct($product, $catalogSlug, $allPlans);
     }
 
     public function show(Product $product): Response
     {
+        abort_if($product->slug === 'hebergement-web', 404);
+
         abort_unless(
             $product->status === 'active'
             && $product->category?->is_active,
@@ -248,8 +279,29 @@ class StoreController extends Controller
             return false;
         });
 
-        $lowestPrice = $product?->plans
-            ?->pluck('price_monthly_cents')
+        $plans = collect($product?->plans ?? [])
+            ->map(fn ($plan) => array_merge(
+                is_array($plan) ? $plan : $plan->toArray(),
+                ['edition' => 'java'],
+            ));
+
+        if ($catalogSlug === 'minecraft-java') {
+            $bedrockProduct = $products->first(
+                fn (Product $p): bool => $p->slug === 'minecraft-bedrock',
+            );
+
+            if ($bedrockProduct) {
+                $bedrockPlans = $bedrockProduct->plans->map(fn ($plan) => array_merge(
+                    $plan->toArray(),
+                    ['edition' => 'bedrock'],
+                ));
+
+                $plans = $plans->concat($bedrockPlans);
+            }
+        }
+
+        $lowestPrice = $plans
+            ->pluck('price_monthly_cents')
             ->filter(fn ($price): bool => is_numeric($price))
             ->map(fn ($price): int => (int) $price)
             ->min();
@@ -258,30 +310,39 @@ class StoreController extends Controller
             'slug' => $catalogSlug,
             'label' => $definition['label'],
             'description' => $definition['description'],
-            'href' => "/boutique/{$catalogSlug}",
-            'available' => $product !== null && $product->plans->isNotEmpty(),
-            'plans_count' => $product?->plans->count() ?? 0,
+            'href' => $catalogSlug === 'minecraft-java'
+                ? '/minecraft'
+                : "/boutique/{$catalogSlug}",
+            'available' => $plans->isNotEmpty(),
+            'plans_count' => $plans->count(),
             'lowest_price_cents' => is_int($lowestPrice)
                 ? $lowestPrice
                 : null,
         ];
     }
 
+    /**
+     * @param  Collection|null  $allPlans  Plans fusionnés (ex. Java + Bedrock), chacun avec son champ `edition`.
+     */
     private function renderProduct(
         Product $product,
         string $catalogSlug,
+        ?Collection $allPlans = null,
     ): Response {
-        $product->load([
-            'category:id,name,slug',
-            'plans' => fn ($query) => $query
-                ->where('status', 'active')
-                ->orderBy('sort_order')
-                ->orderBy('price_monthly_cents'),
-        ]);
+        if (! $product->relationLoaded('plans')) {
+            $product->load([
+                'category:id,name,slug',
+                'plans' => fn ($query) => $query
+                    ->where('status', 'active')
+                    ->orderBy('sort_order')
+                    ->orderBy('price_monthly_cents'),
+            ]);
+        }
 
         return Inertia::render('store/show', [
             'product' => $product,
             'catalogSlug' => $catalogSlug,
+            'allPlans' => $allPlans ?? $product->plans,
             'arkEditions' => $catalogSlug === 'ark'
                 ? [
                     [

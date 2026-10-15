@@ -1,7 +1,25 @@
 <?php
 
-
-use App\Http\Controllers\PublicStatusController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AutomaticBackupController;
+use App\Http\Controllers\Admin\InfrastructureController;
+use App\Http\Controllers\Admin\InfrastructureSyncController;
+use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PanelController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanController;
+use App\Http\Controllers\Admin\ServerController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserPaymentMethodController;
+use App\Http\Controllers\Admin\UserWalletController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Client\Account\ContactController;
 use App\Http\Controllers\Client\Account\EmailHistoryController;
 use App\Http\Controllers\Client\Account\MemberController;
@@ -9,376 +27,67 @@ use App\Http\Controllers\Client\Account\PasswordController;
 use App\Http\Controllers\Client\Account\PaymentMethodController;
 use App\Http\Controllers\Client\Account\ProfileController;
 use App\Http\Controllers\Client\Account\SecurityController;
-
-use App\Http\Controllers\Admin\SettingsController;
-
-use App\Http\Controllers\Admin\LogController;
-
-use App\Http\Controllers\Admin\InfrastructureSyncController;
-
-use App\Http\Controllers\Admin\InfrastructureController;
-
-use App\Http\Controllers\Admin\PaymentController;
-
-use App\Http\Controllers\Admin\OrderController;
-
-use App\Http\Controllers\Client\ClientTicketController;
-
-use App\Http\Controllers\Admin\TicketController;
-
-use App\Http\Controllers\Admin\ServerController;
-
-use App\Http\Controllers\Admin\UserController;
-
-use App\Http\Controllers\Admin\AdminDashboardController;
-
-use App\Http\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\ProductPlanController as AdminProductPlanController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CatalogController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Client\ClientDashboardController;
 use App\Http\Controllers\Client\ClientOrderController;
-use App\Http\Controllers\Client\ClientServerPowerController;
-use App\Http\Controllers\Client\ClientServerFilesController;
+use App\Http\Controllers\Client\ClientServerActivityController;
+use App\Http\Controllers\Client\ClientServerApiKeyController;
 use App\Http\Controllers\Client\ClientServerBackupController;
 use App\Http\Controllers\Client\ClientServerDatabaseController;
-use App\Http\Controllers\Client\ClientServerStartupController;
+use App\Http\Controllers\Client\ClientServerFilesController;
 use App\Http\Controllers\Client\ClientServerNetworkController;
+use App\Http\Controllers\Client\ClientServerPowerController;
 use App\Http\Controllers\Client\ClientServerScheduleController;
-use App\Http\Controllers\Client\ClientServerApiKeyController;
+use App\Http\Controllers\Client\ClientServerSettingsController;
+use App\Http\Controllers\Client\ClientServerStartupController;
+use App\Http\Controllers\Client\ClientServerUserController;
 use App\Http\Controllers\Client\ClientServerWebsocketController;
 use App\Http\Controllers\Client\ClientServiceController;
-use App\Http\Controllers\Client\ClientServerActivityController;
-use App\Http\Controllers\Client\ClientServerSettingsController;
-use App\Http\Controllers\Client\ClientServerUserController;
-
+use App\Http\Controllers\Client\ClientTicketController;
+use App\Http\Controllers\Client\InvoiceController;
+use App\Http\Controllers\Client\WalletController;
+use App\Http\Controllers\Notifications\NotificationController;
+use App\Http\Controllers\PublicStatusController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\StripeCheckoutController;
+use App\Http\Controllers\WebHostingController;
+use App\Models\Order;
+use App\Services\Billing\InvoiceService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserWalletController;
-use App\Http\Controllers\Client\WalletController;
 
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/promos')
-    ->name('admin.promos.')
-    ->group(function (): void {
-        Route::get(
-            '/',
-            [\App\Http\Controllers\Admin\PromoController::class, 'index'],
-        )->name('index');
-
-        Route::post(
-            '/',
-            [\App\Http\Controllers\Admin\PromoController::class, 'store'],
-        )->name('store');
-
-        Route::patch(
-            '/{promo}',
-            [\App\Http\Controllers\Admin\PromoController::class, 'update'],
-        )->name('update');
-
-        Route::delete(
-            '/{promo}',
-            [\App\Http\Controllers\Admin\PromoController::class, 'destroy'],
-        )->name('destroy');
-    });
-
-Route::middleware([
-    'auth',
-    'admin'
-])->prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('/', [AdminDashboardController::class,'index'])
-        ->name('dashboard');
-
-});
-
-Route::middleware(['auth', 'verified'])
-    ->prefix('client')
-    ->name('client.')
-    ->group(function (): void {
-        Route::get('/', ClientDashboardController::class)
-            ->name('dashboard');
-
-        Route::get('/orders', [ClientOrderController::class, 'index'])
-            ->name('orders.index');
-
-        Route::get('/orders/{order}', [ClientOrderController::class, 'show'])
-            ->name('orders.show');
-
-        Route::get('/services', [ClientServiceController::class, 'index'])
-            ->name('services.index');
-
-        Route::post(
-            '/services/{service}/power',
-            ClientServerPowerController::class,
-        )->name('services.power');
-
-        Route::get(
-            '/services/{service}/websocket',
-            ClientServerWebsocketController::class,
-        )->name('services.websocket');
-
-        Route::get(
-            '/services/{service}/files',
-            [ClientServerFilesController::class, 'index'],
-        )->name('services.files.index');
-
-        Route::get(
-            '/services/{service}/files/contents',
-            [ClientServerFilesController::class, 'contents'],
-        )->name('services.files.contents');
-
-        Route::put(
-            '/services/{service}/files/write',
-            [ClientServerFilesController::class, 'write'],
-        )->name('services.files.write');
-
-        Route::post(
-            '/services/{service}/files/folder',
-            [ClientServerFilesController::class, 'createFolder'],
-        )->name('services.files.folder');
-
-        Route::put(
-            '/services/{service}/files/rename',
-            [ClientServerFilesController::class, 'rename'],
-        )->name('services.files.rename');
-
-        Route::post(
-            '/services/{service}/files/delete',
-            [ClientServerFilesController::class, 'destroy'],
-        )->name('services.files.destroy');
-
-        Route::get(
-            '/services/{service}/files/download',
-            [ClientServerFilesController::class, 'download'],
-        )->name('services.files.download');
-
-        Route::get(
-            '/services/{service}/files/upload',
-            [ClientServerFilesController::class, 'upload'],
-        )->name('services.files.upload');
-
-        Route::get(
-            '/services/{service}/backups',
-            [ClientServerBackupController::class, 'index'],
-        )->name('services.backups.index');
-
-        Route::post(
-            '/services/{service}/backups',
-            [ClientServerBackupController::class, 'store'],
-        )->name('services.backups.store');
-
-        Route::delete(
-            '/services/{service}/backups/{backup}',
-            [ClientServerBackupController::class, 'destroy'],
-        )->name('services.backups.destroy');
-
-        Route::post(
-            '/services/{service}/backups/{backup}/restore',
-            [ClientServerBackupController::class, 'restore'],
-        )->name('services.backups.restore');
-
-        Route::get(
-            '/services/{service}/backups/{backup}/download',
-            [ClientServerBackupController::class, 'download'],
-        )->name('services.backups.download');
-
-        Route::get(
-            '/services/{service}/databases',
-            [ClientServerDatabaseController::class, 'index'],
-        )->name('services.databases.index');
-
-        Route::post(
-            '/services/{service}/databases',
-            [ClientServerDatabaseController::class, 'store'],
-        )->name('services.databases.store');
-
-        Route::post(
-            '/services/{service}/databases/{database}/password',
-            [ClientServerDatabaseController::class, 'rotate'],
-        )->name('services.databases.rotate');
-
-        Route::delete(
-            '/services/{service}/databases/{database}',
-            [ClientServerDatabaseController::class, 'destroy'],
-        )->name('services.databases.destroy');
-
-        Route::get(
-            '/services/{service}/network',
-            [ClientServerNetworkController::class, 'index'],
-        )->name('services.network.index');
-
-        Route::post(
-            '/services/{service}/network',
-            [ClientServerNetworkController::class, 'store'],
-        )->name('services.network.store');
-
-        Route::post(
-            '/services/{service}/network/{allocation}/primary',
-            [ClientServerNetworkController::class, 'primary'],
-        )->name('services.network.primary');
-
-        Route::put(
-            '/services/{service}/network/{allocation}/note',
-            [ClientServerNetworkController::class, 'note'],
-        )->name('services.network.note');
-
-        Route::delete(
-            '/services/{service}/network/{allocation}',
-            [ClientServerNetworkController::class, 'destroy'],
-        )->name('services.network.destroy');
-
-        Route::get(
-            '/services/{service}/startup',
-            [ClientServerStartupController::class, 'index'],
-        )->name('services.startup.index');
-
-        Route::put(
-            '/services/{service}/startup',
-            [ClientServerStartupController::class, 'update'],
-        )->name('services.startup.update');
-
-        Route::get(
-            '/services/{service}/schedules',
-            [ClientServerScheduleController::class, 'index'],
-        )->name('services.schedules.index');
-
-        Route::post(
-            '/services/{service}/schedules',
-            [ClientServerScheduleController::class, 'store'],
-        )->name('services.schedules.store');
-
-        Route::put(
-            '/services/{service}/schedules/{schedule}',
-            [ClientServerScheduleController::class, 'update'],
-        )->name('services.schedules.update');
-
-        Route::post(
-            '/services/{service}/schedules/{schedule}/execute',
-            [ClientServerScheduleController::class, 'execute'],
-        )->name('services.schedules.execute');
-
-        Route::delete(
-            '/services/{service}/schedules/{schedule}',
-            [ClientServerScheduleController::class, 'destroy'],
-        )->name('services.schedules.destroy');
-
-        Route::post(
-            '/services/{service}/schedules/{schedule}/tasks',
-            [ClientServerScheduleController::class, 'storeTask'],
-        )->name('services.schedules.tasks.store');
-
-        Route::put(
-            '/services/{service}/schedules/{schedule}/tasks/{task}',
-            [ClientServerScheduleController::class, 'updateTask'],
-        )->name('services.schedules.tasks.update');
-
-        Route::delete(
-            '/services/{service}/schedules/{schedule}/tasks/{task}',
-            [ClientServerScheduleController::class, 'destroyTask'],
-        )->name('services.schedules.tasks.destroy');
-
-        Route::get(
-            '/services/{service}/api-keys',
-            [ClientServerApiKeyController::class, 'index'],
-        )->name('services.api-keys.index');
-
-        Route::post(
-            '/services/{service}/api-keys',
-            [ClientServerApiKeyController::class, 'store'],
-        )->name('services.api-keys.store');
-
-        Route::delete(
-            '/services/{service}/api-keys/{apiKey}',
-            [ClientServerApiKeyController::class, 'destroy'],
-        )->name('services.api-keys.destroy');
-
-
-        Route::get('/services/{service}/activity', [ClientServerActivityController::class, 'index'])->name('services.activity.index');
-        Route::get('/services/{service}/settings', [ClientServerSettingsController::class, 'index'])->name('services.settings.index');
-        Route::put('/services/{service}/settings', [ClientServerSettingsController::class, 'update'])->name('services.settings.update');
-        Route::post('/services/{service}/settings/reinstall', [ClientServerSettingsController::class, 'reinstall'])->name('services.settings.reinstall');
-        Route::get('/services/{service}/users', [ClientServerUserController::class, 'index'])->name('services.users.index');
-        Route::post('/services/{service}/users', [ClientServerUserController::class, 'store'])->name('services.users.store');
-        Route::put('/services/{service}/users/{user}', [ClientServerUserController::class, 'update'])->name('services.users.update');
-        Route::delete('/services/{service}/users/{user}', [ClientServerUserController::class, 'destroy'])->name('services.users.destroy');
-
-        Route::get('/services/{service}', [ClientServiceController::class, 'show'])
-            ->name('services.show');
-    });
-
-Route::middleware(['auth', 'verified'])->group(function (): void {
-    Route::get('/checkout', [CheckoutController::class, 'index'])
-        ->name('checkout.index');
-
-    Route::post('/orders/{order}/stripe', [
-        StripeCheckoutController::class,
-        'create',
-    ])->name('stripe.create');
-
-    Route::get('/orders/{order}/stripe/success', [
-        StripeCheckoutController::class,
-        'success',
-    ])->name('stripe.success');
-
-    Route::get('/orders/{order}/stripe/cancel', [
-        StripeCheckoutController::class,
-        'cancel',
-    ])->name('stripe.cancel');
-
-    Route::post('/checkout', [CheckoutController::class, 'store'])
-        ->name('checkout.store');
-
-Route::post('/checkout/promo', [
-    CheckoutController::class,
-    'applyPromo',
-])->name('checkout.promo.apply');
-
-Route::post('/checkout/promo/remove', [
-    CheckoutController::class,
-    'removePromo',
-])->name('checkout.promo.remove');
-
-    Route::post('/checkout/paypal', [
-        CheckoutController::class,
-        'paypalCreate',
-    ])->name('checkout.paypal.create');
-
-    Route::get('/checkout/paypal/return', [
-        CheckoutController::class,
-        'paypalReturn',
-    ])->name('checkout.paypal.return');
-
-    Route::get('/checkout/paypal/cancel', [
-        CheckoutController::class,
-        'paypalCancel',
-    ])->name('checkout.paypal.cancel');
-
-    Route::get('/checkout/success/{order}', [
-        CheckoutController::class,
-        'success',
-    ])->name('checkout.success');
-});
+/*
+|--------------------------------------------------------------------------
+| Public
+|--------------------------------------------------------------------------
+*/
 
 Route::inertia('/', 'welcome')->name('home');
+Route::inertia('/a-propos', 'public/about')->name('about');
+Route::get('/status', PublicStatusController::class)->name('status');
+Route::get('/offres', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/services-web', WebHostingController::class)->name('services-web');
 
-Route::get('/offres', [CatalogController::class, 'index'])
-    ->name('catalog.index');
+/*
+|--------------------------------------------------------------------------
+| Boutique
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/boutique', [StoreController::class, 'index'])
-    ->name('store.index');
+Route::get('/boutique', [StoreController::class, 'index'])->name('store.index');
 
-Route::get('/boutique/categorie/{universe}', [
-    StoreController::class,
-    'category',
-])
+Route::get('/boutique/categorie/{universe}', [StoreController::class, 'category'])
     ->whereIn('universe', ['gaming', 'vps', 'web'])
     ->name('store.category');
 
+Route::redirect('/minecraft-java', '/minecraft', 301);
+
+Route::get('/minecraft', [StoreController::class, 'landing'])
+    ->defaults('catalogSlug', 'minecraft-java')
+    ->name('store.minecraft');
+
+Route::get('/minecraft-bedrock', [StoreController::class, 'landing'])
+    ->defaults('catalogSlug', 'minecraft-bedrock')
+    ->name('store.minecraft-bedrock');
 
 Route::get('/boutique/{catalogSlug}', [StoreController::class, 'landing'])
     ->whereIn('catalogSlug', [
@@ -388,304 +97,224 @@ Route::get('/boutique/{catalogSlug}', [StoreController::class, 'landing'])
         'minecraft-bedrock',
         'ark',
         'palworld',
-        'hebergement-web',
     ])
     ->name('store.landing');
+
 Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
     ->name('store.show');
 
-Route::get('/panier', [CartController::class, 'index'])
-    ->name('cart.index');
+/*
+|--------------------------------------------------------------------------
+| Panier & checkout
+|--------------------------------------------------------------------------
+*/
 
-Route::post('/panier/{plan}', [CartController::class, 'store'])
-    ->name('cart.store');
-
-Route::patch('/panier/{plan}', [CartController::class, 'update'])
-    ->name('cart.update');
-
-Route::delete('/panier/{plan}', [CartController::class, 'destroy'])
-    ->name('cart.destroy');
-
-Route::delete('/panier', [CartController::class, 'clear'])
-    ->name('cart.clear');
+Route::get('/panier', [CartController::class, 'index'])->name('cart.index');
+Route::post('/panier/{plan}', [CartController::class, 'store'])->name('cart.store');
+Route::patch('/panier/{plan}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/panier/{plan}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::delete('/panier', [CartController::class, 'clear'])->name('cart.clear');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
-    Route::inertia('/dashboard', 'dashboard')
-        ->name('dashboard');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::post('/checkout/promo', [CheckoutController::class, 'applyPromo'])
+        ->name('checkout.promo.apply');
+    Route::post('/checkout/promo/remove', [CheckoutController::class, 'removePromo'])
+        ->name('checkout.promo.remove');
+
+    Route::post('/checkout/paypal', [CheckoutController::class, 'paypalCreate'])
+        ->name('checkout.paypal.create');
+    Route::get('/checkout/paypal/return', [CheckoutController::class, 'paypalReturn'])
+        ->name('checkout.paypal.return');
+    Route::get('/checkout/paypal/cancel', [CheckoutController::class, 'paypalCancel'])
+        ->name('checkout.paypal.cancel');
+
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])
+        ->name('checkout.success');
+
+    Route::post('/orders/{order}/stripe', [StripeCheckoutController::class, 'create'])
+        ->name('stripe.create');
+    Route::get('/orders/{order}/stripe/success', [StripeCheckoutController::class, 'success'])
+        ->name('stripe.success');
+    Route::get('/orders/{order}/stripe/cancel', [StripeCheckoutController::class, 'cancel'])
+        ->name('stripe.cancel');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Espace client
+|--------------------------------------------------------------------------
+*/
 
-Route::middleware([
-    'auth',
-    'verified',
-    'admin',
-])
-    ->prefix('admin')
-    ->name('admin.')
+Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::inertia('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::get('/assistance', fn () => redirect()->route('client.support.index'))
+        ->name('support.redirect');
+    Route::get('/support', fn () => redirect()->route('client.support.index'));
+});
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('client')
+    ->name('client.')
     ->group(function (): void {
-        Route::get('/', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+        Route::get('/', ClientDashboardController::class)->name('dashboard');
 
-        Route::middleware('can:manage orders')->group(function (): void {
-            Route::get('/orders', [OrderController::class, 'index'])
-                ->name('orders.index');
+        Route::get('/orders', [ClientOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [ClientOrderController::class, 'show'])->name('orders.show');
 
-            Route::get('/orders/{order}', [OrderController::class, 'show'])
-                ->name('orders.show');
+        Route::get('/services', [ClientServiceController::class, 'index'])->name('services.index');
+        Route::get('/services/{service}', [ClientServiceController::class, 'show'])
+            ->name('services.show');
 
-            Route::patch('/orders/{order}', [OrderController::class, 'update'])
-                ->name('orders.update');
-        });
+        Route::post('/services/{service}/power', ClientServerPowerController::class)
+            ->name('services.power');
+        Route::get('/services/{service}/websocket', ClientServerWebsocketController::class)
+            ->name('services.websocket');
 
-        Route::get('/boutique', [StoreController::class, 'index'])
-            ->name('store.index');
+        // Fichiers
+        Route::get('/services/{service}/files', [ClientServerFilesController::class, 'index'])
+            ->name('services.files.index');
+        Route::get('/services/{service}/files/contents', [ClientServerFilesController::class, 'contents'])
+            ->name('services.files.contents');
+        Route::put('/services/{service}/files/write', [ClientServerFilesController::class, 'write'])
+            ->name('services.files.write');
+        Route::post('/services/{service}/files/folder', [ClientServerFilesController::class, 'createFolder'])
+            ->name('services.files.folder');
+        Route::put('/services/{service}/files/rename', [ClientServerFilesController::class, 'rename'])
+            ->name('services.files.rename');
+        Route::post('/services/{service}/files/delete', [ClientServerFilesController::class, 'destroy'])
+            ->name('services.files.destroy');
+        Route::get('/services/{service}/files/download', [ClientServerFilesController::class, 'download'])
+            ->name('services.files.download');
+        Route::get('/services/{service}/files/upload', [ClientServerFilesController::class, 'upload'])
+            ->name('services.files.upload');
 
-        Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])
-            ->name('store.show');
+        // Sauvegardes
+        Route::get('/services/{service}/backups', [ClientServerBackupController::class, 'index'])
+            ->name('services.backups.index');
+        Route::post('/services/{service}/backups', [ClientServerBackupController::class, 'store'])
+            ->name('services.backups.store');
+        Route::delete('/services/{service}/backups/{backup}', [ClientServerBackupController::class, 'destroy'])
+            ->name('services.backups.destroy');
+        Route::post('/services/{service}/backups/{backup}/restore', [ClientServerBackupController::class, 'restore'])
+            ->name('services.backups.restore');
+        Route::get('/services/{service}/backups/{backup}/download', [ClientServerBackupController::class, 'download'])
+            ->name('services.backups.download');
 
-        Route::middleware('can:manage products')->group(function (): void {
-            Route::resource(
-                'categories',
-                AdminProductCategoryController::class,
-            )->except('show');
+        // Bases de données
+        Route::get('/services/{service}/databases', [ClientServerDatabaseController::class, 'index'])
+            ->name('services.databases.index');
+        Route::post('/services/{service}/databases', [ClientServerDatabaseController::class, 'store'])
+            ->name('services.databases.store');
+        Route::post('/services/{service}/databases/{database}/password', [ClientServerDatabaseController::class, 'rotate'])
+            ->name('services.databases.rotate');
+        Route::delete('/services/{service}/databases/{database}', [ClientServerDatabaseController::class, 'destroy'])
+            ->name('services.databases.destroy');
 
-            Route::resource(
-                'products',
-                AdminProductController::class,
-            )->except('show');
+        // Réseau
+        Route::post('/services/{service}/network', [ClientServerNetworkController::class, 'store'])
+            ->name('services.network.store');
+        Route::post('/services/{service}/network/{allocation}/primary', [ClientServerNetworkController::class, 'primary'])
+            ->name('services.network.primary');
+        Route::put('/services/{service}/network/{allocation}/note', [ClientServerNetworkController::class, 'note'])
+            ->name('services.network.note');
+        Route::delete('/services/{service}/network/{allocation}', [ClientServerNetworkController::class, 'destroy'])
+            ->name('services.network.destroy');
 
-            Route::resource(
-                'plans',
-                AdminProductPlanController::class,
-            )->except('show');
-        });
+        // Démarrage
+        Route::get('/services/{service}/startup', [ClientServerStartupController::class, 'index'])
+            ->name('services.startup.index');
+        Route::put('/services/{service}/startup', [ClientServerStartupController::class, 'update'])
+            ->name('services.startup.update');
+
+        // Planifications
+        Route::get('/services/{service}/schedules', [ClientServerScheduleController::class, 'index'])
+            ->name('services.schedules.index');
+        Route::post('/services/{service}/schedules', [ClientServerScheduleController::class, 'store'])
+            ->name('services.schedules.store');
+        Route::put('/services/{service}/schedules/{schedule}', [ClientServerScheduleController::class, 'update'])
+            ->name('services.schedules.update');
+        Route::post('/services/{service}/schedules/{schedule}/execute', [ClientServerScheduleController::class, 'execute'])
+            ->name('services.schedules.execute');
+        Route::delete('/services/{service}/schedules/{schedule}', [ClientServerScheduleController::class, 'destroy'])
+            ->name('services.schedules.destroy');
+        Route::post('/services/{service}/schedules/{schedule}/tasks', [ClientServerScheduleController::class, 'storeTask'])
+            ->name('services.schedules.tasks.store');
+        Route::put('/services/{service}/schedules/{schedule}/tasks/{task}', [ClientServerScheduleController::class, 'updateTask'])
+            ->name('services.schedules.tasks.update');
+        Route::delete('/services/{service}/schedules/{schedule}/tasks/{task}', [ClientServerScheduleController::class, 'destroyTask'])
+            ->name('services.schedules.tasks.destroy');
+
+        // Clés API
+        Route::post('/services/{service}/api-keys', [ClientServerApiKeyController::class, 'store'])
+            ->name('services.api-keys.store');
+        Route::delete('/services/{service}/api-keys/{apiKey}', [ClientServerApiKeyController::class, 'destroy'])
+            ->name('services.api-keys.destroy');
+
+        // Activité, paramètres, utilisateurs
+        Route::get('/services/{service}/activity', [ClientServerActivityController::class, 'index'])
+            ->name('services.activity.index');
+        Route::get('/services/{service}/settings', [ClientServerSettingsController::class, 'index'])
+            ->name('services.settings.index');
+        Route::put('/services/{service}/settings', [ClientServerSettingsController::class, 'update'])
+            ->name('services.settings.update');
+        Route::post('/services/{service}/settings/reinstall', [ClientServerSettingsController::class, 'reinstall'])
+            ->name('services.settings.reinstall');
+        Route::get('/services/{service}/users', [ClientServerUserController::class, 'index'])
+            ->name('services.users.index');
+        Route::post('/services/{service}/users', [ClientServerUserController::class, 'store'])
+            ->name('services.users.store');
+        Route::put('/services/{service}/users/{user}', [ClientServerUserController::class, 'update'])
+            ->name('services.users.update');
+        Route::delete('/services/{service}/users/{user}', [ClientServerUserController::class, 'destroy'])
+            ->name('services.users.destroy');
     });
-
-require __DIR__.'/settings.php';
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/users')
-    ->name('admin.users.')
-    ->group(function (): void {
-        Route::get('/', [UserController::class, 'index'])
-            ->name('index');
-
-        Route::get('/{user}', [UserController::class, 'show'])
-            ->whereNumber('user')
-            ->name('show');
-
-        Route::put('/{user}', [UserController::class, 'update'])
-            ->whereNumber('user')
-            ->name('update');
-
-        Route::post('/{user}/temporary-password', [UserController::class, 'temporaryPassword'])
-            ->whereNumber('user')
-            ->name('temporary-password');
-
-        Route::post('/{user}/disable-2fa', [UserController::class, 'disableTwoFactor'])
-            ->whereNumber('user')
-            ->name('disable-2fa');
-
-        Route::post('/{user}/suspend', [UserController::class, 'suspend'])
-            ->whereNumber('user')
-            ->name('suspend');
-
-        Route::post('/{user}/activate', [UserController::class, 'activate'])
-            ->whereNumber('user')
-            ->name('activate');
-    });
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/servers')
-    ->name('admin.servers.')
-    ->group(function (): void {
-        Route::get('/', [ServerController::class, 'index'])
-            ->name('index');
-
-        Route::get('/{service}', [ServerController::class, 'show'])
-            ->whereNumber('service')
-            ->name('show');
-
-        Route::put('/{service}', [ServerController::class, 'update'])
-            ->whereNumber('service')
-            ->name('update');
-
-        Route::post('/{service}/suspend', [ServerController::class, 'suspend'])
-            ->whereNumber('service')
-            ->name('suspend');
-
-        Route::post('/{service}/activate', [ServerController::class, 'activate'])
-            ->whereNumber('service')
-            ->name('activate');
-    });
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/tickets')
-    ->name('admin.tickets.')
-    ->group(function (): void {
-        Route::get('/', [TicketController::class, 'index'])
-            ->name('index');
-
-        Route::get('/{ticket}', [TicketController::class, 'show'])
-            ->whereNumber('ticket')
-            ->name('show');
-
-        Route::post('/{ticket}/assign', [TicketController::class, 'assign'])
-            ->whereNumber('ticket')
-            ->name('assign');
-
-        Route::post('/{ticket}/reply', [TicketController::class, 'reply'])
-            ->whereNumber('ticket')
-            ->name('reply');
-
-        Route::post('/{ticket}/close', [TicketController::class, 'close'])
-            ->whereNumber('ticket')
-            ->name('close');
-
-        Route::post('/{ticket}/reopen', [TicketController::class, 'reopen'])
-            ->whereNumber('ticket')
-            ->name('reopen');
-    });
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->get('/admin/ticket-attachments/{attachment}', [TicketController::class, 'attachment'])
-    ->whereNumber('attachment')
-    ->name('admin.ticket-attachments.download');
-
 
 Route::middleware(['auth', 'verified'])
     ->prefix('client/support')
     ->name('client.support.')
     ->group(function (): void {
-        Route::get('/', [ClientTicketController::class, 'index'])
-            ->name('index');
-
-        Route::get('/create', [ClientTicketController::class, 'create'])
-            ->name('create');
-
-        Route::post('/', [ClientTicketController::class, 'store'])
-            ->name('store');
-
+        Route::get('/', [ClientTicketController::class, 'index'])->name('index');
+        Route::get('/create', [ClientTicketController::class, 'create'])->name('create');
+        Route::post('/', [ClientTicketController::class, 'store'])->name('store');
         Route::get('/attachments/{attachment}', [ClientTicketController::class, 'attachment'])
             ->whereNumber('attachment')
             ->name('attachments.download');
-
         Route::get('/{ticket}', [ClientTicketController::class, 'show'])
             ->whereNumber('ticket')
             ->name('show');
-
         Route::post('/{ticket}/reply', [ClientTicketController::class, 'reply'])
             ->whereNumber('ticket')
             ->name('reply');
     });
 
-
-Route::middleware(['auth', 'verified'])
-    ->get('/assistance', fn () => redirect()->route('client.support.index'))
-    ->name('support.redirect');
-
-Route::middleware(['auth', 'verified'])
-    ->get('/support', fn () => redirect()->route('client.support.index'));
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/orders')
-    ->name('admin.orders.')
-    ->group(function (): void {
-        Route::get('/', [OrderController::class, 'index'])
-            ->name('index');
-
-        Route::get('/{order}', [OrderController::class, 'show'])
-            ->whereNumber('order')
-            ->name('show');
-
-        Route::patch('/{order}', [OrderController::class, 'update'])
-            ->whereNumber('order')
-            ->name('update');
-    });
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/payments')
-    ->name('admin.payments.')
-    ->group(function (): void {
-        Route::get('/', [PaymentController::class, 'index'])
-            ->name('index');
-
-        Route::get('/{payment}', [PaymentController::class, 'show'])
-            ->where('payment', '(payment|order)-[0-9]+|[0-9]+')
-            ->name('show');
-    });
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->get('/admin/infrastructure', [InfrastructureController::class, 'index'])
-    ->name('admin.infrastructure.index');
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->post('/admin/infrastructure/sync', InfrastructureSyncController::class)
-    ->name('admin.infrastructure.sync');
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->get('/admin/logs', [LogController::class, 'index'])
-    ->name('admin.logs.index');
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->prefix('admin/settings')
-    ->name('admin.settings.')
-    ->group(function (): void {
-        Route::get('/', [SettingsController::class, 'index'])
-            ->name('index');
-
-        Route::patch('/', [SettingsController::class, 'update'])
-            ->name('update');
-    });
-
-
 Route::middleware(['auth', 'verified'])
     ->prefix('client/account')
     ->name('client.account.')
     ->group(function (): void {
-        Route::get('/', [ProfileController::class, 'index'])
-            ->name('profile');
-        Route::patch('/', [ProfileController::class, 'update'])
-            ->name('profile.update');
+        Route::get('/', [ProfileController::class, 'index'])->name('profile');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
 
-        Route::get('/members', [MemberController::class, 'index'])
-            ->name('members.index');
-        Route::post('/members', [MemberController::class, 'store'])
-            ->name('members.store');
+        Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+        Route::post('/members', [MemberController::class, 'store'])->name('members.store');
         Route::delete('/members/{member}', [MemberController::class, 'destroy'])
             ->whereNumber('member')
             ->name('members.destroy');
 
         Route::get('/payment-methods', [PaymentMethodController::class, 'index'])
             ->name('payment-methods.index');
+        Route::post('/payment-methods/setup', [PaymentMethodController::class, 'setup'])
+            ->name('payment-methods.setup');
+        Route::patch('/payment-methods/{paymentMethod}/default', [PaymentMethodController::class, 'makeDefault'])
+            ->name('payment-methods.default');
+        Route::delete('/payment-methods/{paymentMethod}', [PaymentMethodController::class, 'destroy'])
+            ->name('payment-methods.destroy');
 
-        Route::post(
-            '/payment-methods/setup',
-            [PaymentMethodController::class, 'setup'],
-        )->name('payment-methods.setup');
-
-        Route::patch(
-            '/payment-methods/{paymentMethod}/default',
-            [PaymentMethodController::class, 'makeDefault'],
-        )->name('payment-methods.default');
-
-        Route::delete(
-            '/payment-methods/{paymentMethod}',
-            [PaymentMethodController::class, 'destroy'],
-        )->name('payment-methods.destroy');
-
-        Route::get('/contacts', [ContactController::class, 'index'])
-            ->name('contacts.index');
-        Route::post('/contacts', [ContactController::class, 'store'])
-            ->name('contacts.store');
+        Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+        Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
         Route::patch('/contacts/{contact}', [ContactController::class, 'update'])
             ->whereNumber('contact')
             ->name('contacts.update');
@@ -693,135 +322,211 @@ Route::middleware(['auth', 'verified'])
             ->whereNumber('contact')
             ->name('contacts.destroy');
 
-        Route::get('/emails', [EmailHistoryController::class, 'index'])
-            ->name('emails.index');
+        Route::get('/emails', [EmailHistoryController::class, 'index'])->name('emails.index');
         Route::get('/emails/{email}', [EmailHistoryController::class, 'show'])
             ->whereNumber('email')
             ->name('emails.show');
 
-        Route::get('/password', [PasswordController::class, 'edit'])
-            ->name('password.edit');
-        Route::put('/password', [PasswordController::class, 'update'])
-            ->name('password.update');
+        Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
+        Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
 
-        Route::get('/security', [SecurityController::class, 'index'])
-            ->name('security.index');
+        Route::get('/security', [SecurityController::class, 'index'])->name('security.index');
     });
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->delete(
-        '/admin/users/{user}/payment-methods/{paymentMethod}',
-        [\App\Http\Controllers\Admin\UserController::class, 'deletePaymentMethod'],
-    )
-    ->whereNumber('user')
-    ->name('admin.users.payment-methods.destroy');
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->post(
-        '/admin/users/{user}/disable-2fa',
-        [\App\Http\Controllers\Admin\UserController::class, 'disableTwoFactor'],
-    )
-    ->whereNumber('user')
-    ->name('admin.users.disable-two-factor');
-
-
-Route::middleware(['auth', 'verified', 'admin'])
-    ->delete(
-        '/admin/users/{user}/stripe-payment-methods/{paymentMethod}',
-        [\App\Http\Controllers\Admin\UserPaymentMethodController::class, 'destroy'],
-    )
-    ->whereNumber('user')
-    ->name('admin.users.payment-methods.secure-destroy');
-
-
-Route::middleware(['auth'])->group(function (): void {
-    Route::get(
-        '/notification-center/summary',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'summary'],
-    )->name('notification-center.summary');
-
-    Route::patch(
-        '/notification-center/{notification}/read',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'read'],
-    )->name('notification-center.read');
-
-    Route::post(
-        '/notification-center/read-all',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'readAll'],
-    )->name('notification-center.read-all');
-
-    Route::delete(
-        '/notification-center/{notification}',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'destroy'],
-    )->name('notification-center.destroy');
-
-    Route::get(
-        '/client/notifications',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'clientIndex'],
-    )->name('client.notifications.index');
-
-    Route::middleware('admin')->get(
-        '/admin/notifications',
-        [\App\Http\Controllers\Notifications\NotificationController::class, 'adminIndex'],
-    )->name('admin.notifications.index');
-});
 
 Route::middleware(['auth', 'verified'])
     ->prefix('client/wallet')
     ->name('client.wallet.')
     ->group(function (): void {
-        Route::get('/', [WalletController::class, 'index'])
-            ->name('index');
-
-        Route::post('/stripe/intent', [WalletController::class, 'stripeIntent'])
-            ->name('stripe.intent');
-
-        Route::post('/stripe/confirm', [WalletController::class, 'stripeConfirm'])
-            ->name('stripe.confirm');
-
-        Route::post('/paypal', [WalletController::class, 'paypalCreate'])
-            ->name('paypal.create');
-
+        Route::get('/', [WalletController::class, 'index'])->name('index');
+        Route::post('/stripe/intent', [WalletController::class, 'stripeIntent'])->name('stripe.intent');
+        Route::post('/stripe/confirm', [WalletController::class, 'stripeConfirm'])->name('stripe.confirm');
+        Route::post('/paypal', [WalletController::class, 'paypalCreate'])->name('paypal.create');
         Route::get('/paypal/{topup}/return', [WalletController::class, 'paypalReturn'])
             ->whereNumber('topup')
             ->name('paypal.return');
-
         Route::get('/paypal/{topup}/cancel', [WalletController::class, 'paypalCancel'])
             ->whereNumber('topup')
             ->name('paypal.cancel');
     });
 
-Route::middleware(['auth', 'verified', 'admin'])
-    ->post(
-        '/admin/users/{user}/wallet/adjust',
-        [UserWalletController::class, 'adjust'],
-    )
-    ->whereNumber('user')
-    ->name('admin.users.wallet.adjust');
-
-Route::get('/a-propos', function () {
-    return \Inertia\Inertia::render('public/about');
-})->name('about');
-
-Route::get('/status', PublicStatusController::class)
-    ->name('status');
-Route::middleware(['auth', 'verified'])
-    ->get('/client/invoices/order/{order}/download', function (\Illuminate\Http\Request $request, \App\Models\Order $order) {
+Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/client/invoices/order/{order}/download', function (Request $request, Order $order) {
         abort_unless($order->user_id === $request->user()->id && $order->status === 'paid', 403);
-        $invoice = app(\App\Services\Billing\InvoiceService::class)->forPaidOrder($order, false);
+
+        $invoice = app(InvoiceService::class)->forPaidOrder($order, false);
+
         return redirect()->route('client.invoices.download', $invoice);
     })->whereNumber('order')->name('client.invoices.order-download');
 
-Route::middleware(['auth', 'verified'])
-    ->get('/client/invoices/{invoice}/download', [\App\Http\Controllers\Client\InvoiceController::class, 'download'])
-    ->whereNumber('invoice')->name('client.invoices.download');
-Route::middleware(['auth', 'verified', 'admin'])->group(function (): void {
-    Route::get('/admin/backups', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'index'])
-        ->name('admin.backups.index');
-    Route::patch('/admin/backups/{service}', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'update'])
-        ->whereNumber('service')->name('admin.backups.update');
-    Route::post('/admin/backups/{service}/create', [\App\Http\Controllers\Admin\AutomaticBackupController::class, 'create'])
-        ->whereNumber('service')->name('admin.backups.create');
+    Route::get('/client/invoices/{invoice}/download', [InvoiceController::class, 'download'])
+        ->whereNumber('invoice')
+        ->name('client.invoices.download');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function (): void {
+    Route::get('/notification-center/summary', [NotificationController::class, 'summary'])
+        ->name('notification-center.summary');
+    Route::patch('/notification-center/{notification}/read', [NotificationController::class, 'read'])
+        ->name('notification-center.read');
+    Route::post('/notification-center/read-all', [NotificationController::class, 'readAll'])
+        ->name('notification-center.read-all');
+    Route::delete('/notification-center/{notification}', [NotificationController::class, 'destroy'])
+        ->name('notification-center.destroy');
+
+    Route::get('/client/notifications', [NotificationController::class, 'clientIndex'])
+        ->name('client.notifications.index');
+
+    Route::middleware('admin')->get('/admin/notifications', [NotificationController::class, 'adminIndex'])
+        ->name('admin.notifications.index');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Administration
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Infrastructure
+        Route::get('/infrastructure', [InfrastructureController::class, 'index'])
+            ->name('infrastructure.index');
+        Route::post('/infrastructure/sync', InfrastructureSyncController::class)
+            ->name('infrastructure.sync');
+        Route::post('/infrastructure/panels/{panel}/sync', [PanelController::class, 'sync'])
+            ->name('infrastructure.panels.sync');
+        Route::resource('/infrastructure/panels', PanelController::class)
+            ->only(['store', 'update', 'destroy']);
+
+        // Commandes
+        Route::middleware('can:manage orders')->group(function (): void {
+            Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+            Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+            Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+        });
+
+        // Boutique (aperçu admin)
+        Route::get('/boutique', [StoreController::class, 'index'])->name('store.index');
+        Route::get('/boutique/{product:slug}', [StoreController::class, 'show'])->name('store.show');
+
+        // Catalogue
+        Route::middleware('can:manage products')->group(function (): void {
+            Route::resource('categories', AdminProductCategoryController::class)->except('show');
+            Route::resource('products', AdminProductController::class)->except('show');
+            Route::resource('plans', AdminProductPlanController::class)->except('show');
+        });
+
+        // Paiements
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+        Route::get('/payments/{payment}', [PaymentController::class, 'show'])
+            ->where('payment', '(payment|order)-[0-9]+|[0-9]+')
+            ->name('payments.show');
+
+        // Logs & paramètres
+        Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+
+        // Sauvegardes automatiques
+        Route::get('/backups', [AutomaticBackupController::class, 'index'])->name('backups.index');
+        Route::patch('/backups/{service}', [AutomaticBackupController::class, 'update'])
+            ->whereNumber('service')
+            ->name('backups.update');
+        Route::post('/backups/{service}/create', [AutomaticBackupController::class, 'create'])
+            ->whereNumber('service')
+            ->name('backups.create');
+
+        // Tickets
+        Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/{ticket}', [TicketController::class, 'show'])
+            ->whereNumber('ticket')
+            ->name('tickets.show');
+        Route::post('/tickets/{ticket}/assign', [TicketController::class, 'assign'])
+            ->whereNumber('ticket')
+            ->name('tickets.assign');
+        Route::post('/tickets/{ticket}/reply', [TicketController::class, 'reply'])
+            ->whereNumber('ticket')
+            ->name('tickets.reply');
+        Route::post('/tickets/{ticket}/close', [TicketController::class, 'close'])
+            ->whereNumber('ticket')
+            ->name('tickets.close');
+        Route::post('/tickets/{ticket}/reopen', [TicketController::class, 'reopen'])
+            ->whereNumber('ticket')
+            ->name('tickets.reopen');
+        Route::get('/ticket-attachments/{attachment}', [TicketController::class, 'attachment'])
+            ->whereNumber('attachment')
+            ->name('ticket-attachments.download');
+
+        // Serveurs
+        Route::get('/servers', [ServerController::class, 'index'])->name('servers.index');
+        Route::get('/servers/{service}', [ServerController::class, 'show'])
+            ->whereNumber('service')
+            ->name('servers.show');
+        Route::put('/servers/{service}', [ServerController::class, 'update'])
+            ->whereNumber('service')
+            ->name('servers.update');
+        Route::post('/servers/{service}/suspend', [ServerController::class, 'suspend'])
+            ->whereNumber('service')
+            ->name('servers.suspend');
+        Route::post('/servers/{service}/activate', [ServerController::class, 'activate'])
+            ->whereNumber('service')
+            ->name('servers.activate');
+
+        // Utilisateurs
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [UserController::class, 'show'])
+            ->whereNumber('user')
+            ->name('users.show');
+        Route::put('/users/{user}', [UserController::class, 'update'])
+            ->whereNumber('user')
+            ->name('users.update');
+        Route::post('/users/{user}/temporary-password', [UserController::class, 'temporaryPassword'])
+            ->whereNumber('user')
+            ->name('users.temporary-password');
+        Route::post('/users/{user}/disable-2fa', [UserController::class, 'disableTwoFactor'])
+            ->whereNumber('user')
+            ->name('users.disable-two-factor');
+        Route::post('/users/{user}/suspend', [UserController::class, 'suspend'])
+            ->whereNumber('user')
+            ->name('users.suspend');
+        Route::post('/users/{user}/activate', [UserController::class, 'activate'])
+            ->whereNumber('user')
+            ->name('users.activate');
+        Route::delete('/users/{user}/payment-methods/{paymentMethod}', [UserController::class, 'deletePaymentMethod'])
+            ->whereNumber('user')
+            ->name('users.payment-methods.destroy');
+        Route::delete('/users/{user}/stripe-payment-methods/{paymentMethod}', [UserPaymentMethodController::class, 'destroy'])
+            ->whereNumber('user')
+            ->name('users.payment-methods.secure-destroy');
+        Route::post('/users/{user}/wallet/adjust', [UserWalletController::class, 'adjust'])
+            ->whereNumber('user')
+            ->name('users.wallet.adjust');
+    });
+
+/*
+|--------------------------------------------------------------------------
+| Promos admin
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin/promos')
+    ->name('admin.promos.')
+    ->group(function (): void {
+        Route::get('/', [\App\Http\Controllers\Admin\PromoController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\Admin\PromoController::class, 'store'])->name('store');
+        Route::patch('/{promo}', [\App\Http\Controllers\Admin\PromoController::class, 'update'])->name('update');
+        Route::delete('/{promo}', [\App\Http\Controllers\Admin\PromoController::class, 'destroy'])->name('destroy');
+    });
+
+require __DIR__.'/settings.php';

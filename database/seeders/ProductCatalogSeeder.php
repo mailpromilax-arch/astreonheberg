@@ -114,7 +114,7 @@ class ProductCatalogSeeder extends Seeder
                         'slug' => 'hebergement-web',
                         'description' => 'Pour sites vitrines, blogs, boutiques et agences.',
                         'plans' => [
-                            ['Web Start', 'WEB-START', 199, null, 5, null, null],
+                            ['Web Start', 'WEB-START', 399, null, 5, null, null],
                             ['Web Plus', 'WEB-PLUS', 399, null, 15, null, null],
                             ['Web Pro', 'WEB-PRO', 699, null, 40, null, null],
                             ['Web Agency', 'WEB-AGENCY', 1299, null, 100, null, null],

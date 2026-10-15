@@ -9,26 +9,19 @@ import {
     X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import AstreonLogo from './AstreonLogo';
 
 type MenuKey = 'gaming' | 'web' | 'other' | null;
 
 const menus = {
     gaming: [
-        ['FiveM', 'Serveurs RP performants et protégés', Gamepad2, '/boutique/fivem'],
-        ['Minecraft Java', 'Serveurs Java avec panel complet', Gamepad2, '/boutique/minecraft-java'],
-        ['Minecraft Bedrock', 'Serveurs Bedrock fluides et automatisés', Gamepad2, '/boutique/minecraft-bedrock'],
-        ['ARK', 'Survival Evolved ou Survival Ascended', Gamepad2, '/boutique/ark'],
-        ['Palworld', 'Instances rapides et automatisées', Gamepad2, '/boutique/palworld'],
+        ['Minecraft Java & Bedrock', 'Serveurs Minecraft avec panel complet', Gamepad2, '/minecraft'],
     ],
     web: [
-        ['Hébergement Web', 'Sites, boutiques et applications', Globe2, '/boutique/hebergement-web'],
+        ['Hébergement Web', 'Sites, boutiques et applications', Globe2, '/services-web'],
     ],
     other: [
         ['Nous contacter', 'Une question avant de commander ?', Globe2, 'https://discord.gg/3fZ6xye97x'],
-        ['À propos', 'Découvrez Astreon et notre vision', Cloud, '/a-propos'],
         ['Discord', 'Rejoignez notre communauté', Gamepad2, 'https://discord.gg/3fZ6xye97x'],
-        ['État des services', 'Consultez la disponibilité en direct', Server, '/status'],
     ],
 } as const;
 
@@ -78,11 +71,16 @@ export default function PublicHeader() {
             className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl"
         >
             <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-4 sm:h-[86px] sm:px-5 lg:px-8">
-                <AstreonLogo />
+                <img
+                    src="/images/astreon/astreon-icon.png"
+                    alt="Astreon"
+                    className="h-10 w-auto object-contain"
+                />
 
                 <nav className="hidden items-center gap-1 lg:flex">
-                    <Link href="/" className="astreon-nav-link">Accueil</Link>
-                    <Link href="/boutique/categorie/vps" className="astreon-nav-link">VPS</Link>
+                    <Link href="/" className="astreon-nav-link">
+                        Accueil
+                    </Link>
 
                     {([
                         ['gaming', 'Service Gaming'],
@@ -185,7 +183,11 @@ export default function PublicHeader() {
 
                     <aside className="absolute inset-y-0 right-0 flex w-[min(92vw,390px)] flex-col bg-white shadow-2xl">
                         <div className="flex h-[72px] items-center justify-between border-b border-slate-200 px-5">
-                            <AstreonLogo compact />
+                            <img
+                                src="/images/astreon/astreon-icon.png"
+                                alt="Astreon"
+                                className="h-8 w-auto object-contain"
+                            />
                             <button
                                 type="button"
                                 onClick={closeMobile}
@@ -197,15 +199,12 @@ export default function PublicHeader() {
                         </div>
 
                         <nav className="flex-1 overflow-y-auto px-4 py-4">
-                            <Link href="/" onClick={closeMobile} className="astreon-mobile-link">
-                                Accueil
-                            </Link>
                             <Link
-                                href="/boutique/categorie/vps"
+                                href="/"
                                 onClick={closeMobile}
                                 className="astreon-mobile-link"
                             >
-                                VPS
+                                Accueil
                             </Link>
 
                             {(['gaming', 'web', 'other'] as const).map((key) => (

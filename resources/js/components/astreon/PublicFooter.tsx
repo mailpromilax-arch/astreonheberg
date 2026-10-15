@@ -6,11 +6,8 @@ const columns = [
     {
         title: 'Services',
         links: [
-            ['FiveM', '/boutique/fivem'],
-            ['Minecraft Java', '/boutique/minecraft-java'],
-            ['Minecraft Bedrock', '/boutique/minecraft-bedrock'],
-            ['VPS Cloud', '/boutique/categorie/vps'],
-            ['Hébergement Web', '/boutique/hebergement-web'],
+            ['Minecraft Java & Bedrock', '/minecraft'],
+            ['Hébergement Web', '/services-web'],
         ],
     },
     {
@@ -39,8 +36,7 @@ export default function PublicFooter() {
                 <div>
                     <AstreonLogo dark />
                     <p className="mt-5 text-sm leading-7 text-slate-400">
-                        Hébergeur français spécialisé dans les serveurs Gaming,
-                        VPS, Web et solutions Cloud.
+                        Hébergeur français spécialisé dans les serveurs Gaming et Web.
                     </p>
                     <div className="mt-5 space-y-3 text-sm text-slate-400">
                         <p className="flex items-center gap-2">

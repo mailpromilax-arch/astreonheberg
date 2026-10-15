@@ -3724,3 +3724,24 @@ canvas {
         padding-bottom: 3rem !important;
     }
 }
+
+
+main .univers-header-transparent {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+
+body:not(:has(.astreon-ptero-page)) main > section.univers-header-transparent {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.web-choose {
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+}
+

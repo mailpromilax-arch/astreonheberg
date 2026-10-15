@@ -42,3 +42,11 @@ storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
+# Dumps et sauvegardes SQL
+*.sql
+backup*.sql
+backup_*
+*.bak
+
+# Fichiers d'installation ponctuels
+INSTALLATION-*.txt

@@ -46,11 +46,9 @@ type ServerItem = {
     cpu?: string | number | null;
     memory?: string | number | null;
     disk?: string | number | null;
-    customer?: {
-        id: number;
-        name: string;
-        email: string;
-    } | null;
+    client_name?: string | null;
+    client_email?: string | null;
+    service_reference?: string | null;
 };
 
 type Props = {
@@ -58,6 +56,7 @@ type Props = {
     locations: LocationItem[];
     servers: ServerItem[];
     pterodactyl_panel_url: string;
+    panels: { id: number; name: string; url: string; is_active: boolean }[];
     stats: {
         nodes: number;
         online_nodes: number;
@@ -95,6 +94,7 @@ export default function AdminInfrastructureIndex({
     servers,
     pterodactyl_panel_url,
     stats,
+    panels,
 }: Props) {
     const [syncing, setSyncing] = useState(false);
     const flash = usePage<SharedProps>().props.flash;
@@ -162,6 +162,8 @@ export default function AdminInfrastructureIndex({
                     {flash.error}
                 </div>
             )}
+
+            <section className="mt-6 rounded-2xl border border-violet-400/15 bg-[#110d20]/90 p-5"><h2 className="font-black">Panels Pterodactyl</h2><div className="mt-3 space-y-2">{panels.map(panel => <div key={panel.id} className="flex items-center justify-between rounded-xl border border-white/5 p-3"><span><b>{panel.name}</b><small className="ml-3 text-slate-500">{panel.url}</small></span><button type="button" onClick={() => router.post(`/admin/infrastructure/panels/${panel.id}/sync`)} className="rounded-lg bg-violet-600 px-3 py-2 text-xs font-black">Synchroniser</button></div>)}</div><form className="mt-4 grid gap-2 md:grid-cols-4" method="post" action="/admin/infrastructure/panels"><input name="name" required placeholder="Nom" className="rounded-lg bg-white/5 p-2"/><input name="url" required placeholder="https://panel.example" className="rounded-lg bg-white/5 p-2"/><input name="api_key" required type="password" placeholder="Clé Application API" className="rounded-lg bg-white/5 p-2"/><button className="rounded-lg bg-fuchsia-600 p-2 font-black">Ajouter un panel</button></form></section>
 
             <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 {cards.map((card) => {
@@ -275,8 +277,8 @@ export default function AdminInfrastructureIndex({
                                             </p>
                                         </td>
                                         <td className="px-5 py-4">
-                                            <p className="text-sm font-black">{server.customer?.name ?? 'Non associé'}</p>
-                                            <p className="mt-1 text-xs text-slate-500">{server.customer?.email ?? '—'}</p>
+                                            <p className="text-sm font-black">{server.client_name ?? 'Non associé'}</p>
+                                            <p className="mt-1 text-xs text-slate-500">{server.client_email ?? '—'}</p>
                                         </td>
                                         <td className="px-5 py-4 text-sm text-slate-400">{server.node ?? '—'}</td>
                                         <td className="px-5 py-4">
