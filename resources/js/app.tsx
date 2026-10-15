@@ -13,15 +13,22 @@ createInertiaApp({
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
-                return null;
-            case name === 'client/services/show':
-                return null;
+            case name === 'catalog':
+            case name === 'services-web':
+            case name.includes('minecraft'):
+            case name.includes('bedrock'):
+            case name.startsWith('boutique/'):
+            case name.startsWith('store/'):
+            case name.startsWith('client/'):
             case name.startsWith('admin/'):
                 return null;
+
             case name.startsWith('auth/'):
                 return AuthLayout;
+
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
+
             default:
                 return AppLayout;
         }

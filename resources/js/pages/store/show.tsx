@@ -1,6 +1,6 @@
 import PublicLayout from '@/layouts/PublicLayout';
 import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CircleCheckBig, Cpu, HardDrive, Users } from 'lucide-react';
 
 type Plan = {
@@ -78,10 +78,6 @@ function getPlanLogo(plan: Plan): string | null {
     );
 }
 
-function formatRam(ramMb: number): string {
-    return `${Math.round(ramMb / 1024)} Go`;
-}
-
 function displayValue(value: unknown): string {
     if (typeof value === 'boolean') {
         return value ? 'Oui' : 'Non';
@@ -104,20 +100,24 @@ export default function StoreShow({
     arkEditions = [],
 }: Props) {
     const isArk = catalogSlug === 'ark';
-    const isMinecraftJava = catalogSlug === 'minecraft-java';
-    const isMinecraftBedrock = catalogSlug === 'minecraft-bedrock';
     const isMinecraft =
-        isMinecraftJava ||
-        isMinecraftBedrock ||
         catalogSlug?.toLowerCase().includes('minecraft') ||
         product.slug.toLowerCase().includes('minecraft');
 
     const [arkEdition, setArkEdition] = useState<ArkEdition['value'] | ''>(
         '',
     );
-    const [mcEdition, setMcEdition] = useState<MinecraftEdition | ''>(
-        isMinecraftJava ? 'java' : isMinecraftBedrock ? 'bedrock' : '',
+
+    const [mcEdition, setMcEdition] = useState<MinecraftEdition>(
+        product.slug === 'minecraft-bedrock' ? 'bedrock' : 'java',
     );
+
+    useEffect(() => {
+        setMcEdition(product.slug === 'minecraft-bedrock' ? 'bedrock' : 'java');
+    }, [product.slug]);
+
+    // Toutes les offres sont affichées : l'édition est choisie au paiement.
+const visiblePlans = product.plans;
 
     return (
         <PublicLayout>
@@ -169,33 +169,6 @@ export default function StoreShow({
                     -webkit-backdrop-filter: none !important;
                 }
 
-                body main .store-plans-grid > article.store-plan-card::before,
-                body main .store-plans-grid > article.store-plan-card::after {
-                    content: none !important;
-                    display: none !important;
-                    background: transparent !important;
-                    box-shadow: none !important;
-                }
-
-                /* Tous les wrappers internes sont transparents; le bouton et
-                   le badge conservent leurs propres couleurs via leurs classes. */
-                body main .store-plans-grid > article.store-plan-card > .plan-head,
-                body main .store-plans-grid > article.store-plan-card > div:not(.plan-head),
-                body main .store-plans-grid > article.store-plan-card > dl,
-                body main .store-plans-grid > article.store-plan-card > ul,
-                body main .store-plans-grid > article.store-plan-card > details,
-                body main .store-plans-grid > article.store-plan-card details dl,
-                body main .store-plans-grid > article.store-plan-card details dl > div,
-                body main .store-plans-grid > article.store-plan-card .plan-head > div,
-                body main .store-plans-grid > article.store-plan-card [class*="bg-"]:not(button):not(.absolute) {
-                    background: transparent !important;
-                    background-color: transparent !important;
-                    background-image: none !important;
-                    box-shadow: none !important;
-                    backdrop-filter: none !important;
-                    -webkit-backdrop-filter: none !important;
-                }
-
                 body main .store-plans-grid .plan-head,
                 body main .store-plans-grid .plan-head * {
                     background: transparent !important;
@@ -215,6 +188,58 @@ export default function StoreShow({
                     padding: 0 !important;
                     box-shadow: none !important;
                     mix-blend-mode: normal !important;
+                }
+
+                /* Switch Java / Bedrock — pilule arrondie */
+                .mc-edition-switch {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    margin: 1.25rem auto 0;
+                    padding: 4px;
+                    border-radius: 999px;
+                    background: rgba(14, 16, 40, 0.85);
+                    border: 1px solid rgba(139, 92, 246, 0.35);
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                }
+
+                .mc-edition-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.45rem;
+                    padding: 0.6rem 1.6rem;
+                    border: none;
+                    border-radius: 999px;
+                    background: transparent;
+                    color: #b8b3d6;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    letter-spacing: 0.02em;
+                    cursor: pointer;
+                    transition: background 0.25s ease, color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.15s ease;
+                }
+
+                .mc-edition-btn:hover {
+                    color: #ffffff;
+                }
+
+                .mc-edition-btn:active {
+                    transform: scale(0.97);
+                }
+
+                .mc-edition-btn[aria-pressed="true"] {
+                    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+                    color: #ffffff;
+                    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+                }
+
+                .mc-edition-btn:focus-visible {
+                    outline: 2px solid #a78bfa;
+                    outline-offset: 3px;
                 }
             `}</style>
 
@@ -309,6 +334,31 @@ export default function StoreShow({
                             ✦ Performances premium · Protection anti-DDoS ·
                             Support réactif ✦
                         </p>
+
+                        {isMinecraft && (
+                            <div
+                                className="mc-edition-switch"
+                                role="group"
+                                aria-label="Choisir l'édition Minecraft"
+                            >
+                                <button
+                                    type="button"
+                                    className="mc-edition-btn"
+                                    aria-pressed={mcEdition === 'java'}
+                                    onClick={() => setMcEdition('java')}
+                                >
+                                    ☕ Java
+                                </button>
+                                <button
+                                    type="button"
+                                    className="mc-edition-btn"
+                                    aria-pressed={mcEdition === 'bedrock'}
+                                    onClick={() => setMcEdition('bedrock')}
+                                >
+                                    🌐 Bedrock
+                                </button>
+                            </div>
+                        )}
                     </section>
 
                     {isArk && (
@@ -369,56 +419,8 @@ export default function StoreShow({
                         </section>
                     )}
 
-                    {isMinecraft && (
-                        <section className="relative mx-auto mt-10 max-w-4xl rounded-2xl border border-violet-400/25 bg-[#0e1028]/90 p-6 sm:p-8">
-                            <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-300">
-                                Édition Minecraft
-                            </p>
-
-                            <h2 className="mt-3 text-2xl font-black">
-                                Choisissez votre édition Minecraft
-                            </h2>
-
-                            <div className="mt-6 grid gap-4 md:grid-cols-2">
-                                {([
-                                    { value: 'java', label: 'Minecraft Java' },
-                                    { value: 'bedrock', label: 'Minecraft Bedrock' },
-                                ] as const).map((edition) => {
-                                    const selected = mcEdition === edition.value;
-
-                                    return (
-                                        <button
-                                            key={edition.value}
-                                            type="button"
-                                            aria-pressed={selected}
-                                            onClick={() => setMcEdition(edition.value)}
-                                            className={`rounded-xl border p-5 text-left transition ${
-                                                selected
-                                                    ? 'border-violet-400 bg-violet-500/15 ring-2 ring-violet-500/30'
-                                                    : 'border-white/10 bg-[#090b1d] hover:border-violet-400/50'
-                                            }`}
-                                        >
-                                            <span className="flex items-center justify-between gap-4 font-bold">
-                                                {edition.label}
-                                                {selected && (
-                                                    <CircleCheckBig className="h-5 w-5 text-violet-300" />
-                                                )}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {!mcEdition && (
-                                <p className="mt-4 text-sm font-semibold text-amber-300">
-                                    Sélectionnez une édition avant d’ajouter une offre au panier.
-                                </p>
-                            )}
-                        </section>
-                    )}
-
                     <section className="store-plans-grid relative mt-12 grid items-stretch gap-5 bg-transparent sm:grid-cols-2 xl:grid-cols-4">
-                        {product.plans.map((plan) => {
+                        {visiblePlans.map((plan) => {
                             const unavailable =
                                 plan.stock_tracking &&
                                 (plan.stock_quantity ?? 0) <= 0;
@@ -479,7 +481,7 @@ export default function StoreShow({
                                         )}
                                     </div>
 
-                                    <dl className="mt-4 space-y-3 text-xs">
+                                    <dl className="mt-5 space-y-3 text-xs">
                                         {plan.ram_mb !== null && (
                                             <div className="flex items-center justify-between gap-3">
                                                 <dt className="flex items-center gap-2 text-slate-400">
@@ -487,7 +489,10 @@ export default function StoreShow({
                                                     RAM
                                                 </dt>
                                                 <dd className="font-bold">
-                                                    {formatRam(plan.ram_mb)}
+                                                    {Math.round(
+                                                        plan.ram_mb / 1024,
+                                                    )}{' '}
+                                                    Go
                                                 </dd>
                                             </div>
                                         )}
@@ -504,17 +509,17 @@ export default function StoreShow({
                                             </div>
                                         )}
 
-                                        {(plan.cpu_cores !== null ||
-                                            plan.cpu_percent !== null) && (
+                                        {(plan.cpu_percent !== null ||
+                                            plan.cpu_cores !== null) && (
                                             <div className="flex items-center justify-between gap-3">
                                                 <dt className="flex items-center gap-2 text-slate-400">
                                                     <Cpu className="h-3.5 w-3.5 text-violet-400" />
                                                     CPU
                                                 </dt>
                                                 <dd className="font-bold">
-                                                    {plan.cpu_cores !== null
-                                                        ? `${plan.cpu_cores} vCPU`
-                                                        : `${plan.cpu_percent} %`}
+                                                    {plan.cpu_percent !== null
+                                                        ? `${plan.cpu_percent} %`
+                                                        : `${plan.cpu_cores} cœur(s)`}
                                                 </dd>
                                             </div>
                                         )}
@@ -608,8 +613,7 @@ export default function StoreShow({
                                         type="button"
                                         disabled={
                                             unavailable ||
-                                            (isArk && !arkEdition) ||
-                                            (isMinecraft && !mcEdition)
+                                            (isArk && !arkEdition)
                                         }
                                         onClick={() => {
                                             router.post(`/panier/${plan.id}`, {
@@ -626,11 +630,8 @@ export default function StoreShow({
                                     >
                                         {unavailable
                                             ? 'Rupture de stock'
-                                            : (isArk && !arkEdition) ||
-                                                (isMinecraft && !mcEdition)
-                                              ? isMinecraft && !mcEdition
-                                                ? 'Choisissez une édition'
-                                                : 'Choisissez une version'
+                                            : isArk && !arkEdition
+                                              ? 'Choisissez une version'
                                               : '🛒 Ajouter au panier'}
                                     </button>
                                 </article>
@@ -638,7 +639,7 @@ export default function StoreShow({
                         })}
                     </section>
 
-                    {product.plans.length === 0 && (
+                    {visiblePlans.length === 0 && (
                         <div className="relative mt-10 rounded-2xl border border-indigo-900/70 bg-[#0b0e27] p-10 text-center text-slate-400">
                             Aucune offre n’est actuellement disponible pour
                             ce produit.
