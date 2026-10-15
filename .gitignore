@@ -50,3 +50,4 @@ backup_*
 
 # Fichiers d'installation ponctuels
 INSTALLATION-*.txt
+*.bak*
