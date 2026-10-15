@@ -1,6 +1,7 @@
-import { Head, Link, router } from '@inertiajs/react';
+import PublicLayout from '@/layouts/PublicLayout';
+import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { CircleCheckBig } from 'lucide-react';
+import { CircleCheckBig, Cpu, HardDrive, Users } from 'lucide-react';
 
 type Plan = {
     id: number;
@@ -44,6 +45,8 @@ type ArkEdition = {
     description: string;
 };
 
+type MinecraftEdition = 'java' | 'bedrock';
+
 type Props = {
     product: Product;
     catalogSlug?: string;
@@ -55,21 +58,28 @@ const euro = new Intl.NumberFormat('fr-FR', {
     currency: 'EUR',
 });
 
-/**
- * Les offres enregistrent la RAM en Mo.
- *
- * Exemples :
- * 4096 Mo  = 4 Go
- * 8192 Mo  = 8 Go
- * 10240 Mo = 10 Go
- * 12288 Mo = 12 Go
- *
- * L'affichage est volontairement limité à un nombre entier.
- */
-function formatRam(ramMb: number): string {
-    const ramGb = Math.round(ramMb / 1024);
+const planLogos: Record<string, string> = {
+    coal: '/images/astreon/Coal.png',
+    charbon: '/images/astreon/Coal.png',
+    iron: '/images/astreon/Iron_Ingot.png',
+    fer: '/images/astreon/Iron_Ingot.png',
+    diamond: '/images/astreon/Diamond.png',
+    diamant: '/images/astreon/Diamond.png',
+    netherite: '/images/astreon/Nether.png',
+    dragon: '/images/astreon/dragon.png',
+};
 
-    return `${ramGb} Go`;
+function getPlanLogo(plan: Plan): string | null {
+    const name = `${plan.name} ${plan.slug} ${plan.sku}`.toLowerCase();
+
+    return (
+        Object.entries(planLogos).find(([key]) => name.includes(key))?.[1] ??
+        null
+    );
+}
+
+function formatRam(ramMb: number): string {
+    return `${Math.round(ramMb / 1024)} Go`;
 }
 
 function displayValue(value: unknown): string {
@@ -94,34 +104,216 @@ export default function StoreShow({
     arkEditions = [],
 }: Props) {
     const isArk = catalogSlug === 'ark';
-    const [arkEdition, setArkEdition] = useState<
-        ArkEdition['value'] | ''
-    >('');
+    const isMinecraftJava = catalogSlug === 'minecraft-java';
+    const isMinecraftBedrock = catalogSlug === 'minecraft-bedrock';
+    const isMinecraft =
+        isMinecraftJava ||
+        isMinecraftBedrock ||
+        catalogSlug?.toLowerCase().includes('minecraft') ||
+        product.slug.toLowerCase().includes('minecraft');
+
+    const [arkEdition, setArkEdition] = useState<ArkEdition['value'] | ''>(
+        '',
+    );
+    const [mcEdition, setMcEdition] = useState<MinecraftEdition | ''>(
+        isMinecraftJava ? 'java' : isMinecraftBedrock ? 'bedrock' : '',
+    );
+
     return (
-        <>
+        <PublicLayout>
             <Head title={`${product.name} — AstreonHeberg`} />
 
-            <div className="min-h-screen bg-[#f5f7fb] text-slate-950">
+            <style>{`
+                /* La page porte l'image Minecraft; toute la chaîne jusqu'à la
+                   grille reste sans peinture ni effet de composition. */
+                body main:has(.store-plans-grid),
+                body main:has(.store-plans-grid) > .store-plans-grid,
+                body main:has(.store-plans-grid) > section,
+                body main > section.store-plans-grid,
+                body main .store-plans-grid,
+                body main .store-plans-grid::before,
+                body main .store-plans-grid::after,
+                body main .store-plans-grid > *:not(.store-plan-card) {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                    background-image: none !important;
+                    box-shadow: none !important;
+                    filter: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                }
 
-                <main className="mx-auto max-w-7xl px-6 py-16">
-                    <section className="max-w-4xl">
-                        <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
-                            {product.category.name}
+                body main:has(.store-plans-grid),
+                body main > section.store-plans-grid {
+                    border: 0 !important;
+                    border-radius: 0 !important;
+                    overflow: visible !important;
+                    background-clip: border-box !important;
+                }
+
+                /* Le seul fond sombre de cette zone est celui de chaque carte.
+                   Pas de backdrop-filter: il ne doit pas fabriquer un rectangle
+                   de composition derrière les coins arrondis. */
+                body main .store-plans-grid > article.store-plan-card {
+                    background: linear-gradient(
+                        145deg,
+                        rgba(23, 16, 59, .88),
+                        rgba(11, 14, 39, .92)
+                    ) !important;
+                    background-color: rgba(11, 14, 39, .92) !important;
+                    background-clip: padding-box !important;
+                    border-radius: 1rem !important;
+                    overflow: visible !important;
+                    filter: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                }
+
+                body main .store-plans-grid > article.store-plan-card::before,
+                body main .store-plans-grid > article.store-plan-card::after {
+                    content: none !important;
+                    display: none !important;
+                    background: transparent !important;
+                    box-shadow: none !important;
+                }
+
+                /* Tous les wrappers internes sont transparents; le bouton et
+                   le badge conservent leurs propres couleurs via leurs classes. */
+                body main .store-plans-grid > article.store-plan-card > .plan-head,
+                body main .store-plans-grid > article.store-plan-card > div:not(.plan-head),
+                body main .store-plans-grid > article.store-plan-card > dl,
+                body main .store-plans-grid > article.store-plan-card > ul,
+                body main .store-plans-grid > article.store-plan-card > details,
+                body main .store-plans-grid > article.store-plan-card details dl,
+                body main .store-plans-grid > article.store-plan-card details dl > div,
+                body main .store-plans-grid > article.store-plan-card .plan-head > div,
+                body main .store-plans-grid > article.store-plan-card [class*="bg-"]:not(button):not(.absolute) {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                    background-image: none !important;
+                    box-shadow: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                }
+
+                body main .store-plans-grid .plan-head,
+                body main .store-plans-grid .plan-head * {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                    background-image: none !important;
+                    box-shadow: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                }
+
+                body main .store-plans-grid .plan-logo {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                    background-image: none !important;
+                    border: none !important;
+                    border-radius: 0 !important;
+                    padding: 0 !important;
+                    box-shadow: none !important;
+                    mix-blend-mode: normal !important;
+                }
+            `}</style>
+
+            <div
+                className={`min-h-screen text-white ${
+                    isMinecraft
+                        ? 'bg-[#07091c] bg-cover bg-center bg-no-repeat'
+                        : 'bg-[#07091c]'
+                }`}
+                style={
+                    isMinecraft
+                        ? {
+                              backgroundImage:
+                                  "linear-gradient(rgba(5, 7, 22, 0.62), rgba(5, 7, 22, 0.82)), url('/images/astreon/minecraft-background.webp')",
+                          }
+                        : undefined
+                }
+            >
+                <main className="relative mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
+                    <div className="pointer-events-none absolute -left-40 top-10 h-80 w-80 rounded-full bg-violet-700/15 blur-[100px]" />
+                    <div className="pointer-events-none absolute -right-40 top-32 h-96 w-96 rounded-full bg-blue-700/10 blur-[120px]" />
+
+                    {isMinecraft && (
+                        <>
+                            <img
+                                src="/images/astreon/minecraft.png"
+                                alt=""
+                                aria-hidden="true"
+                                className="pointer-events-none absolute left-2 top-8 z-0 hidden w-28 object-contain drop-shadow-[0_0_22px_rgba(34,197,94,0.45)] sm:block lg:left-4 lg:top-10 lg:w-36"
+                            />
+
+                            <img
+                                src="/images/astreon/dragon.png"
+                                alt=""
+                                aria-hidden="true"
+                                className="pointer-events-none fixed right-[-18px] top-16 z-50 hidden w-28 object-contain drop-shadow-[0_0_26px_rgba(124,58,237,0.7)] sm:block sm:w-36 lg:right-[-18px] lg:top-20 lg:w-44"
+                            />
+                        </>
+                    )}
+
+                    <section
+                        className="univers-header-transparent relative z-10 mx-auto max-w-3xl text-center"
+                        style={{
+                            background: 'transparent',
+                            backgroundColor: 'transparent',
+                            backgroundImage: 'none',
+                            boxShadow: 'none',
+                            backdropFilter: 'none',
+                        }}
+                    >
+                        <p className="bg-transparent text-xs font-black uppercase tracking-[0.45em] text-violet-400">
+                            Serveurs gaming
                         </p>
 
-                        <h1 className="mt-4 text-5xl font-black">
-                            {product.name}
+                        <h1 className="mt-4 bg-transparent text-4xl font-black tracking-tight sm:text-6xl">
+                            {isMinecraft ? (
+                                <>
+                                    Minecraft{' '}
+                                    <span className="text-white">Java &</span>{' '}
+                                    <span className="bg-gradient-to-r from-violet-400 to-fuchsia-500 bg-clip-text text-transparent">
+                                        Bedrock
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="bg-gradient-to-r from-white to-violet-300 bg-clip-text text-transparent">
+                                    {product.name}
+                                </span>
+                            )}
                         </h1>
 
-                        <p className="mt-6 text-lg leading-8 text-slate-500">
-                            {product.description ??
-                                product.short_description}
+                        <p className="mx-auto mt-4 max-w-2xl bg-transparent text-sm leading-6 text-slate-400 sm:text-base">
+                            {product.short_description ??
+                                product.description ??
+                                'Choisissez l’offre adaptée à votre serveur.'}
+                        </p>
+
+                        {isMinecraft && (
+                            <>
+                                <p className="mt-3 bg-transparent text-xs text-slate-500">
+                                    Vanilla, Paper, Forge, Fabric, plugins et
+                                    modpacks.
+                                </p>
+                                <p className="mt-3 bg-transparent text-xs text-violet-200">
+                                    ☕ Java&nbsp;&nbsp; · &nbsp;&nbsp;🌐
+                                    Bedrock&nbsp;&nbsp; · &nbsp;&nbsp;🎮
+                                    Cross-play
+                                </p>
+                            </>
+                        )}
+
+                        <p className="mt-5 bg-transparent text-xs font-semibold text-violet-200">
+                            ✦ Performances premium · Protection anti-DDoS ·
+                            Support réactif ✦
                         </p>
                     </section>
 
                     {isArk && (
-                        <section className="mt-10 rounded-3xl border border-violet-400/25 bg-[#120d21] p-7">
-                            <p className="text-xs font-black uppercase tracking-[0.22em] text-violet-300">
+                        <section className="relative mx-auto mt-10 max-w-4xl rounded-2xl border border-violet-400/25 bg-[#0e1028]/90 p-6 sm:p-8">
+                            <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-300">
                                 Étape obligatoire
                             </p>
 
@@ -130,7 +322,8 @@ export default function StoreShow({
                             </h2>
 
                             <p className="mt-2 text-sm text-slate-400">
-                                Ce choix détermine automatiquement le bon Egg Pterodactyl lors de la création du serveur.
+                                Votre sélection détermine le bon Egg
+                                Pterodactyl lors de la création du serveur.
                             </p>
 
                             <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -146,162 +339,165 @@ export default function StoreShow({
                                             onClick={() =>
                                                 setArkEdition(edition.value)
                                             }
-                                            className={`group relative overflow-hidden rounded-2xl border p-6 text-left transition-all duration-200 ${
+                                            className={`rounded-xl border p-5 text-left transition ${
                                                 selected
-                                                    ? 'border-violet-300 bg-violet-500/20 shadow-[0_0_38px_rgba(168,85,247,0.28)] ring-2 ring-violet-400/50'
-                                                    : 'border-violet-400/20 bg-[#0b0813] hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500/5'
+                                                    ? 'border-violet-400 bg-violet-500/15 ring-2 ring-violet-500/30'
+                                                    : 'border-white/10 bg-[#090b1d] hover:border-violet-400/50'
                                             }`}
                                         >
-                                            {selected && (
-                                                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet-500 via-fuchsia-400 to-violet-500" />
-                                            )}
+                                            <span className="flex items-center justify-between gap-4 font-bold">
+                                                {edition.label}
+                                                {selected && (
+                                                    <CircleCheckBig className="h-5 w-5 text-violet-300" />
+                                                )}
+                                            </span>
 
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div>
-                                                    <span
-                                                        className={`block text-lg font-black transition ${
-                                                            selected
-                                                                ? 'text-white'
-                                                                : 'text-slate-200'
-                                                        }`}
-                                                    >
-                                                        {edition.label}
-                                                    </span>
-
-                                                    <span
-                                                        className={`mt-2 block text-sm leading-6 ${
-                                                            selected
-                                                                ? 'text-violet-100'
-                                                                : 'text-slate-400'
-                                                        }`}
-                                                    >
-                                                        {edition.description}
-                                                    </span>
-                                                </div>
-
-                                                <div
-                                                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border transition ${
-                                                        selected
-                                                            ? 'border-violet-200 bg-violet-500 text-white shadow-lg shadow-violet-500/35'
-                                                            : 'border-violet-400/25 bg-[#120d21] text-slate-600 group-hover:border-violet-400/60 group-hover:text-violet-300'
-                                                    }`}
-                                                >
-                                                    {selected ? (
-                                                        <CircleCheckBig className="h-6 w-6" />
-                                                    ) : (
-                                                        <span className="h-3.5 w-3.5 rounded-full border-2 border-current" />
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {selected && (
-                                                <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-violet-300/30 bg-violet-500/20 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-violet-100">
-                                                    <CircleCheckBig className="h-4 w-4" />
-                                                    Version sélectionnée
-                                                </div>
-                                            )}
+                                            <span className="mt-2 block text-sm leading-6 text-slate-400">
+                                                {edition.description}
+                                            </span>
                                         </button>
                                     );
                                 })}
                             </div>
 
-                            {arkEdition ? (
-                                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-100">
-                                    <CircleCheckBig className="h-5 w-5 shrink-0 text-emerald-400" />
-
-                                    <p>
-                                        Version sélectionnée :{' '}
-                                        <strong className="text-white">
-                                            {arkEdition ===
-                                            'survival-ascended'
-                                                ? 'ARK: Survival Ascended'
-                                                : 'ARK: Survival Evolved'}
-                                        </strong>
-                                    </p>
-                                </div>
-                            ) : (
-                                <p className="mt-4 text-sm font-bold text-amber-300">
-                                    Sélectionnez une version avant d’ajouter une offre au panier.
+                            {!arkEdition && (
+                                <p className="mt-4 text-sm font-semibold text-amber-300">
+                                    Sélectionnez une version avant d’ajouter
+                                    une offre au panier.
                                 </p>
                             )}
                         </section>
                     )}
 
-                    <section className="mt-14 grid gap-7 md:grid-cols-2 xl:grid-cols-4">
+                    {isMinecraft && (
+                        <section className="relative mx-auto mt-10 max-w-4xl rounded-2xl border border-violet-400/25 bg-[#0e1028]/90 p-6 sm:p-8">
+                            <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-300">
+                                Édition Minecraft
+                            </p>
+
+                            <h2 className="mt-3 text-2xl font-black">
+                                Choisissez votre édition Minecraft
+                            </h2>
+
+                            <div className="mt-6 grid gap-4 md:grid-cols-2">
+                                {([
+                                    { value: 'java', label: 'Minecraft Java' },
+                                    { value: 'bedrock', label: 'Minecraft Bedrock' },
+                                ] as const).map((edition) => {
+                                    const selected = mcEdition === edition.value;
+
+                                    return (
+                                        <button
+                                            key={edition.value}
+                                            type="button"
+                                            aria-pressed={selected}
+                                            onClick={() => setMcEdition(edition.value)}
+                                            className={`rounded-xl border p-5 text-left transition ${
+                                                selected
+                                                    ? 'border-violet-400 bg-violet-500/15 ring-2 ring-violet-500/30'
+                                                    : 'border-white/10 bg-[#090b1d] hover:border-violet-400/50'
+                                            }`}
+                                        >
+                                            <span className="flex items-center justify-between gap-4 font-bold">
+                                                {edition.label}
+                                                {selected && (
+                                                    <CircleCheckBig className="h-5 w-5 text-violet-300" />
+                                                )}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {!mcEdition && (
+                                <p className="mt-4 text-sm font-semibold text-amber-300">
+                                    Sélectionnez une édition avant d’ajouter une offre au panier.
+                                </p>
+                            )}
+                        </section>
+                    )}
+
+                    <section className="store-plans-grid relative mt-12 grid items-stretch gap-5 bg-transparent sm:grid-cols-2 xl:grid-cols-4">
                         {product.plans.map((plan) => {
                             const unavailable =
                                 plan.stock_tracking &&
                                 (plan.stock_quantity ?? 0) <= 0;
+                            const logo = getPlanLogo(plan);
 
                             return (
                                 <article
                                     key={plan.id}
-                                    className={`relative rounded-3xl border p-6 ${
+                                    className={`store-plan-card relative flex flex-col rounded-2xl border bg-transparent p-5 transition duration-200 hover:-translate-y-1 ${
                                         plan.is_popular
-                                            ? 'border-emerald-400/50 bg-emerald-400/10'
-                                            : 'border-slate-200 bg-white'
+                                            ? 'border-violet-500 shadow-[0_0_35px_rgba(124,58,237,0.22)]'
+                                            : 'border-indigo-900/70 hover:border-violet-500/60'
                                     }`}
                                 >
                                     {plan.is_popular && (
-                                        <span className="absolute -top-3 right-5 rounded-full bg-emerald-400 px-3 py-1 text-xs font-black text-slate-950">
+                                        <span className="absolute -top-3 right-4 rounded-full border border-violet-300/30 bg-violet-600 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg shadow-violet-900/50">
                                             Populaire
                                         </span>
                                     )}
 
-                                    <h2 className="text-2xl font-black">
-                                        {plan.name}
-                                    </h2>
+                                    <div className="plan-head flex min-h-12 items-center gap-3">
+                                        {logo && (
+                                            <img
+                                                src={logo}
+                                                alt=""
+                                                className="plan-logo h-10 w-10 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.35)]"
+                                            />
+                                        )}
 
-                                    <p className="mt-2 text-xs text-slate-500">
-                                        {plan.sku}
-                                    </p>
-
-                                    <div className="mt-6">
-                                        <span className="text-4xl font-black">
-                                            {euro.format(
-                                                plan.price_monthly_cents /
-                                                    100,
-                                            )}
-                                        </span>
-
-                                        <span className="text-sm text-slate-500">
-                                            {' '}
-                                            / mois
-                                        </span>
+                                        <div>
+                                            <h2 className="text-xl font-black tracking-wide">
+                                                {plan.name}
+                                            </h2>
+                                            <p className="mt-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-violet-300">
+                                                {plan.sku}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    {plan.setup_fee_cents > 0 && (
-                                        <p className="mt-2 text-xs text-slate-500">
-                                            +{' '}
+                                    <div className="mt-5 border-b border-white/10 pb-4">
+                                        <span className="text-3xl font-black">
                                             {euro.format(
-                                                plan.setup_fee_cents /
-                                                    100,
-                                            )}{' '}
-                                            de mise en service
-                                        </p>
-                                    )}
+                                                plan.price_monthly_cents / 100,
+                                            )}
+                                        </span>
+                                        <span className="ml-1 text-xs text-slate-400">
+                                            / mois
+                                        </span>
 
-                                    <dl className="mt-7 space-y-3 text-sm">
+                                        {plan.setup_fee_cents > 0 && (
+                                            <p className="mt-1 text-[11px] text-slate-500">
+                                                +{' '}
+                                                {euro.format(
+                                                    plan.setup_fee_cents / 100,
+                                                )}{' '}
+                                                de mise en service
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <dl className="mt-4 space-y-3 text-xs">
                                         {plan.ram_mb !== null && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <dt className="flex items-center gap-2 text-slate-400">
+                                                    <HardDrive className="h-3.5 w-3.5 text-violet-400" />
                                                     RAM
                                                 </dt>
-
                                                 <dd className="font-bold">
-                                                    {formatRam(
-                                                        plan.ram_mb,
-                                                    )}
+                                                    {formatRam(plan.ram_mb)}
                                                 </dd>
                                             </div>
                                         )}
 
                                         {plan.disk_gb !== null && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <dt className="flex items-center gap-2 text-slate-400">
+                                                    <HardDrive className="h-3.5 w-3.5 text-violet-400" />
                                                     Stockage
                                                 </dt>
-
                                                 <dd className="font-bold">
                                                     {plan.disk_gb} Go NVMe
                                                 </dd>
@@ -310,11 +506,11 @@ export default function StoreShow({
 
                                         {(plan.cpu_cores !== null ||
                                             plan.cpu_percent !== null) && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <dt className="flex items-center gap-2 text-slate-400">
+                                                    <Cpu className="h-3.5 w-3.5 text-violet-400" />
                                                     CPU
                                                 </dt>
-
                                                 <dd className="font-bold">
                                                     {plan.cpu_cores !== null
                                                         ? `${plan.cpu_cores} vCPU`
@@ -324,11 +520,11 @@ export default function StoreShow({
                                         )}
 
                                         {plan.player_slots !== null && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <dt className="flex items-center gap-2 text-slate-400">
+                                                    <Users className="h-3.5 w-3.5 text-violet-400" />
                                                     Joueurs
                                                 </dt>
-
                                                 <dd className="font-bold">
                                                     {plan.player_slots}
                                                 </dd>
@@ -336,25 +532,21 @@ export default function StoreShow({
                                         )}
 
                                         {plan.databases_limit !== null && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex justify-between gap-3">
+                                                <dt className="text-slate-400">
                                                     Bases de données
                                                 </dt>
-
                                                 <dd className="font-bold">
-                                                    {
-                                                        plan.databases_limit
-                                                    }
+                                                    {plan.databases_limit}
                                                 </dd>
                                             </div>
                                         )}
 
                                         {plan.backups_limit !== null && (
-                                            <div className="flex justify-between gap-4">
-                                                <dt className="text-slate-500">
+                                            <div className="flex justify-between gap-3">
+                                                <dt className="text-slate-400">
                                                     Sauvegardes
                                                 </dt>
-
                                                 <dd className="font-bold">
                                                     {plan.backups_limit}
                                                 </dd>
@@ -362,73 +554,84 @@ export default function StoreShow({
                                         )}
                                     </dl>
 
-                                    <ul className="mt-7 space-y-2 text-sm text-slate-300">
-                                        {(plan.features ?? []).map(
-                                            (feature) => (
-                                                <li key={feature}>
-                                                    ✓ {feature}
-                                                </li>
-                                            ),
+                                    {plan.features &&
+                                        plan.features.length > 0 && (
+                                            <ul className="mt-5 flex-1 space-y-2 border-t border-white/10 pt-4 text-[11px] leading-4 text-slate-300">
+                                                {plan.features.map(
+                                                    (feature) => (
+                                                        <li
+                                                            key={feature}
+                                                            className="flex gap-2"
+                                                        >
+                                                            <span className="font-black text-violet-400">
+                                                                ✓
+                                                            </span>
+                                                            <span>
+                                                                {feature}
+                                                            </span>
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
                                         )}
-                                    </ul>
 
                                     {plan.specifications &&
-                                        Object.keys(
-                                            plan.specifications,
-                                        ).length > 0 && (
-                                            <details className="mt-6 rounded-xl border border-slate-200 bg-black/10 p-4">
-                                                <summary className="cursor-pointer text-sm font-bold">
-                                                    Caractéristiques
-                                                    avancées
+                                        Object.keys(plan.specifications)
+                                            .length > 0 && (
+                                            <details className="mt-4 rounded-lg border border-white/10 bg-black/20 p-3">
+                                                <summary className="cursor-pointer text-xs font-bold text-slate-300">
+                                                    Caractéristiques avancées
                                                 </summary>
-
-                                                <dl className="mt-4 space-y-2 text-xs">
+                                                <dl className="mt-3 space-y-2 text-[10px]">
                                                     {Object.entries(
                                                         plan.specifications,
-                                                    ).map(
-                                                        ([key, value]) => (
-                                                            <div
-                                                                key={key}
-                                                                className="flex justify-between gap-4"
-                                                            >
-                                                                <dt className="text-slate-500">
-                                                                    {key}
-                                                                </dt>
-
-                                                                <dd className="text-right font-semibold">
-                                                                    {displayValue(
-                                                                        value,
-                                                                    )}
-                                                                </dd>
-                                                            </div>
-                                                        ),
-                                                    )}
+                                                    ).map(([key, value]) => (
+                                                        <div
+                                                            key={key}
+                                                            className="flex justify-between gap-3"
+                                                        >
+                                                            <dt className="text-slate-500">
+                                                                {key}
+                                                            </dt>
+                                                            <dd className="text-right font-semibold">
+                                                                {displayValue(
+                                                                    value,
+                                                                )}
+                                                            </dd>
+                                                        </div>
+                                                    ))}
                                                 </dl>
                                             </details>
                                         )}
 
                                     <button
                                         type="button"
-                                        disabled={unavailable || (isArk && !arkEdition)}
+                                        disabled={
+                                            unavailable ||
+                                            (isArk && !arkEdition) ||
+                                            (isMinecraft && !mcEdition)
+                                        }
                                         onClick={() => {
-                                            router.post(
-                                                `/panier/${plan.id}`,
-                                                {
-                                                    quantity: 1,
-                                                    ark_edition:
-                                                        isArk
-                                                            ? arkEdition
-                                                            : null,
-                                                },
-                                            );
+                                            router.post(`/panier/${plan.id}`, {
+                                                quantity: 1,
+                                                ark_edition: isArk
+                                                    ? arkEdition
+                                                    : null,
+                                                minecraft_edition: isMinecraft
+                                                    ? mcEdition
+                                                    : null,
+                                            });
                                         }}
-                                        className="mt-7 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3 font-black disabled:cursor-not-allowed disabled:opacity-40"
+                                        className="mt-5 w-full rounded-lg bg-gradient-to-r from-violet-700 to-violet-500 px-4 py-3 text-xs font-black text-white shadow-lg shadow-violet-950/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
                                     >
                                         {unavailable
                                             ? 'Rupture de stock'
-                                            : isArk && !arkEdition
-                                              ? 'Choisissez une version'
-                                              : 'Ajouter au panier'}
+                                            : (isArk && !arkEdition) ||
+                                                (isMinecraft && !mcEdition)
+                                              ? isMinecraft && !mcEdition
+                                                ? 'Choisissez une édition'
+                                                : 'Choisissez une version'
+                                              : '🛒 Ajouter au panier'}
                                     </button>
                                 </article>
                             );
@@ -436,13 +639,13 @@ export default function StoreShow({
                     </section>
 
                     {product.plans.length === 0 && (
-                        <div className="mt-14 rounded-3xl border border-slate-200 bg-white p-12 text-center text-slate-500">
-                            Aucune offre n’est actuellement disponible
-                            pour ce produit.
+                        <div className="relative mt-10 rounded-2xl border border-indigo-900/70 bg-[#0b0e27] p-10 text-center text-slate-400">
+                            Aucune offre n’est actuellement disponible pour
+                            ce produit.
                         </div>
                     )}
                 </main>
             </div>
-        </>
+        </PublicLayout>
     );
 }
