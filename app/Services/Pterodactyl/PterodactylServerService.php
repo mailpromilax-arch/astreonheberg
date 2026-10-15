@@ -34,9 +34,12 @@ class PterodactylServerService
             'nest_id',
         );
 
-        $eggId = (int) data_get(
-            $configuration,
-            'egg_id',
+                $edition = data_get($configuration, 'edition', 'java');
+
+        $eggId = (int) config(
+            $edition === 'bedrock'
+                ? 'services.pterodactyl.egg_bedrock'
+                : 'services.pterodactyl.egg_java'
         );
 
         if (
@@ -104,6 +107,15 @@ class PterodactylServerService
                 [],
             ),
         );
+
+        // Bedrock : SERVER_PORT_V6 doit différer du port IPv4 (sinon conflit)
+        if (array_key_exists('SERVER_PORT_V6', $environment)) {
+            $ipv4Port = (int) (data_get($allocation, 'port')
+                ?? data_get($allocation, 'attributes.port'));
+            if ($ipv4Port > 0) {
+                $environment['SERVER_PORT_V6'] = (string) ($ipv4Port + 1000);
+            }
+        }
 
         $externalId = (string) data_get(
             $configuration,
